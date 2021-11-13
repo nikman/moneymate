@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">moneymate</string>
+    <string name="account_title_label">Имя счета</string>
+    <string name="account_title_hint">Введите имя счета</string>
+</resources>

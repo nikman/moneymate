@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">moneymate</string>
+    <string name="account_title_label">title</string>
+    <string name="account_title_hint">Enter a title for the account</string>
+</resources>
