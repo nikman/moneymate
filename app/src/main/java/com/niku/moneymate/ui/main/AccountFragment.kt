@@ -3,9 +3,11 @@ package com.niku.moneymate.ui.main
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import com.niku.moneymate.Account
 import com.niku.moneymate.R
 
@@ -17,6 +19,7 @@ class AccountFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
+    private lateinit var titleField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +28,27 @@ class AccountFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.account_fragment, container, false)
+
+        val view = inflater.inflate(R.layout.account_fragment, container, false)
+
+        titleField = view.findViewById(R.id.account_title) as EditText
+
+        return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val titleWatcher = object : TextWatcher {
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TODO("Not yet implemented")
+                account.title = s.toString()
+            }
+        }
+
+        titleField.addTextChangedListener(titleWatcher)
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
