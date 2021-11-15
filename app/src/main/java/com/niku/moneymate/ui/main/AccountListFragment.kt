@@ -29,8 +29,9 @@ class AccountListFragment: Fragment() {
 
     private val viewModelFactory = AccountViewModelFactory()
 
-    private val accountListViewModel =
+    private val accountListViewModel: AccountListViewModel by lazy {
         ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
