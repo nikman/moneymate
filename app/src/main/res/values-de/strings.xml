@@ -2,5 +2,7 @@
 <resources>
     <string name="app_name">moneymate</string>
     <string name="account_title_label">Name</string>
-    <string name="account_title_hint">Fuhren Sie ein Name der Konto</string>
+    <string name="account_title_hint">Fuhren Sie ein Name der Konto ein</string>
+    <string name="currency_title_label">Wahrung</string>
+    <string name="currency_title_hint">Fuhren Sie ein Name der Wahrung ein</string>
 </resources>

@@ -21,7 +21,7 @@ private const val TAG = "AccountListFragment"
 class AccountListFragment: Fragment() {
 
     private lateinit var accountRecyclerView: RecyclerView
-    private var adapter: AccountAdapter? = null
+    private var adapter: AccountAdapter? = AccountAdapter(emptyList())
 
     /*private val accountListViewModel: AccountListViewModel by lazy {
         ViewModelProvider(this).get(AccountListViewModel::class.java)
@@ -30,7 +30,7 @@ class AccountListFragment: Fragment() {
     private val viewModelFactory = AccountViewModelFactory()
 
     private val accountListViewModel =
-        ViewModelProvider(viewModelStore, viewModelFactory).get(AccountListViewModel::class.java)
+        ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +48,7 @@ class AccountListFragment: Fragment() {
         accountRecyclerView = view.findViewById(R.id.account_recycler_view) as RecyclerView
         accountRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        updateUI()
+        //updateUI()
 
         return view
 

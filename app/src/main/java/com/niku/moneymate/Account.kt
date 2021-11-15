@@ -1,7 +1,12 @@
 package com.niku.moneymate
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 
-data class Account(val id: UUID = UUID.randomUUID(),
+@Entity
+data class Account(@PrimaryKey val id: UUID = UUID.randomUUID(),
                    var title: String = "",
-                   var balance: Int = 0)
+                   var balance: Int = 0,
+                   //var currency: Currency? = null
+)

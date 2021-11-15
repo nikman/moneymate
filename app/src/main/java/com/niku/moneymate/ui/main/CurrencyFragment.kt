@@ -1,38 +1,37 @@
 package com.niku.moneymate.ui.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import com.niku.moneymate.Account
+import androidx.fragment.app.Fragment
+import com.niku.moneymate.Currency
 import com.niku.moneymate.R
 
-class AccountFragment : Fragment() {
+class CurrencyFragment : Fragment() {
 
     companion object {
-        fun newInstance() = AccountFragment()
+        fun newInstance() = CurrencyFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
-    private lateinit var account: Account
+    //private lateinit var viewModel: MainViewModel
+    private lateinit var currency: Currency
     private lateinit var titleField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        account = Account()
+        currency = Currency()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.account_fragment, container, false)
+        val view = inflater.inflate(R.layout.currency_fragment, container, false)
 
-        titleField = view.findViewById(R.id.account_title) as EditText
+        titleField = view.findViewById(R.id.currency_title) as EditText
 
         return view
     }
@@ -47,7 +46,8 @@ class AccountFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                account.title = s.toString()
+                TODO("Not yet implemented")
+                currency.title = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -58,11 +58,4 @@ class AccountFragment : Fragment() {
         titleField.addTextChangedListener(titleWatcher)
 
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 }

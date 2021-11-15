@@ -3,4 +3,6 @@
     <string name="app_name">moneymate</string>
     <string name="account_title_label">Имя счета</string>
     <string name="account_title_hint">Введите имя счета</string>
+    <string name="currency_title_label">Наименование валюты</string>
+    <string name="currency_title_hint">Введите имя валюты</string>
 </resources>
