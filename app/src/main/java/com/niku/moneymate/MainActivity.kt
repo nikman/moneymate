@@ -4,8 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.niku.moneymate.ui.main.AccountFragment
 import com.niku.moneymate.ui.main.AccountListFragment
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,4 +17,14 @@ class MainActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
+
+    override fun onAccountSelected(accountId: UUID) {
+        val fragment = AccountFragment.newInstance(accountId)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 }

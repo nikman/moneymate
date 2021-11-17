@@ -10,21 +10,42 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.niku.moneymate.Account
+import com.niku.moneymate.AccountDetailViewModel
 import com.niku.moneymate.R
+import java.util.*
+
+private const val ARG_ACCOUNT_ID = "account_id"
+private const val TAG = "AccountFragment"
 
 class AccountFragment : Fragment() {
 
-    companion object {
+    /*companion object {
         fun newInstance() = AccountFragment()
+    }*/
+
+    companion object {
+        fun newInstance(account_id: UUID) : AccountFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_ACCOUNT_ID, account_id)
+            }
+            return AccountFragment().apply {
+                arguments = args
+            }
+        }
     }
 
     private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
     private lateinit var titleField: EditText
 
+    private val accountDetailViewModel: AccountDetailViewModel by lazy {
+        ViewModelProvider(this)[AccountDetailViewModel::class.java]
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         account = Account()
+        val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +56,27 @@ class AccountFragment : Fragment() {
         titleField = view.findViewById(R.id.account_title) as EditText
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        accountDetailViewModel.accountLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                account -> account?.let {
+                    this.account = account
+                    updateUI()
+            }
+            }
+        )
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel =
+            ViewModelProvider(
+                this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+        // TODO: Use the ViewModel
     }
 
     override fun onStart() {
@@ -59,10 +101,15 @@ class AccountFragment : Fragment() {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onStop() {
+        super.onStop()
+        accountDetailViewModel.saveAccount(account)
+    }
+
+    private fun updateUI() {
+
+        titleField.setText(account.title)
+
     }
 
 }

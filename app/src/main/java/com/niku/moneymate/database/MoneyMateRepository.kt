@@ -1,9 +1,11 @@
 package com.niku.moneymate.database
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.niku.moneymate.Account
 import java.util.*
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "money-mate-database"
 
@@ -16,10 +18,23 @@ class MoneyMateRepository private constructor(context: Context) {
     ).build()
 
     private val moneyMateDao = database.accountDao()
+    private val executor = Executors.newSingleThreadExecutor()
 
-    fun getAccounts(): List<Account> = moneyMateDao.getAccounts()
+    fun getAccounts(): LiveData<List<Account>> = moneyMateDao.getAccounts()
 
-    fun getAccount(id: UUID): Account? = moneyMateDao.getAccount(id)
+    fun getAccount(id: UUID): LiveData<Account?> = moneyMateDao.getAccount(id)
+
+    fun updateAccount(account: Account) {
+        executor.execute {
+            moneyMateDao.updateAccount(account)
+        }
+    }
+
+    fun addAccount(account: Account) {
+        executor.execute {
+            moneyMateDao.addAccount(account)
+        }
+    }
 
     companion object{
         private var INSTANCE: MoneyMateRepository? = null
