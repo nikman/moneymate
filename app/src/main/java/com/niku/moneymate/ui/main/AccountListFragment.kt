@@ -3,9 +3,7 @@ package com.niku.moneymate.ui.main
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -41,6 +39,11 @@ class AccountListFragment: Fragment() {
         ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callbacks = context as Callbacks?
@@ -72,6 +75,23 @@ class AccountListFragment: Fragment() {
     override fun onDetach() {
         super.onDetach()
         callbacks = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_account_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_account -> {
+                val account = Account()
+                accountListViewModel.addAccount(account)
+                callbacks?.onAccountSelected(account.id)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     private fun updateUI(accounts: List<Account>) {
