@@ -5,4 +5,5 @@
     <string name="account_title_hint">Fuhren Sie ein Name der Konto ein</string>
     <string name="currency_title_label">Wahrung</string>
     <string name="currency_title_hint">Fuhren Sie ein Name der Wahrung ein</string>
+    <string name="new_account">Neue Konto</string>
 </resources>
