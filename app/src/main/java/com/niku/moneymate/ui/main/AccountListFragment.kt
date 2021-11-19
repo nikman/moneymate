@@ -27,11 +27,7 @@ class AccountListFragment: Fragment() {
 
     private var callbacks: Callbacks? = null
     private lateinit var accountRecyclerView: RecyclerView
-    private var adapter: AccountAdapter? = AccountAdapter(emptyList())
-
-    /*private val accountListViewModel: AccountListViewModel by lazy {
-        ViewModelProvider(this).get(AccountListViewModel::class.java)
-    }*/
+    private var adapter: AccountAdapter = AccountAdapter(emptyList())
 
     private val viewModelFactory = AccountViewModelFactory()
 
@@ -66,10 +62,16 @@ class AccountListFragment: Fragment() {
         accountRecyclerView.layoutManager = LinearLayoutManager(context)
         accountRecyclerView.adapter = adapter
 
-        //updateUI()
-
         return view
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        accountListViewModel.accountListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { accounts -> accounts?.let { updateUI(accounts) } }
+        )
     }
 
     override fun onDetach() {
@@ -96,26 +98,10 @@ class AccountListFragment: Fragment() {
     }
 
     private fun updateUI(accounts: List<Account>) {
-        //val accounts = accountListViewModel.accounts
-        /*adapter = AccountAdapter(accounts)
+
+        adapter = AccountAdapter(accounts)
         accountRecyclerView.adapter = adapter
 
-         */
-        adapter?.let {
-            it.accounts = accounts
-        } ?: run {
-            adapter = AccountAdapter(accounts)
-        }
-        accountRecyclerView.adapter = adapter
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        accountListViewModel.accountListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { accounts -> accounts?.let { updateUI(accounts) } }
-        )
     }
 
     override fun onStart() {
@@ -127,7 +113,7 @@ class AccountListFragment: Fragment() {
                 accounts?.let {
                     Log.i(TAG, "Got accountLiveData ${accounts.size}")
                     for (element in accounts) {
-                        Log.i(TAG, "Got ${element.title} # ${element.id}")
+                        Log.i(TAG, "Got elem ${element.title} # ${element.id} note: ${element.note}")
                     }
                     updateUI(accounts)
                 }
@@ -142,6 +128,7 @@ class AccountListFragment: Fragment() {
         private lateinit var account: Account
 
         private val titleTextView: TextView = itemView.findViewById(R.id.account_title)
+        private val noteTextView: TextView = itemView.findViewById(R.id.account_note)
 
         init {
             itemView.setOnClickListener(this)
@@ -157,6 +144,7 @@ class AccountListFragment: Fragment() {
         fun bind(account: Account) {
             this.account = account
             titleTextView.text = this.account.title
+            noteTextView.text = this.account.note
         }
 
     }
@@ -173,6 +161,7 @@ class AccountListFragment: Fragment() {
         override fun onBindViewHolder(holder: AccountHolder, position: Int) {
             val account = accounts[position]
             //holder.apply { titleTextView.text = account.title }
+            Log.d(TAG, "Position: $position")
             holder.bind(account)
         }
     }

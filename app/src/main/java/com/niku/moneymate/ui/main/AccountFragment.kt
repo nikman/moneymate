@@ -24,17 +24,6 @@ class AccountFragment : Fragment() {
         fun newInstance() = AccountFragment()
     }*/
 
-    companion object {
-        fun newInstance(account_id: UUID) : AccountFragment {
-            val args = Bundle().apply {
-                putSerializable(ARG_ACCOUNT_ID, account_id)
-            }
-            return AccountFragment().apply {
-                arguments = args
-            }
-        }
-    }
-
     private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
     private lateinit var titleField: EditText
@@ -48,6 +37,7 @@ class AccountFragment : Fragment() {
         super.onCreate(savedInstanceState)
         account = Account()
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
+        accountDetailViewModel.loadAccount(accountId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +52,12 @@ class AccountFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
+        val accountId = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
+        accountDetailViewModel.loadAccount(accountId)
+
         accountDetailViewModel.accountLiveData.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer {
@@ -78,7 +73,7 @@ class AccountFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel =
             ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
     }
 
     override fun onStart() {
@@ -92,7 +87,7 @@ class AccountFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val changedText = s.toString()
-                Log.d(TAG, "Changed text: ${changedText}")
+                Log.d(TAG, "Changed text: $changedText")
                 account.title = changedText
             }
 
@@ -102,6 +97,25 @@ class AccountFragment : Fragment() {
         }
 
         titleField.addTextChangedListener(titleWatcher)
+
+        val noteWatcher = object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val changedText = s.toString()
+                Log.d(TAG, "Changed text (note: $changedText")
+                account.note = changedText
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        }
+
+        noteField.addTextChangedListener(noteWatcher)
 
     }
 
@@ -113,7 +127,19 @@ class AccountFragment : Fragment() {
     private fun updateUI() {
 
         titleField.setText(account.title)
+        noteField.setText(account.note)
 
+    }
+
+    companion object {
+        fun newInstance(account_id: UUID) : AccountFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_ACCOUNT_ID, account_id)
+            }
+            return AccountFragment().apply {
+                arguments = args
+            }
+        }
     }
 
 }
