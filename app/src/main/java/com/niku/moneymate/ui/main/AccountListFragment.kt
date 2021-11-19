@@ -85,6 +85,7 @@ class AccountListFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_account -> {
+                Log.d(TAG,"new account pressed")
                 val account = Account()
                 accountListViewModel.addAccount(account)
                 callbacks?.onAccountSelected(account.id)
@@ -96,8 +97,17 @@ class AccountListFragment: Fragment() {
 
     private fun updateUI(accounts: List<Account>) {
         //val accounts = accountListViewModel.accounts
-        adapter = AccountAdapter(accounts)
+        /*adapter = AccountAdapter(accounts)
         accountRecyclerView.adapter = adapter
+
+         */
+        adapter?.let {
+            it.accounts = accounts
+        } ?: run {
+            adapter = AccountAdapter(accounts)
+        }
+        accountRecyclerView.adapter = adapter
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,6 +116,24 @@ class AccountListFragment: Fragment() {
             viewLifecycleOwner,
             Observer { accounts -> accounts?.let { updateUI(accounts) } }
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        accountListViewModel.accountListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { accounts ->
+                accounts?.let {
+                    Log.i(TAG, "Got accountLiveData ${accounts.size}")
+                    for (element in accounts) {
+                        Log.i(TAG, "Got ${element.title} # ${element.id}")
+                    }
+                    updateUI(accounts)
+                }
+            }
+        )
+
     }
 
     private inner class AccountHolder(view: View):
@@ -133,7 +161,7 @@ class AccountListFragment: Fragment() {
 
     }
 
-    private inner class AccountAdapter(val accounts: List<Account>): RecyclerView.Adapter<AccountHolder>() {
+    private inner class AccountAdapter(var accounts: List<Account>): RecyclerView.Adapter<AccountHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountHolder {
             val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)

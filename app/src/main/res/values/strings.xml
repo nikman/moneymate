@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">moneymate</string>
-    <string name="account_title_label">title</string>
+    <string name="account_title_label">Title</string>
     <string name="account_title_hint">Enter a title for the account</string>
     <string name="currency_title_label">Currency</string>
     <string name="currency_title_hint">Enter currency title</string>
     <string name="new_account">New account</string>
+    <string name="account_note_hint">Enter note for the account</string>
+    <string name="account_note_label">Note</string>
 </resources>

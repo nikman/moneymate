@@ -10,4 +10,10 @@
         android:layout_height="wrap_content">
     </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
 
+    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/account_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.appcompat.widget.AppCompatAutoCompleteTextView>
+
 </LinearLayout>

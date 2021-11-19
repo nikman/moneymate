@@ -6,4 +6,6 @@
     <string name="currency_title_label">Wahrung</string>
     <string name="currency_title_hint">Fuhren Sie ein Name der Wahrung ein</string>
     <string name="new_account">Neue Konto</string>
+    <string name="account_note_hint">Enter note for the account</string>
+    <string name="account_note_label">Note</string>
 </resources>

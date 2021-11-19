@@ -6,4 +6,6 @@
     <string name="currency_title_label">Наименование валюты</string>
     <string name="currency_title_hint">Введите имя валюты</string>
     <string name="new_account">Новый счет</string>
+    <string name="account_note_hint">Enter note for the account</string>
+    <string name="account_note_label">Note</string>
 </resources>
