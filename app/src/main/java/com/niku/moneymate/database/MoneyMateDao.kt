@@ -23,4 +23,16 @@ interface MoneyMateDao {
     @Insert
     fun addAccount(account: Account)
 
+    @Query("SELECT * FROM currency")
+    fun getCurrencies(): LiveData<List<Currency>>
+
+    @Query("SELECT * FROM currency WHERE id=(:id)")
+    fun getCurrency(id: UUID): LiveData<Currency>
+
+    @Update
+    fun updateCurrency(currency: Currency)
+
+    @Insert
+    fun insertCurrency(currency: Currency)
+
 }

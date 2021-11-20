@@ -10,5 +10,5 @@ import com.niku.moneymate.Currency
 @TypeConverters(MoneyMateTypeConverters::class)
 
 abstract class MoneyMateDatabase: RoomDatabase() {
-    abstract fun accountDao(): MoneyMateDao
+    abstract fun moneyMateDao(): MoneyMateDao
 }
