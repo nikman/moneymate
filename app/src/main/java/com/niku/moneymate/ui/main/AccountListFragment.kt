@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.Account
@@ -61,6 +62,10 @@ class AccountListFragment: Fragment() {
         accountRecyclerView = view.findViewById(R.id.account_recycler_view) as RecyclerView
         accountRecyclerView.layoutManager = LinearLayoutManager(context)
         accountRecyclerView.adapter = adapter
+        accountRecyclerView.addItemDecoration(
+            DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
+                .apply { setOrientation(1) }
+        )
 
         return view
 
@@ -152,11 +157,19 @@ class AccountListFragment: Fragment() {
     private inner class AccountAdapter(var accounts: List<Account>): RecyclerView.Adapter<AccountHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)
-            return AccountHolder(view)
+            //val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)
+            val itemView =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.list_item_view_account, parent, false)
+
+            return AccountHolder(itemView)
         }
 
-        override fun getItemCount() = accounts.size
+        override fun getItemCount() : Int {
+            val accSize = accounts.size
+            Log.d(TAG, "accSize: $accSize")
+            return accSize
+        }
 
         override fun onBindViewHolder(holder: AccountHolder, position: Int) {
             val account = accounts[position]
@@ -164,6 +177,7 @@ class AccountListFragment: Fragment() {
             Log.d(TAG, "Position: $position")
             holder.bind(account)
         }
+
     }
 
     companion object {
