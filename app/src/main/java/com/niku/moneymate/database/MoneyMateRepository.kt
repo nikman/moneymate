@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.niku.moneymate.Account
+import com.niku.moneymate.category.Category
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -21,6 +22,7 @@ class MoneyMateRepository private constructor(context: Context) {
     private val executor = Executors.newSingleThreadExecutor()
 
     fun getAccounts(): LiveData<List<Account>> = moneyMateDao.getAccounts()
+    //fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
 
     fun getAccount(id: UUID): LiveData<Account?> = moneyMateDao.getAccount(id)
 
