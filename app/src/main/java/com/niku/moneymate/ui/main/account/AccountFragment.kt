@@ -20,10 +20,6 @@ private const val TAG = "AccountFragment"
 
 class AccountFragment : Fragment() {
 
-    /*companion object {
-        fun newInstance() = AccountFragment()
-    }*/
-
     private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
     private lateinit var titleField: EditText
