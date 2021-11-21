@@ -1,4 +1,4 @@
-package com.niku.moneymate
+package com.niku.moneymate.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -5,7 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.niku.moneymate.Account
+import com.niku.moneymate.account.Account
+import com.niku.moneymate.currency.MainCurrency
 import java.util.*
 
 @Dao
@@ -22,5 +23,17 @@ interface MoneyMateDao {
 
     @Insert
     fun addAccount(account: Account)
+
+    @Query("SELECT * FROM mainCurrency")
+    fun getCurrencies(): LiveData<List<MainCurrency>>
+
+    @Query("SELECT * FROM mainCurrency WHERE id=(:id)")
+    fun getCurrency(id: UUID): LiveData<MainCurrency>
+
+    @Update
+    fun updateCurrency(currency: MainCurrency)
+
+    @Insert
+    fun insertCurrency(currency: MainCurrency)
 
 }

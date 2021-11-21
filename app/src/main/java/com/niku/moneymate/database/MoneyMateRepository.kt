@@ -3,6 +3,7 @@ package com.niku.moneymate.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
+import com.niku.moneymate.account.Account
 import com.niku.moneymate.Account
 import com.niku.moneymate.category.Category
 import java.util.*
@@ -16,7 +17,7 @@ class MoneyMateRepository private constructor(context: Context) {
         context.applicationContext,
         MoneyMateDatabase::class.java,
         DATABASE_NAME
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     private val moneyMateDao = database.moneyMateDao()
     private val executor = Executors.newSingleThreadExecutor()

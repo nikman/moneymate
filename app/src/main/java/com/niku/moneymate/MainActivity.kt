@@ -2,8 +2,8 @@ package com.niku.moneymate
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.niku.moneymate.ui.main.AccountFragment
-import com.niku.moneymate.ui.main.AccountListFragment
+import com.niku.moneymate.ui.main.account.AccountFragment
+import com.niku.moneymate.ui.main.account.AccountListFragment
 import java.util.*
 
 class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {

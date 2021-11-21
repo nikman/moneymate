@@ -1,4 +1,4 @@
-package com.niku.moneymate.ui.main
+package com.niku.moneymate.ui.main.currency
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import com.niku.moneymate.Currency
+import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.R
 
 class CurrencyFragment : Fragment() {
@@ -18,12 +18,12 @@ class CurrencyFragment : Fragment() {
     }
 
     //private lateinit var viewModel: MainViewModel
-    private lateinit var currency: Currency
+    private lateinit var currency: MainCurrency
     private lateinit var titleField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currency = Currency()
+        currency = MainCurrency()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
