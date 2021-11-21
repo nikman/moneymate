@@ -17,7 +17,7 @@ class MoneyMateRepository private constructor(context: Context) {
         DATABASE_NAME
     ).build()
 
-    private val moneyMateDao = database.accountDao()
+    private val moneyMateDao = database.moneyMateDao()
     private val executor = Executors.newSingleThreadExecutor()
 
     fun getAccounts(): LiveData<List<Account>> = moneyMateDao.getAccounts()
