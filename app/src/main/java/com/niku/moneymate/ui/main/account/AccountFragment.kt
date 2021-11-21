@@ -1,4 +1,4 @@
-package com.niku.moneymate.ui.main
+package com.niku.moneymate.ui.main.account
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -10,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import com.niku.moneymate.Account
-import com.niku.moneymate.AccountDetailViewModel
+import com.niku.moneymate.account.Account
+import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
 import java.util.*
 

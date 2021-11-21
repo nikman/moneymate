@@ -1,11 +1,11 @@
 package com.niku.moneymate
 
+import com.niku.moneymate.account.Account
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.util.*
-import javax.security.auth.Subject
 
 private const val ACCOUNT_TITLE = "testTitle"
 private const val ACCOUNT_BALANCE = 3

@@ -1,4 +1,4 @@
-package com.niku.moneymate.ui.main
+package com.niku.moneymate.ui.main.account
 
 import android.content.Context
 import android.os.Bundle
@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.niku.moneymate.Account
-import com.niku.moneymate.AccountListViewModel
-import com.niku.moneymate.AccountViewModelFactory
+import com.niku.moneymate.account.Account
+import com.niku.moneymate.account.AccountListViewModel
+import com.niku.moneymate.account.AccountViewModelFactory
 import com.niku.moneymate.R
 import java.util.*
 
