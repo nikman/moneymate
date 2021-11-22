@@ -13,6 +13,7 @@ import android.widget.EditText
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
+import com.niku.moneymate.ui.main.common.MainViewModel
 import java.util.*
 
 private const val ARG_ACCOUNT_ID = "account_id"
@@ -56,7 +57,7 @@ class AccountFragment : Fragment() {
 
         accountDetailViewModel.accountLiveData.observe(
             viewLifecycleOwner,
-            androidx.lifecycle.Observer {
+            {
                 account -> account?.let {
                     this.account = account
                     updateUI()

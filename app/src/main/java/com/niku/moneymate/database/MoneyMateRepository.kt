@@ -17,7 +17,7 @@ class MoneyMateRepository private constructor(context: Context) {
         context.applicationContext,
         MoneyMateDatabase::class.java,
         DATABASE_NAME
-    ).fallbackToDestructiveMigration().build()
+    ).fallbackToDestructiveMigration().build() // !
 
     private val moneyMateDao = database.moneyMateDao()
     private val executor = Executors.newSingleThreadExecutor()

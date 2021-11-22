@@ -1,4 +1,4 @@
-package com.niku.moneymate.ui.main.account
+package com.niku.moneymate.ui.main.common
 
 import androidx.lifecycle.ViewModel
 
