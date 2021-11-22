@@ -20,11 +20,13 @@ class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {
         }
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        bottomNavigationView.setOnNavigationItemSelectedListener  {
-            when(it.itemId){
-                R.id.home->setCurrentFragment(AccountListFragment.newInstance())
-                R.id.person->setCurrentFragment(CategoryListFragment.newInstance())
-                /*/ R.id.settings->setCurrentFragment(thirdFragment)*/
+        bottomNavigationView.setOnItemSelectedListener  {
+
+            when(it.itemId) {
+                R.id.budget->setCurrentFragment(AccountListFragment.newInstance())
+                R.id.accounts->setCurrentFragment(AccountListFragment.newInstance())
+                R.id.categories->setCurrentFragment(CategoryListFragment.newInstance())
+                R.id.projects->setCurrentFragment(CategoryListFragment.newInstance())
 
             }
             true

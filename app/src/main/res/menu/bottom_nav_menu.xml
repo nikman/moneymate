@@ -2,16 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/person"
-        android:title="Person"
+        android:id="@+id/budget"
+        android:title="Budget"
         android:icon="@drawable/ic_launcher_foreground"/>
     <item
-        android:id="@+id/home"
-        android:title="Home"
+        android:id="@+id/accounts"
+        android:title="Accounts"
         android:icon="@drawable/ic_launcher_foreground"/>
     <item
-        android:id="@+id/settings"
-        android:title="Settings"
+        android:id="@+id/categories"
+        android:title="Categories"
+        android:icon="@drawable/ic_launcher_foreground"/>
+    <item
+        android:id="@+id/projects"
+        android:title="Projects"
         android:icon="@drawable/ic_launcher_foreground"/>
 
 </menu>
