@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {
         bottomNavigationView.setOnItemSelectedListener  {
 
             when(it.itemId) {
+
                 R.id.budget->setCurrentFragment(AccountListFragment.newInstance())
                 R.id.accounts->setCurrentFragment(AccountListFragment.newInstance())
                 R.id.categories->setCurrentFragment(CategoryListFragment.newInstance())

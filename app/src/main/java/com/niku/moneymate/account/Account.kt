@@ -8,6 +8,7 @@ import java.util.*
 data class Account(@PrimaryKey val id: UUID = UUID.randomUUID(),
                    var title: String = "",
                    var balance: Int = 0,
-                   var note: String = ""
+                   var note: String = "",
+                    var currency_id: UUID
                    //var currency: Currency? = null
 )
