@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.niku.moneymate.account.Account
+import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
 import java.util.*
 import java.util.concurrent.Executors
 
-private const val DATABASE_NAME = "money-mate-database"
+const val DATABASE_NAME = "money-mate-database"
 
 class MoneyMateRepository private constructor(context: Context) {
 
@@ -22,15 +23,15 @@ class MoneyMateRepository private constructor(context: Context) {
     private val moneyMateDao = database.moneyMateDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    fun getAccounts(): LiveData<List<Account>> = moneyMateDao.getAccounts()
+    fun getAccounts(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccounts()
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
 
-    fun getAccount(id: UUID): LiveData<Account?> = moneyMateDao.getAccount(id)
+    fun getAccount(id: UUID): LiveData<AccountWithCurrency?> = moneyMateDao.getAccount(id)
     fun getCurrency(id: UUID): LiveData<MainCurrency?> = moneyMateDao.getCurrency(id)
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
 
-    fun updateAccount(account: Account) {
+    fun updateAccount(account: AccountWithCurrency) {
         executor.execute {
             moneyMateDao.updateAccount(account)
         }

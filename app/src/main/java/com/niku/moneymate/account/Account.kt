@@ -1,14 +1,22 @@
 package com.niku.moneymate.account
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.niku.moneymate.currency.MainCurrency
 import java.util.*
 
-@Entity
-data class Account(@PrimaryKey val id: UUID = UUID.randomUUID(),
-                   var title: String = "",
-                   var balance: Int = 0,
-                   var note: String = "",
-                    var currency_id: UUID
-                   //var currency: Currency? = null
+@Entity(
+    tableName = "account",
+    foreignKeys = [
+        ForeignKey(
+            entity = MainCurrency::class,
+            parentColumns = ["currency_id"],
+            childColumns = ["currency_id"])
+    ], indices = [Index("currency_id")]
+)
+data class Account(
+    var currency_id: UUID,
+    var title: String = "",
+    var balance: Int = 0,
+    var note: String = "",
+    @PrimaryKey val id: UUID = UUID.randomUUID()
 )

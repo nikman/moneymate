@@ -5,6 +5,8 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity
-data class MainCurrency(@PrimaryKey val id: UUID = UUID.randomUUID(),
-                        var currency_code: Int = 0,
-                        var title: String = "")
+data class MainCurrency(
+    var currency_code: Int = 0,
+    var currency_title: String = "",
+    @PrimaryKey val currency_id: UUID = UUID.randomUUID()
+)

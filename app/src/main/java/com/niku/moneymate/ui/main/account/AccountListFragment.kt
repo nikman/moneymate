@@ -15,6 +15,9 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
 import com.niku.moneymate.account.AccountViewModelFactory
 import com.niku.moneymate.R
+import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
+import com.niku.moneymate.currency.MainCurrency
+import org.w3c.dom.Text
 import java.util.*
 
 private const val TAG = "AccountListFragment"
@@ -72,9 +75,9 @@ class AccountListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accountListViewModel.accountListLiveData.observe(
+        accountListViewModel.accountWithCurrencyListLiveData.observe(
             viewLifecycleOwner,
-            Observer { accounts -> accounts?.let { updateUI(accounts) } }
+            Observer { accountsWithCurrency -> accountsWithCurrency?.let { updateUI(accountsWithCurrency) } }
         )
     }
 
@@ -92,7 +95,8 @@ class AccountListFragment: Fragment() {
         return when (item.itemId) {
             R.id.new_account -> {
                 Log.d(TAG,"new account pressed")
-                val account = Account()
+                val currency = MainCurrency(643, "RUB")
+                val account = Account(currency.currency_id)
                 accountListViewModel.addAccount(account)
                 callbacks?.onAccountSelected(account.id)
                 true
@@ -101,9 +105,9 @@ class AccountListFragment: Fragment() {
         }
     }
 
-    private fun updateUI(accounts: List<Account>) {
+    private fun updateUI(accountsWithCurrency: List<AccountWithCurrency>) {
 
-        adapter = AccountAdapter(accounts)
+        adapter = AccountAdapter(accountsWithCurrency)
         accountRecyclerView.adapter = adapter
 
     }
@@ -111,13 +115,15 @@ class AccountListFragment: Fragment() {
     override fun onStart() {
         super.onStart()
 
-        accountListViewModel.accountListLiveData.observe(
+        accountListViewModel.accountWithCurrencyListLiveData.observe(
             viewLifecycleOwner,
             Observer { accounts ->
                 accounts?.let {
                     Log.i(TAG, "Got accountLiveData ${accounts.size}")
                     for (element in accounts) {
-                        Log.i(TAG, "Got elem ${element.title} # ${element.id} note: ${element.note}")
+                        Log.i(
+                            TAG,
+                            "Got elem ${element.account.title} # ${element.account.id} note: ${element.account.note} currency: ${element.currency.currency_id}")
                     }
                     updateUI(accounts)
                 }
@@ -129,10 +135,11 @@ class AccountListFragment: Fragment() {
     private inner class AccountHolder(view: View):
         RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private lateinit var account: Account
+        private lateinit var account: AccountWithCurrency
 
         private val titleTextView: TextView = itemView.findViewById(R.id.account_title)
         private val noteTextView: TextView = itemView.findViewById(R.id.account_note)
+        private val currencyTextView: TextView = itemView.findViewById(R.id.account_currency)
 
         init {
             itemView.setOnClickListener(this)
@@ -141,19 +148,20 @@ class AccountListFragment: Fragment() {
         override fun onClick(v: View?) {
 
             //Toast.makeText(context, "${account.title} pressed!", Toast.LENGTH_SHORT).show()
-            callbacks?.onAccountSelected(account.id)
+            callbacks?.onAccountSelected(account.account.id)
 
         }
 
-        fun bind(account: Account) {
+        fun bind(account: AccountWithCurrency) {
             this.account = account
-            titleTextView.text = this.account.title
-            noteTextView.text = this.account.note
+            titleTextView.text = this.account.account.title
+            noteTextView.text = this.account.account.note
+            currencyTextView.text = this.account.currency.currency_title
         }
 
     }
 
-    private inner class AccountAdapter(var accounts: List<Account>): RecyclerView.Adapter<AccountHolder>() {
+    private inner class AccountAdapter(var accounts: List<AccountWithCurrency>): RecyclerView.Adapter<AccountHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountHolder {
             //val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)

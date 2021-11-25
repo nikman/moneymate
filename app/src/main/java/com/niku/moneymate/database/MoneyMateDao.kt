@@ -1,11 +1,9 @@
 package com.niku.moneymate.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.niku.moneymate.account.Account
+import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
 import java.util.*
@@ -13,14 +11,17 @@ import java.util.*
 @Dao
 interface MoneyMateDao {
 
+    //@Query("SELECT account.id, account.title, account.balance, account.note, mainCurrency.title FROM account, mainCurrency WHERE account.currency_id = mainCurrency.id")
+    @Transaction
     @Query("SELECT * FROM account")
-    fun getAccounts(): LiveData<List<Account>>
+    fun getAccounts(): LiveData<List<AccountWithCurrency>>
 
+    @Transaction
     @Query("SELECT * FROM account WHERE id=(:id)")
-    fun getAccount(id: UUID): LiveData<Account?>
+    fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
 
     @Update
-    fun updateAccount(account: Account)
+    fun updateAccount(account: AccountWithCurrency)
 
     @Insert
     fun addAccount(account: Account)
@@ -28,7 +29,7 @@ interface MoneyMateDao {
     @Query("SELECT * FROM mainCurrency")
     fun getCurrencies(): LiveData<List<MainCurrency>>
 
-    @Query("SELECT * FROM mainCurrency WHERE id=(:id)")
+    @Query("SELECT * FROM mainCurrency WHERE currency_id=(:id)")
     fun getCurrency(id: UUID): LiveData<MainCurrency?>
 
     @Update

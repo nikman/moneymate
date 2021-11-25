@@ -15,4 +15,10 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/account_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/teal_700" />
+
 </LinearLayout>
