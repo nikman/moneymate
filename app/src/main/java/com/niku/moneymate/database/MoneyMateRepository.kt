@@ -31,7 +31,7 @@ class MoneyMateRepository private constructor(context: Context) {
     fun getCurrency(id: UUID): LiveData<MainCurrency?> = moneyMateDao.getCurrency(id)
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
 
-    fun updateAccount(account: AccountWithCurrency) {
+    fun updateAccount(account: Account) {
         executor.execute {
             moneyMateDao.updateAccount(account)
         }

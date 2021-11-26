@@ -3,14 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/account_fragment.xml" value="0.4" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/account_fragment.xml" value="0.2847222222222222" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/account_list_fragment.xml" value="0.1" />
-        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/currency_fragment.xml" value="0.1" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/currency_fragment.xml" value="0.4" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/fragment_account_list.xml" value="0.1" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/fragment_currency_list.xml" value="0.1" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/list_item_account.xml" value="0.1" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/list_item_view_account.xml" value="0.536" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/list_item_view_currency.xml" value="0.1" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/main_activity.xml" value="0.1" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/menu/bottom_nav_menu.xml" value="0.11197916666666667" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/menu/fragment_account_list.xml" value="0.17916666666666667" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/menu/fragment_currency_list.xml" value="0.1" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/account_fragment.xml" value="0.264" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/category_fragment.xml" value="0.15" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/fragment_account_list.xml" value="0.264" />

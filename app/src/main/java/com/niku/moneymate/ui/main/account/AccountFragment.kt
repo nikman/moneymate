@@ -9,17 +9,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.SpinnerAdapter
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
-import com.niku.moneymate.currency.CurrencyDetailViewModel
 import com.niku.moneymate.ui.main.common.MainViewModel
 import java.util.*
-import androidx.lifecycle.MediatorLiveData
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
+import com.niku.moneymate.currency.CurrencyListViewModel
+import com.niku.moneymate.currency.CurrencyViewModelFactory
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.database.MoneyMateRepository
+import androidx.lifecycle.Observer
 
 
 private const val ARG_ACCOUNT_ID = "account_id"
@@ -34,20 +38,16 @@ class AccountFragment : Fragment() {
     private lateinit var currency: MainCurrency
     private lateinit var titleField: EditText
     private lateinit var noteField: EditText
-    //private lateinit var currencyField: Spinner
-    private lateinit var currencyField: EditText
+    private lateinit var currencyField: Spinner
+    //private lateinit var currencyField: EditText
 
     private val accountDetailViewModel: AccountDetailViewModel by lazy {
         ViewModelProvider(this)[AccountDetailViewModel::class.java]
     }
 
-    private val currencyDetailViewModel: CurrencyDetailViewModel by lazy {
-        ViewModelProvider(this)[CurrencyDetailViewModel::class.java]
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currency = MainCurrency(643, "RUB", UUID.fromString("3422b448-2460-4fd2-9183-8000de6f8343"))
+        currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
         account = Account(currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
@@ -62,7 +62,18 @@ class AccountFragment : Fragment() {
         titleField = view.findViewById(R.id.account_title) as EditText
         noteField = view.findViewById(R.id.account_note) as EditText
         //currencyField = view.findViewById(R.id.currency_spinner)
-        currencyField = view.findViewById(R.id.account_currency) as EditText
+        //currencyField = view.findViewById(R.id.account_currency) as EditText
+        currencyField = view.findViewById(R.id.spinner) as Spinner
+
+        //val spinnerAdapter = ArrayAdapter()
+        val viewModelFactory = CurrencyViewModelFactory()
+        val currencyListViewModel: CurrencyListViewModel by lazy {
+            ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
+        }
+        currencyListViewModel.currencyListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { currencies -> currencies?.let { updateCurrencyList(currencies) } }
+        )
 
         return view
     }
@@ -72,35 +83,30 @@ class AccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val accountId = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
-        //val currencyId = arguments?.getSerializable(ARG_CURRENCY_ID) as UUID
-
-        //val mediatorLiveData = MediatorLiveData<Account>()
-
         accountDetailViewModel.loadAccount(accountId)
 
-        val accountObserver = accountDetailViewModel.accountLiveData.observe(
+        accountDetailViewModel.accountLiveData.observe(
             viewLifecycleOwner,
             {
                 account -> account?.let {
                     this.accountWithCurrency = account
-                    //currencyDetailViewModel.loadCurrency(account.currency_id)
+                    this.account = account.account
                     updateUI()
             }
             }
         )
-        /*val currencyObserver = currencyDetailViewModel.currencyLiveData.observe(
+
+        /*currencyDetailViewModel.currencyLiveData.observe(
             viewLifecycleOwner,
             {
                     currency -> currency?.let {
-                        this.currency = currency
-                        //currencyDetailViewModel.loadCurrency(account.currency_id)
-                        updateUI()
+                this.accountWithCurrency = currency
+                this.account = account.account
+                updateUI()
             }
             }
-        )
-        mediatorLiveData.addSource(accountDetailViewModel.accountLiveData, accountObserver)
-        mediatorLiveData.addSource(currencyDetailViewModel.currencyLiveData, currencyObserver)
-        mediatorLiveData.observe(accountObserver, currencyObserver)*/
+        )*/
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -122,7 +128,7 @@ class AccountFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val changedText = s.toString()
                 Log.d(TAG, "Changed text: $changedText")
-                accountWithCurrency.account.title = changedText
+                account.title = changedText
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -141,7 +147,7 @@ class AccountFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val changedText = s.toString()
                 Log.d(TAG, "Changed text (note: $changedText")
-                accountWithCurrency.account.note = changedText
+                account.note = changedText
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -155,7 +161,7 @@ class AccountFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        accountDetailViewModel.saveAccount(accountWithCurrency)
+        accountDetailViewModel.saveAccount(account)
     }
 
     private fun updateUI() {
@@ -163,8 +169,24 @@ class AccountFragment : Fragment() {
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
         //currencyField.setSelection(0)
-        currencyField.setText(accountWithCurrency.currency.currency_title)
+        //currencyField.setText(accountWithCurrency.currency.currency_title)
 
+    }
+
+    private fun updateCurrencyList(currencies: List<MainCurrency>) {
+
+        val currenciesStrings = List<String>(currencies.size)
+            { i -> currencies[i].toString() }
+
+        val adapter: ArrayAdapter<*>
+
+        adapter = ArrayAdapter(
+            this.requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            currenciesStrings)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        currencyField.adapter = adapter
     }
 
     companion object {

@@ -10,4 +10,8 @@
     <string name="account_note_label">Note</string>
     <string name="category_title_hint">Enter category title</string>
     <string name="category_title_label">Title</string>
+    <string name="new_currency">New currency</string>
+    <string name="account_currency_label">Currency</string>
+    <string name="currency_code_label">Currency code</string>
+    <string name="currency_code_hint">Enter currency code</string>
 </resources>

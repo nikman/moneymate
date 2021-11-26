@@ -9,12 +9,31 @@
     tools:context=".ui.main.currency.CurrencyFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView_currency_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/currency_title_label"
+        android:layout_marginTop="16dp"
+        android:text="@string/currency_code_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/currency_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:hint="@string/currency_code_hint"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/currency_title_label"
+        app:layout_constraintEnd_toEndOf="@+id/textView_currency_code"
+        app:layout_constraintTop_toBottomOf="@+id/textView_currency_code" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/currency_title"
@@ -22,7 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:hint="@string/currency_title_hint"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

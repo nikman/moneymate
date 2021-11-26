@@ -21,7 +21,7 @@ interface MoneyMateDao {
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
 
     @Update
-    fun updateAccount(account: AccountWithCurrency)
+    fun updateAccount(account: Account)
 
     @Insert
     fun addAccount(account: Account)

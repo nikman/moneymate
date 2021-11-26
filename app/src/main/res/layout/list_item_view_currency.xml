@@ -5,17 +5,12 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/account_title"
+        android:id="@+id/currency_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/account_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/account_currency"
+        android:id="@+id/currency_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

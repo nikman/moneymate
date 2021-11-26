@@ -23,7 +23,7 @@ class AccountDetailViewModel: ViewModel() {
         accountIdLiveData.value = accountId
     }
 
-    fun saveAccount(account: AccountWithCurrency) {
+    fun saveAccount(account: Account) {
         moneyMateRepository.updateAccount(account)
     }
 

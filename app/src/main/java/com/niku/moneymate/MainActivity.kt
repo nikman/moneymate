@@ -8,9 +8,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.niku.moneymate.ui.main.account.AccountFragment
 import com.niku.moneymate.ui.main.account.AccountListFragment
 import com.niku.moneymate.ui.main.category.CategoryListFragment
+import com.niku.moneymate.ui.main.currency.CurrencyFragment
+import com.niku.moneymate.ui.main.currency.CurrencyListFragment
 import java.util.*
 
-class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {
+class MainActivity :
+    AppCompatActivity(),
+    AccountListFragment.Callbacks,
+    CurrencyListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {
                 R.id.accounts->setCurrentFragment(AccountListFragment.newInstance())
                 R.id.categories->setCurrentFragment(CategoryListFragment.newInstance())
                 R.id.projects->setCurrentFragment(CategoryListFragment.newInstance())
+                R.id.currencies->setCurrentFragment(CurrencyListFragment.newInstance())
 
             }
             true
@@ -37,6 +43,15 @@ class MainActivity : AppCompatActivity(), AccountListFragment.Callbacks {
 
     override fun onAccountSelected(accountId: UUID) {
         val fragment = AccountFragment.newInstance(accountId)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun onCurrencySelected(currencyId: UUID) {
+        val fragment = CurrencyFragment.newInstance(currencyId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, fragment)

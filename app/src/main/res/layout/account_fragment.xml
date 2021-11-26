@@ -11,10 +11,9 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="17dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="16dp"
         android:text="@string/account_title_label"
-        android:textColor="#0277BD"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,7 +33,6 @@
         android:layout_height="18dp"
         android:layout_marginTop="44dp"
         android:text="@string/account_note_label"
-        android:textColor="#546E7A"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -48,6 +46,25 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView_account_note"
         app:layout_constraintStart_toEndOf="@+id/textView_account_note"
         app:layout_constraintTop_toTopOf="@+id/textView_account_note" />
+
+    <TextView
+        android:id="@+id/textView_account_currency"
+        android:layout_width="0dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/account_currency_label"
+        app:layout_constraintEnd_toEndOf="@+id/textView_account_note"
+        app:layout_constraintTop_toBottomOf="@+id/textView_account_note" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_account_currency"
+        app:layout_constraintStart_toEndOf="@+id/textView_account_currency"
+        app:layout_constraintTop_toTopOf="@+id/textView_account_currency"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

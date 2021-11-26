@@ -17,5 +17,9 @@
         android:id="@+id/projects"
         android:title="Projects"
         android:icon="@drawable/ic_launcher_foreground"/>
+    <item
+        android:id="@+id/currencies"
+        android:title="Currencies"
+        android:icon="@drawable/ic_launcher_foreground"/>
 
 </menu>
