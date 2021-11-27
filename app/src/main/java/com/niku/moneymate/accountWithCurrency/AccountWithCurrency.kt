@@ -9,9 +9,6 @@ data class AccountWithCurrency(
     @Embedded
     val account: Account,
 
-    /*@Embedded
-    val currency: MainCurrency,*/
-
     @Relation(parentColumn = "currency_id", entityColumn = "currency_id")
     val currency: MainCurrency
 )

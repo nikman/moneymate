@@ -38,10 +38,14 @@ interface MoneyMateDao {
     @Insert
     fun addCurrency(currency: MainCurrency)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    //suspend fun insertAllCurrencies(currencies: List<MainCurrency>)
+    fun insertAllCurrencies(currencies: List<MainCurrency>)
+
     @Query("SELECT * FROM category")
     fun getCategories(): LiveData<List<Category>>
 
-    @Query("SELECT * FROM category WHERE id=(:id)")
+    @Query("SELECT * FROM category WHERE category_id=(:id)")
     fun getCategory(id: UUID): LiveData<Category?>
 
     @Update

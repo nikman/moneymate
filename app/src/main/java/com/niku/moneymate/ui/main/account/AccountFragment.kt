@@ -24,6 +24,7 @@ import com.niku.moneymate.currency.CurrencyViewModelFactory
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.database.MoneyMateRepository
 import androidx.lifecycle.Observer
+import com.niku.moneymate.utils.SharedPrefs
 
 
 private const val ARG_ACCOUNT_ID = "account_id"
@@ -47,7 +48,9 @@ class AccountFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
+        //currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
+        currency = MainCurrency(
+            UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
         account = Account(currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
@@ -61,11 +64,8 @@ class AccountFragment : Fragment() {
 
         titleField = view.findViewById(R.id.account_title) as EditText
         noteField = view.findViewById(R.id.account_note) as EditText
-        //currencyField = view.findViewById(R.id.currency_spinner)
-        //currencyField = view.findViewById(R.id.account_currency) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
 
-        //val spinnerAdapter = ArrayAdapter()
         val viewModelFactory = CurrencyViewModelFactory()
         val currencyListViewModel: CurrencyListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
@@ -176,7 +176,7 @@ class AccountFragment : Fragment() {
     private fun updateCurrencyList(currencies: List<MainCurrency>) {
 
         val currenciesStrings = List<String>(currencies.size)
-            { i -> currencies[i].toString() }
+            { i -> currencies[i].currency_title }
 
         val adapter: ArrayAdapter<*>
 

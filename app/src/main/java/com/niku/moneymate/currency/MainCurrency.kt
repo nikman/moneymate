@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity
 data class MainCurrency(
+    @PrimaryKey val currency_id: UUID = UUID.randomUUID(),
     var currency_code: Int = 0,
-    var currency_title: String = "",
-    @PrimaryKey val currency_id: UUID = UUID.randomUUID()
+    var currency_title: String = ""
 )

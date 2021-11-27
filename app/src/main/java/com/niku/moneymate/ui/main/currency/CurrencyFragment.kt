@@ -85,7 +85,7 @@ class CurrencyFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                currency.currency_code = s.toString().toInt()
+                currency.currency_code = if (count > 0) s.toString().toInt() else 0
             }
 
             override fun afterTextChanged(s: Editable?) {
