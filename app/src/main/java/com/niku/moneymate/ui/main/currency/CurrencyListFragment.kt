@@ -16,8 +16,13 @@ import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.CurrencyViewModelFactory
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.utils.SharedPrefs
 import org.w3c.dom.Text
 import java.util.*
+import android.graphics.Typeface
+
+
+
 
 private const val TAG = "CurrencyListFragment"
 
@@ -155,6 +160,19 @@ class CurrencyListFragment: Fragment() {
             this.currency = currency
             titleTextView.text = this.currency.currency_title
             codeTextView.text = this.currency.currency_code.toString()
+
+            val uuidAsString = context?.applicationContext?.let {
+                SharedPrefs().getStoredCurrencyId(it) }
+
+            if (uuidAsString != null) {
+                if (uuidAsString.isNotEmpty() &&
+                            currency.currency_id == UUID.fromString(uuidAsString)) {
+                    val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                    titleTextView.typeface = boldTypeface
+                    codeTextView.typeface = boldTypeface
+                }
+            }
+
         }
 
     }

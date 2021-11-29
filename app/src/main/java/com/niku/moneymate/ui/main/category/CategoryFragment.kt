@@ -23,6 +23,7 @@ class CategoryFragment: Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var category: Category
     private lateinit var titleField: EditText
+    private lateinit var typeField: EditText
     //private lateinit var noteField: EditText
 
     private val categoryDetailViewModel: CategoryDetailViewModel by lazy {
@@ -46,6 +47,7 @@ class CategoryFragment: Fragment() {
 
         val view = inflater.inflate(R.layout.category_fragment, container, false)
         titleField = view.findViewById(R.id.category_title)
+        typeField = view.findViewById(R.id.category_type)
 
         return view
 
@@ -80,24 +82,24 @@ class CategoryFragment: Fragment() {
         super.onStart()
 
         val titleWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 val changedText = s.toString()
-
-                category.title = changedText
-
+                category.category_title = changedText
             }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
+            override fun afterTextChanged(s: Editable?) { }
         }
-
         titleField.addTextChangedListener(titleWatcher)
+
+        val typeWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val changedText = s.toString()
+                category.category_type = if (count > 0) s.toString().toInt() else 0
+            }
+            override fun afterTextChanged(s: Editable?) { }
+        }
+        typeField.addTextChangedListener(typeWatcher)
 
     }
 
@@ -107,7 +109,8 @@ class CategoryFragment: Fragment() {
     }
 
     private fun updateUI() {
-        titleField.setText(category.title)
+        titleField.setText(category.category_title)
+        typeField.setText(category.category_type.toString())
     }
 
     companion object {

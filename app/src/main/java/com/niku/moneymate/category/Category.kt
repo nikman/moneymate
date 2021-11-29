@@ -7,7 +7,7 @@ import java.util.*
 @Entity
 data class Category(
     var category_type: Int = 0,
-    var parent_category_id: UUID = UUID.randomUUID(),
-    var title: String = "",
+    //var parent_category_id: UUID = UUID.randomUUID(),
+    var category_title: String = "",
     @PrimaryKey val category_id: UUID = UUID.randomUUID()
 )

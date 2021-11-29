@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.category.CategoryFragment">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/category_title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,13 +19,32 @@
         app:layout_constraintTop_toTopOf="@+id/category_title"
         app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/category_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
+        android:layout_marginStart="12dp"
         android:hint="@string/category_title_hint"
         app:layout_constraintStart_toEndOf="@+id/category_title_label"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/category_type_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/category_type_label"
+        app:layout_constraintBottom_toBottomOf="@+id/category_type"
+        app:layout_constraintEnd_toEndOf="@+id/category_title_label"
+        app:layout_constraintTop_toTopOf="@+id/category_type" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/category_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/category_type_hint"
+        app:layout_constraintStart_toEndOf="@+id/category_type_label"
+        app:layout_constraintTop_toBottomOf="@+id/category_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

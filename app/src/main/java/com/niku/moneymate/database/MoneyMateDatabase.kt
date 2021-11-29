@@ -7,7 +7,7 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.category.Category
 
-@Database(entities = [Account::class, MainCurrency::class, Category::class], version = 9)
+@Database(entities = [Account::class, MainCurrency::class, Category::class], version = 11)
 @TypeConverters(MoneyMateTypeConverters::class)
 
 abstract class MoneyMateDatabase: RoomDatabase() {

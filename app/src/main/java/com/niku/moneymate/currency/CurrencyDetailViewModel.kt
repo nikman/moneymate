@@ -26,4 +26,8 @@ class CurrencyDetailViewModel: ViewModel() {
         moneyMateRepository.updateCurrency(currency)
     }
 
+    /*fun getDefaultCurrency(): MainCurrency {
+        moneyMateRepository.getDefaultCurrency()
+    }*/
+
 }

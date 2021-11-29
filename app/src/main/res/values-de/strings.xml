@@ -9,9 +9,13 @@
     <string name="account_note_hint">Enter note for the account</string>
     <string name="account_note_label">Note</string>
     <string name="category_title_hint">Enter category title</string>
-    <string name="category_title_label">Title</string>
+    <string name="category_title_label">Category title</string>
     <string name="new_currency">New currency</string>
     <string name="account_currency_label">Currency</string>
     <string name="currency_code_label">Currency code</string>
     <string name="currency_code_hint">Enter currency code</string>
+    <string name="currency_default_label">Default currency</string>
+    <string name="category_type_label">Type</string>
+    <string name="category_type_hint">Enter category type (+=1/-=-1)</string>
+    <string name="new_category">New category</string>
 </resources>

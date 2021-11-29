@@ -17,6 +17,7 @@ import com.niku.moneymate.account.AccountViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.database.MoneyMateRepository
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -96,8 +97,13 @@ class AccountListFragment: Fragment() {
             R.id.new_account -> {
                 Log.d(TAG,"new account pressed")
                 //val currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
+
                 val currency = MainCurrency(
-                        UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
+                        UUID.fromString(
+                            context?.applicationContext?.let {
+                                SharedPrefs().getStoredCurrencyId(it) }))
+
+                //val currency = MoneyMateRepository().getDefaultCurrency()
                 val account = Account(currency.currency_id)
                 accountListViewModel.addAccount(account)
                 callbacks?.onAccountSelected(account.id)

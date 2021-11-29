@@ -32,6 +32,9 @@ interface MoneyMateDao {
     @Query("SELECT * FROM mainCurrency WHERE currency_id=(:id)")
     fun getCurrency(id: UUID): LiveData<MainCurrency?>
 
+    /*@Query("SELECT * FROM mainCurrency WHERE currency_is_default limit 1")
+    fun getDefaultCurrency(): LiveData<MainCurrency>*/
+
     @Update
     fun updateCurrency(currency: MainCurrency)
 

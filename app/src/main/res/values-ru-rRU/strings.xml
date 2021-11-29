@@ -6,12 +6,16 @@
     <string name="currency_title_label">Наименование валюты</string>
     <string name="currency_title_hint">Введите имя валюты</string>
     <string name="new_account">Новый счет</string>
-    <string name="account_note_hint">Enter note for the account</string>
-    <string name="account_note_label">Note</string>
-    <string name="category_title_hint">Enter category title</string>
-    <string name="category_title_label">Title</string>
-    <string name="new_currency">New currency</string>
-    <string name="account_currency_label">Currency</string>
-    <string name="currency_code_label">Currency code</string>
-    <string name="currency_code_hint">Enter currency code</string>
+    <string name="account_note_hint">Дополнительная информация</string>
+    <string name="account_note_label">Заметка</string>
+    <string name="category_title_hint">Введите имя категории</string>
+    <string name="category_title_label">Имя категории</string>
+    <string name="new_currency">Добавить валюту</string>
+    <string name="account_currency_label">Валюта</string>
+    <string name="currency_code_label">Код валюты</string>
+    <string name="currency_code_hint">Введите код валюты</string>
+    <string name="currency_default_label">Валюта по-умолчанию</string>
+    <string name="category_type_label">Тип</string>
+    <string name="category_type_hint">Укажите тип (+=1/-=-1)</string>
+    <string name="new_category">Новая категория</string>
 </resources>

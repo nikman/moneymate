@@ -9,10 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.SpinnerAdapter
+import android.widget.*
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
@@ -37,6 +34,7 @@ class AccountFragment : Fragment() {
     private lateinit var account: Account
     private lateinit var accountWithCurrency: AccountWithCurrency
     private lateinit var currency: MainCurrency
+    private lateinit var currencies: List<MainCurrency>
     private lateinit var titleField: EditText
     private lateinit var noteField: EditText
     private lateinit var currencyField: Spinner
@@ -92,20 +90,9 @@ class AccountFragment : Fragment() {
                     this.accountWithCurrency = account
                     this.account = account.account
                     updateUI()
-            }
+                }
             }
         )
-
-        /*currencyDetailViewModel.currencyLiveData.observe(
-            viewLifecycleOwner,
-            {
-                    currency -> currency?.let {
-                this.accountWithCurrency = currency
-                this.account = account.account
-                updateUI()
-            }
-            }
-        )*/
 
     }
 
@@ -120,10 +107,7 @@ class AccountFragment : Fragment() {
         super.onStart()
 
         val titleWatcher = object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val changedText = s.toString()
@@ -131,11 +115,8 @@ class AccountFragment : Fragment() {
                 account.title = changedText
             }
 
-            override fun afterTextChanged(s: Editable?) {
-
-            }
+            override fun afterTextChanged(s: Editable?) {  }
         }
-
         titleField.addTextChangedListener(titleWatcher)
 
         val noteWatcher = object : TextWatcher {
@@ -157,6 +138,22 @@ class AccountFragment : Fragment() {
 
         noteField.addTextChangedListener(noteWatcher)
 
+        currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                account.currency_id = currencies!![position].currency_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
+
     }
 
     override fun onStop() {
@@ -168,12 +165,14 @@ class AccountFragment : Fragment() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
-        //currencyField.setSelection(0)
+        currencyField.setSelection(currencies!!.indexOf(accountWithCurrency.currency), true)
         //currencyField.setText(accountWithCurrency.currency.currency_title)
 
     }
 
     private fun updateCurrencyList(currencies: List<MainCurrency>) {
+
+        this.currencies = currencies
 
         val currenciesStrings = List<String>(currencies.size)
             { i -> currencies[i].currency_title }

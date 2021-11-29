@@ -56,6 +56,7 @@ class MoneyMateRepository private constructor(context: Context) {
 
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?> = moneyMateDao.getAccount(id)
     fun getCurrency(id: UUID): LiveData<MainCurrency?> = moneyMateDao.getCurrency(id)
+    //fun getDefaultCurrency(): LiveData<MainCurrency?> = moneyMateDao.getDefaultCurrency()
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
 
     fun updateAccount(account: Account) {
@@ -85,9 +86,6 @@ class MoneyMateRepository private constructor(context: Context) {
     fun addCurrency(currency: MainCurrency) {
         executor.execute {
             moneyMateDao.addCurrency(currency)
-            //if (moneyMateDao.getCurrencies().value?.size == 1) {
-                SharedPrefs().storeCurrencyId(context, currency.currency_id)
-           // }
         }
     }
 

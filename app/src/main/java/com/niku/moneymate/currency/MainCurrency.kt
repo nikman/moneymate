@@ -8,5 +8,6 @@ import java.util.*
 data class MainCurrency(
     @PrimaryKey val currency_id: UUID = UUID.randomUUID(),
     var currency_code: Int = 0,
-    var currency_title: String = ""
+    var currency_title: String = ""//,
+    //var currency_is_default: Boolean = false
 )

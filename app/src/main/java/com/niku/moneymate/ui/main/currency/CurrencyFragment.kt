@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyDetailViewModel
 import com.niku.moneymate.ui.main.common.MainViewModel
+import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
 private const val ARG_CURRENCY_ID = "currency_id"
@@ -24,6 +26,7 @@ class CurrencyFragment : Fragment() {
 
     private lateinit var codeField: EditText
     private lateinit var titleField: EditText
+    private lateinit var isDefaultCurrencyCheckBox: CheckBox
 
     private val currencyDetailViewModel: CurrencyDetailViewModel by lazy {
         ViewModelProvider(this)[CurrencyDetailViewModel::class.java]
@@ -44,6 +47,7 @@ class CurrencyFragment : Fragment() {
 
         codeField = view.findViewById(R.id.currency_code) as EditText
         titleField = view.findViewById(R.id.currency_title) as EditText
+        isDefaultCurrencyCheckBox = view.findViewById(R.id.currency_isDefault) as CheckBox
 
         return view
     }
@@ -112,6 +116,15 @@ class CurrencyFragment : Fragment() {
 
         titleField.addTextChangedListener(titleWatcher)
 
+        isDefaultCurrencyCheckBox.apply {
+            setOnCheckedChangeListener { _, isChecked ->
+                //currency.currency_is_default = isChecked
+                if (isChecked) {
+                    SharedPrefs().storeCurrencyId(context, currency.currency_id)
+                }
+            }
+        }
+
     }
 
     override fun onStop() {
@@ -123,6 +136,15 @@ class CurrencyFragment : Fragment() {
 
         codeField.setText(currency.currency_code.toString())
         titleField.setText(currency.currency_title)
+
+        val uuidAsString = context?.applicationContext?.let {
+            SharedPrefs().getStoredCurrencyId(it) }
+
+        if (uuidAsString != null) {
+            isDefaultCurrencyCheckBox.isChecked =
+                uuidAsString.isNotEmpty() &&
+                        currency.currency_id == UUID.fromString(uuidAsString)
+        }
 
     }
 
