@@ -3,23 +3,23 @@
 
     <item
         android:id="@+id/budget"
-        android:title="Budget"
+        android:title="@string/bottom_nav_item_budget"
         android:icon="@drawable/ic_baseline_bar_chart_24" />
     <item
         android:id="@+id/accounts"
-        android:title="Accounts"
+        android:title="@string/bottom_nav_item_accounts"
         android:icon="@drawable/ic_baseline_account_balance_wallet_24"/>
     <item
         android:id="@+id/categories"
-        android:title="Categories"
+        android:title="@string/bottom_nav_item_categories"
         android:icon="@drawable/ic_baseline_list_alt_24"/>
     <item
         android:id="@+id/projects"
-        android:title="Projects"
+        android:title="@string/bottom_nav_item_projects"
         android:icon="@drawable/ic_baseline_auto_awesome_motion_24"/>
     <item
         android:id="@+id/currencies"
-        android:title="Currencies"
+        android:title="@string/bottom_nav_item_currencies"
         android:icon="@drawable/ic_baseline_monetization_on_24"/>
 
 </menu>

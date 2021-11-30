@@ -60,7 +60,7 @@ class CurrencyFragment : Fragment() {
 
         currencyDetailViewModel.loadCurrency(currencyId)
 
-        val currencyObserver = currencyDetailViewModel.currencyLiveData.observe(
+        currencyDetailViewModel.currencyLiveData.observe(
             viewLifecycleOwner,
             {
                     currency -> currency?.let {

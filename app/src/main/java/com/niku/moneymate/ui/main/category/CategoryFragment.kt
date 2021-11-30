@@ -94,7 +94,7 @@ class CategoryFragment: Fragment() {
         val typeWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val changedText = s.toString()
+                //val changedText = s.toString()
                 category.category_type = if (count > 0) s.toString().toInt() else 0
             }
             override fun afterTextChanged(s: Editable?) { }

@@ -145,7 +145,7 @@ class AccountFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                account.currency_id = currencies!![position].currency_id
+                account.currency_id = currencies[position].currency_id
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -165,7 +165,7 @@ class AccountFragment : Fragment() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
-        currencyField.setSelection(currencies!!.indexOf(accountWithCurrency.currency), true)
+        currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
         //currencyField.setText(accountWithCurrency.currency.currency_title)
 
     }

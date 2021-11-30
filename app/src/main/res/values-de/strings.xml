@@ -18,4 +18,9 @@
     <string name="category_type_label">Type</string>
     <string name="category_type_hint">Enter category type (+=1/-=-1)</string>
     <string name="new_category">New category</string>
+    <string name="bottom_nav_item_budget">Budget</string>
+    <string name="bottom_nav_item_accounts">Accounts</string>
+    <string name="bottom_nav_item_categories">Categories</string>
+    <string name="bottom_nav_item_projects">Projects</string>
+    <string name="bottom_nav_item_currencies">Currencies</string>
 </resources>

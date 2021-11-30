@@ -6,7 +6,7 @@ import java.util.*
 private const val KEY_NAME = "money-mate-shared-prefs-key"
 private const val CURRENCY_PREFS_KEY = "currency-code-key"
 
-class SharedPrefs() {
+class SharedPrefs {
 
     fun storeCurrencyId(context: Context, value: UUID) {
 

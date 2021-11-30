@@ -18,4 +18,9 @@
     <string name="category_type_label">Тип</string>
     <string name="category_type_hint">Укажите тип (+=1/-=-1)</string>
     <string name="new_category">Новая категория</string>
+    <string name="bottom_nav_item_budget">Бюджет</string>
+    <string name="bottom_nav_item_accounts">Счета</string>
+    <string name="bottom_nav_item_categories">Категории</string>
+    <string name="bottom_nav_item_projects">Проекты</string>
+    <string name="bottom_nav_item_currencies">Валюты</string>
 </resources>
