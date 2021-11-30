@@ -4,22 +4,22 @@
     <item
         android:id="@+id/budget"
         android:title="@string/bottom_nav_item_budget"
-        android:icon="@drawable/ic_baseline_bar_chart_24" />
+        android:icon="@drawable/ic_action_navbar_item_budget" />
     <item
         android:id="@+id/accounts"
         android:title="@string/bottom_nav_item_accounts"
-        android:icon="@drawable/ic_baseline_account_balance_wallet_24"/>
+        android:icon="@drawable/ic_action_navbar_item_account"/>
     <item
         android:id="@+id/categories"
         android:title="@string/bottom_nav_item_categories"
-        android:icon="@drawable/ic_baseline_list_alt_24"/>
+        android:icon="@drawable/ic_action_navbar_item_categories"/>
     <item
         android:id="@+id/projects"
         android:title="@string/bottom_nav_item_projects"
-        android:icon="@drawable/ic_baseline_auto_awesome_motion_24"/>
+        android:icon="@drawable/ic_action_navbar_item_projects"/>
     <item
         android:id="@+id/currencies"
         android:title="@string/bottom_nav_item_currencies"
-        android:icon="@drawable/ic_baseline_monetization_on_24"/>
+        android:icon="@drawable/ic_action_navbar_item_currency"/>
 
 </menu>
