@@ -18,5 +18,5 @@ data class Account(
     var title: String = "",
     var balance: Int = 0,
     var note: String = "",
-    @PrimaryKey val id: UUID = UUID.randomUUID()
+    @PrimaryKey val account_id: UUID = UUID.randomUUID()
 )

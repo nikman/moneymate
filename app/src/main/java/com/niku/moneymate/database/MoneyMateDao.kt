@@ -6,6 +6,8 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.transaction.MoneyTransaction
+import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
 
 @Dao
@@ -17,7 +19,7 @@ interface MoneyMateDao {
     fun getAccounts(): LiveData<List<AccountWithCurrency>>
 
     @Transaction
-    @Query("SELECT * FROM account WHERE id=(:id)")
+    @Query("SELECT * FROM account WHERE account_id=(:id)")
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
 
     @Update
@@ -56,5 +58,19 @@ interface MoneyMateDao {
 
     @Insert
     fun addCategory(category: Category)
+
+    @Transaction
+    @Query("SELECT * FROM moneyTransaction")
+    fun getTransactions(): LiveData<List<TransactionWithProperties>>
+
+    @Transaction
+    @Query("SELECT * FROM moneyTransaction WHERE transaction_id=(:id)")
+    fun getTransaction(id: UUID): LiveData<TransactionWithProperties?>
+
+    @Update
+    fun updateTransaction(transaction: MoneyTransaction)
+
+    @Insert
+    fun addTransaction(transaction: MoneyTransaction)
 
 }

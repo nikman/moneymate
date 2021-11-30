@@ -6,8 +6,9 @@ import androidx.room.TypeConverters
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.category.Category
+import com.niku.moneymate.transaction.MoneyTransaction
 
-@Database(entities = [Account::class, MainCurrency::class, Category::class], version = 11)
+@Database(entities = [Account::class, MainCurrency::class, Category::class, MoneyTransaction::class], version = 12)
 @TypeConverters(MoneyMateTypeConverters::class)
 
 abstract class MoneyMateDatabase: RoomDatabase() {

@@ -16,15 +16,15 @@ import java.util.*
             entity = MainCurrency::class,
             parentColumns = ["currency_id"],
             childColumns = ["currency_id"])
-    ], indices = [Index("currency_id")]
+    ], indices = [Index("account_id"),Index("currency_id")]
 )
 data class MoneyTransaction(
 
     @Relation(parentColumn = "account_id", entityColumn = "account_id")
-    var account_id: UUID,
+    val account_id: UUID,
 
     @Relation(parentColumn = "currency_id", entityColumn = "currency_id")
-    var currency_id: UUID,
+    val currency_id: UUID,
 
     var amount: Double = 0.0,
 
