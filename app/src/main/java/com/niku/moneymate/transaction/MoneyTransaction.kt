@@ -26,7 +26,7 @@ data class MoneyTransaction(
     @Relation(parentColumn = "currency_id", entityColumn = "currency_id")
     var currency_id: UUID,
 
-    var amount: Int = 0,
+    var amount: Double = 0.0,
 
     val transaction_id: UUID = UUID.randomUUID()
 )
