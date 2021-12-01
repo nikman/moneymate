@@ -1,11 +1,13 @@
 package com.niku.moneymate.transaction
 
-import androidx.room.Embedded
-import androidx.room.Relation
+import androidx.room.*
 import com.niku.moneymate.account.Account
+import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import java.util.*
 
 data class TransactionWithProperties(
+
     @Embedded
     val transaction: MoneyTransaction,
 
@@ -13,5 +15,9 @@ data class TransactionWithProperties(
     val account: Account,
 
     @Relation(parentColumn = "currency_id", entityColumn = "currency_id")
-    val currency: MainCurrency
+    val currency: MainCurrency,
+
+    @Relation(parentColumn = "category_id", entityColumn = "category_id")
+    val category: Category
+
 )

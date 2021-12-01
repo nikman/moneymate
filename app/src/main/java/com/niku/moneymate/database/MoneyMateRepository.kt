@@ -1,9 +1,10 @@
 package com.niku.moneymate.database
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
@@ -19,6 +20,35 @@ const val TAG = "MoneyMateRepository"
 class MoneyMateRepository private constructor(context: Context) {
 
     //private val context = context
+    private val migrationFrom_11_To_12: Migration = object : Migration(11, 12) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // https://developer.android.com/reference/android/arch/persistence/room/ColumnInfo
+            /*
+            database.execSQL("ALTER TABLE pin "
+                    + " ADD COLUMN is_location_accurate INTEGER")
+            database.execSQL("ALTER TABLE pin "
+                    + " ADD COLUMN is_location_accurate INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("UPDATE pin "
+                    + " SET is_location_accurate = 0 WHERE lat IS NULL")
+            database.execSQL("UPDATE pin "
+                    + " SET is_location_accurate = 1 WHERE lat IS NOT NULL")*/
+        }
+    }
+
+    private val migrationFrom_12_To_13: Migration = object : Migration(12, 13) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // https://developer.android.com/reference/android/arch/persistence/room/ColumnInfo
+            /*
+            database.execSQL("ALTER TABLE pin "
+                    + " ADD COLUMN is_location_accurate INTEGER")
+            database.execSQL("ALTER TABLE pin "
+                    + " ADD COLUMN is_location_accurate INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("UPDATE pin "
+                    + " SET is_location_accurate = 0 WHERE lat IS NULL")
+            database.execSQL("UPDATE pin "
+                    + " SET is_location_accurate = 1 WHERE lat IS NOT NULL")*/
+        }
+    }
 
     private val database : MoneyMateDatabase = Room.databaseBuilder(
             context.applicationContext,
@@ -41,11 +71,13 @@ class MoneyMateRepository private constructor(context: Context) {
                 }
             })*/
         .fallbackToDestructiveMigration()
+        .addMigrations(migrationFrom_11_To_12)
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()
     private val executor = Executors.newSingleThreadExecutor()
 
+    fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
     fun getAccounts(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccounts()
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()

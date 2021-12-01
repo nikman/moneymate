@@ -11,13 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
-import com.niku.moneymate.account.AccountViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.database.MoneyMateRepository
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -33,7 +32,7 @@ class AccountListFragment: Fragment() {
     private lateinit var accountRecyclerView: RecyclerView
     private var adapter: AccountAdapter = AccountAdapter(emptyList())
 
-    private val viewModelFactory = AccountViewModelFactory()
+    private val viewModelFactory = CommonViewModelFactory()
 
     private val accountListViewModel: AccountListViewModel by lazy {
         ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
@@ -106,7 +105,7 @@ class AccountListFragment: Fragment() {
                 //val currency = MoneyMateRepository().getDefaultCurrency()
                 val account = Account(currency.currency_id)
                 accountListViewModel.addAccount(account)
-                callbacks?.onAccountSelected(account.id)
+                callbacks?.onAccountSelected(account.account_id)
                 true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -131,7 +130,7 @@ class AccountListFragment: Fragment() {
                     for (element in accounts) {
                         Log.i(
                             TAG,
-                            "Got elem ${element.account.title} # ${element.account.id} note: ${element.account.note} currency: ${element.currency.currency_id}")
+                            "Got elem ${element.account.title} # ${element.account.account_id} note: ${element.account.note} currency: ${element.currency.currency_id}")
                     }
                     updateUI(accounts)
                 }
@@ -156,7 +155,7 @@ class AccountListFragment: Fragment() {
         override fun onClick(v: View?) {
 
             //Toast.makeText(context, "${account.title} pressed!", Toast.LENGTH_SHORT).show()
-            callbacks?.onAccountSelected(account.account.id)
+            callbacks?.onAccountSelected(account.account.account_id)
 
         }
 

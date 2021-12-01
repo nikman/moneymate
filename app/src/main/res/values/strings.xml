@@ -22,4 +22,5 @@
     <string name="bottom_nav_item_categories">Categories</string>
     <string name="bottom_nav_item_projects">Projects</string>
     <string name="bottom_nav_item_currencies">Currencies</string>
+    <string name="default_transaction_date">Wed Dec 02 00:33 EST 2021</string>
 </resources>

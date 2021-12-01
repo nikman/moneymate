@@ -17,10 +17,9 @@ import com.niku.moneymate.ui.main.common.MainViewModel
 import java.util.*
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
-import com.niku.moneymate.currency.CurrencyViewModelFactory
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.database.MoneyMateRepository
 import androidx.lifecycle.Observer
+import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.utils.SharedPrefs
 
 
@@ -64,7 +63,7 @@ class AccountFragment : Fragment() {
         noteField = view.findViewById(R.id.account_note) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
 
-        val viewModelFactory = CurrencyViewModelFactory()
+        val viewModelFactory = CommonViewModelFactory()
         val currencyListViewModel: CurrencyListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
         }

@@ -12,16 +12,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
-import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
-import com.niku.moneymate.currency.CurrencyViewModelFactory
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.utils.SharedPrefs
-import org.w3c.dom.Text
 import java.util.*
 import android.graphics.Typeface
-
-
+import com.niku.moneymate.CommonViewModelFactory
 
 
 private const val TAG = "CurrencyListFragment"
@@ -36,7 +32,7 @@ class CurrencyListFragment: Fragment() {
     private lateinit var currencyRecyclerView: RecyclerView
     private var adapter: CurrencyAdapter = CurrencyAdapter(emptyList())
 
-    private val viewModelFactory = CurrencyViewModelFactory()
+    private val viewModelFactory = CommonViewModelFactory()
 
     private val currencyListViewModel: CurrencyListViewModel by lazy {
         ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]

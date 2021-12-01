@@ -13,7 +13,10 @@ import java.util.*
 @Dao
 interface MoneyMateDao {
 
-    //@Query("SELECT account.id, account.title, account.balance, account.note, mainCurrency.title FROM account, mainCurrency WHERE account.currency_id = mainCurrency.id")
+    @Transaction
+    @Query("SELECT * FROM account")
+    fun getAllAccounts(): LiveData<List<Account>>
+
     @Transaction
     @Query("SELECT * FROM account")
     fun getAccounts(): LiveData<List<AccountWithCurrency>>

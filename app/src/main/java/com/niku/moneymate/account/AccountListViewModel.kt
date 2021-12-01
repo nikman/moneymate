@@ -7,6 +7,7 @@ import com.niku.moneymate.database.MoneyMateRepository
 class AccountListViewModel: ViewModel() {
 
     private val moneyMateRepository = MoneyMateRepository.get()
+    val accountListLiveData = moneyMateRepository.getAllAccounts()
     val accountWithCurrencyListLiveData = moneyMateRepository.getAccounts()
 
     fun addAccount(account: Account) {
