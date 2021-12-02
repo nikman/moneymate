@@ -61,10 +61,10 @@ class CategoryListFragment: Fragment() {
         categoryRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         categoryRecyclerView.layoutManager = LinearLayoutManager(context)
         categoryRecyclerView.adapter = adapter
-        categoryRecyclerView.addItemDecoration(
+        /*categoryRecyclerView.addItemDecoration(
             DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
                 .apply { setOrientation(1) }
-        )
+        )*/
 
         return view
 

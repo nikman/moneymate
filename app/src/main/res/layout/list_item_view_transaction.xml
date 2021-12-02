@@ -5,17 +5,22 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/account_title"
+        android:id="@+id/transaction_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/account_note"
+        android:id="@+id/transaction_account_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/account_currency"
+        android:id="@+id/transaction_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/transaction_account_currency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

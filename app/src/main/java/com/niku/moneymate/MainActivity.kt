@@ -26,7 +26,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
-            setCurrentFragment(AccountListFragment.newInstance())
+            setCurrentFragment(TransactionListFragment.newInstance())
         }
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
@@ -34,7 +34,7 @@ class MainActivity :
 
             when(it.itemId) {
 
-                R.id.budget->setCurrentFragment(AccountListFragment.newInstance())
+                R.id.budget->setCurrentFragment(TransactionListFragment.newInstance())
                 R.id.accounts->setCurrentFragment(AccountListFragment.newInstance())
                 R.id.categories->setCurrentFragment(CategoryListFragment.newInstance())
                 R.id.projects->setCurrentFragment(CategoryListFragment.newInstance())

@@ -37,6 +37,7 @@ class AccountFragment : Fragment() {
     private lateinit var titleField: EditText
     private lateinit var noteField: EditText
     private lateinit var currencyField: Spinner
+    private lateinit var isDefaultAccountCheckBox: CheckBox
     //private lateinit var currencyField: EditText
 
     private val accountDetailViewModel: AccountDetailViewModel by lazy {
@@ -62,6 +63,7 @@ class AccountFragment : Fragment() {
         titleField = view.findViewById(R.id.account_title) as EditText
         noteField = view.findViewById(R.id.account_note) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
+        isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
 
         val viewModelFactory = CommonViewModelFactory()
         val currencyListViewModel: CurrencyListViewModel by lazy {
@@ -152,6 +154,14 @@ class AccountFragment : Fragment() {
             }
         }
 
+        isDefaultAccountCheckBox.apply {
+            setOnCheckedChangeListener { _, isChecked ->
+                //currency.currency_is_default = isChecked
+                if (isChecked) {
+                    SharedPrefs().storeAccountId(context, account.account_id)
+                }
+            }
+        }
 
     }
 
@@ -166,6 +176,15 @@ class AccountFragment : Fragment() {
         noteField.setText(accountWithCurrency.account.note)
         currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
         //currencyField.setText(accountWithCurrency.currency.currency_title)
+
+        val uuidAsString = context?.applicationContext?.let {
+            SharedPrefs().getStoredAccountId(it) }
+
+        if (uuidAsString != null) {
+            isDefaultAccountCheckBox.isChecked =
+                uuidAsString.isNotEmpty() &&
+                        account.account_id == UUID.fromString(uuidAsString)
+        }
 
     }
 

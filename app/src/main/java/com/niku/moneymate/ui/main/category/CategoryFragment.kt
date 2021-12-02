@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryDetailViewModel
 import com.niku.moneymate.ui.main.common.MainViewModel
+import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
 private const val ARG_CATEGORY_ID = "category_id"
@@ -24,6 +26,7 @@ class CategoryFragment: Fragment() {
     private lateinit var category: Category
     private lateinit var titleField: EditText
     private lateinit var typeField: EditText
+    private lateinit var isDefaultCategoryCheckBox: CheckBox
     //private lateinit var noteField: EditText
 
     private val categoryDetailViewModel: CategoryDetailViewModel by lazy {
@@ -48,6 +51,7 @@ class CategoryFragment: Fragment() {
         val view = inflater.inflate(R.layout.category_fragment, container, false)
         titleField = view.findViewById(R.id.category_title)
         typeField = view.findViewById(R.id.category_type)
+        isDefaultCategoryCheckBox = view.findViewById(R.id.category_isDefault) as CheckBox
 
         return view
 
@@ -101,6 +105,15 @@ class CategoryFragment: Fragment() {
         }
         typeField.addTextChangedListener(typeWatcher)
 
+        isDefaultCategoryCheckBox.apply {
+            setOnCheckedChangeListener { _, isChecked ->
+                //currency.currency_is_default = isChecked
+                if (isChecked) {
+                    SharedPrefs().storeCategoryId(context, category.category_id)
+                }
+            }
+        }
+
     }
 
     override fun onStop() {
@@ -111,6 +124,16 @@ class CategoryFragment: Fragment() {
     private fun updateUI() {
         titleField.setText(category.category_title)
         typeField.setText(category.category_type.toString())
+
+        val uuidAsString = context?.applicationContext?.let {
+            SharedPrefs().getStoredCategoryId(it) }
+
+        if (uuidAsString != null) {
+            isDefaultCategoryCheckBox.isChecked =
+                uuidAsString.isNotEmpty() &&
+                        category.category_id == UUID.fromString(uuidAsString)
+        }
+
     }
 
     companion object {

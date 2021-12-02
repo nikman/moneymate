@@ -64,10 +64,10 @@ class AccountListFragment: Fragment() {
         accountRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         accountRecyclerView.layoutManager = LinearLayoutManager(context)
         accountRecyclerView.adapter = adapter
-        accountRecyclerView.addItemDecoration(
+        /*accountRecyclerView.addItemDecoration(
             DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
                 .apply { setOrientation(1) }
-        )
+        )*/
 
         return view
 

@@ -98,7 +98,7 @@ class TransactionListFragment: Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_account -> {
+            R.id.new_transaction -> {
                 Log.d(TAG,"new account pressed")
                 //val currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
 
@@ -111,7 +111,11 @@ class TransactionListFragment: Fragment() {
                         context?.applicationContext?.let {
                             SharedPrefs().getStoredCategoryId(it) }))
 
-                val account = Account(currency.currency_id)
+                val account = Account(
+                    currency.currency_id,"",0,"", UUID.fromString(
+                        context?.applicationContext?.let {
+                            SharedPrefs().getStoredAccountId(it) }))
+
                 val transaction = MoneyTransaction(
                     account.account_id, currency.currency_id, category.category_id)
                 transactionListViewModel.addTransaction(transaction)
@@ -153,7 +157,8 @@ class TransactionListFragment: Fragment() {
 
         private lateinit var transaction: TransactionWithProperties
 
-        private val dateButton: Button = itemView.findViewById(R.id.transaction_date)
+        private val dateTextView: TextView = itemView.findViewById(R.id.transaction_date)
+        private val accountTextView: TextView = itemView.findViewById(R.id.transaction_account_title)
         private val amountTextView: TextView = itemView.findViewById(R.id.transaction_amount)
         //private val noteTextView: TextView = itemView.findViewById(R.id.account_note)
         //private val currencySpinner: Spinner = itemView.findViewById(R.id.tra)
@@ -174,6 +179,8 @@ class TransactionListFragment: Fragment() {
             //titleTextView.text = this.account.account.title
             //noteTextView.text = this.account.account.note
             //currencyTextView.text = this.account.currency.currency_title
+            dateTextView.text = this.transaction.transaction.transactionDate.toString()
+            accountTextView.text = this.transaction.account.title
             amountTextView.text = this.transaction.transaction.amount.toString()
         }
 
