@@ -11,13 +11,16 @@ import com.niku.moneymate.ui.main.category.CategoryFragment
 import com.niku.moneymate.ui.main.category.CategoryListFragment
 import com.niku.moneymate.ui.main.currency.CurrencyFragment
 import com.niku.moneymate.ui.main.currency.CurrencyListFragment
+import com.niku.moneymate.ui.main.transaction.TransactionFragment
+import com.niku.moneymate.ui.main.transaction.TransactionListFragment
 import java.util.*
 
 class MainActivity :
     AppCompatActivity(),
     AccountListFragment.Callbacks,
     CurrencyListFragment.Callbacks,
-    CategoryListFragment.Callbacks {
+    CategoryListFragment.Callbacks,
+    TransactionListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +66,15 @@ class MainActivity :
 
     override fun onCategorySelected(categoryId: UUID) {
         val fragment = CategoryFragment.newInstance(categoryId)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun onTransactionSelected(transactionId: UUID) {
+        val fragment = TransactionFragment.newInstance(transactionId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, fragment)

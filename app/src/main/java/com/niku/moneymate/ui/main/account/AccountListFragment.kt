@@ -59,9 +59,9 @@ class AccountListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_account_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_common_list, container, false)
 
-        accountRecyclerView = view.findViewById(R.id.account_recycler_view) as RecyclerView
+        accountRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         accountRecyclerView.layoutManager = LinearLayoutManager(context)
         accountRecyclerView.adapter = adapter
         accountRecyclerView.addItemDecoration(

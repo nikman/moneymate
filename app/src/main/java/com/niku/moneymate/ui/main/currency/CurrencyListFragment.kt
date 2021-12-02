@@ -1,6 +1,7 @@
 package com.niku.moneymate.ui.main.currency
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -8,16 +9,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
-import android.graphics.Typeface
-import com.niku.moneymate.CommonViewModelFactory
 
 
 private const val TAG = "CurrencyListFragment"
@@ -59,15 +58,15 @@ class CurrencyListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_currency_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_common_list, container, false)
 
-        currencyRecyclerView = view.findViewById(R.id.currency_recycler_view) as RecyclerView
+        currencyRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         currencyRecyclerView.layoutManager = LinearLayoutManager(context)
         currencyRecyclerView.adapter = adapter
-        currencyRecyclerView.addItemDecoration(
+        /*currencyRecyclerView.addItemDecoration(
             DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
                 .apply { setOrientation(1) }
-        )
+        )*/
 
         return view
 

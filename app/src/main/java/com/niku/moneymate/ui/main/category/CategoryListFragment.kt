@@ -56,9 +56,9 @@ class CategoryListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_category_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_common_list, container, false)
 
-        categoryRecyclerView = view.findViewById(R.id.category_recycler_view) as RecyclerView
+        categoryRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         categoryRecyclerView.layoutManager = LinearLayoutManager(context)
         categoryRecyclerView.adapter = adapter
         categoryRecyclerView.addItemDecoration(
