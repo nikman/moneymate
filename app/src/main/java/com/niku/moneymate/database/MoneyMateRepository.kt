@@ -20,7 +20,7 @@ const val TAG = "MoneyMateRepository"
 class MoneyMateRepository private constructor(context: Context) {
 
     //private val context = context
-    private val migrationFrom_11_To_12: Migration = object : Migration(11, 12) {
+    private val migrationFrom11To12: Migration = object : Migration(11, 12) {
         override fun migrate(database: SupportSQLiteDatabase) {
             // https://developer.android.com/reference/android/arch/persistence/room/ColumnInfo
             /*
@@ -35,13 +35,13 @@ class MoneyMateRepository private constructor(context: Context) {
         }
     }
 
-    private val migrationFrom_12_To_13: Migration = object : Migration(12, 13) {
+    private val migrationFrom13To14: Migration = object : Migration(13, 14) {
         override fun migrate(database: SupportSQLiteDatabase) {
             // https://developer.android.com/reference/android/arch/persistence/room/ColumnInfo
             /*
             database.execSQL("ALTER TABLE pin "
                     + " ADD COLUMN is_location_accurate INTEGER")
-            database.execSQL("ALTER TABLE pin "
+            database.execSQL("ALTER TABLE account "
                     + " ADD COLUMN is_location_accurate INTEGER NOT NULL DEFAULT 0")
             database.execSQL("UPDATE pin "
                     + " SET is_location_accurate = 0 WHERE lat IS NULL")
@@ -71,7 +71,8 @@ class MoneyMateRepository private constructor(context: Context) {
                 }
             })*/
         .fallbackToDestructiveMigration()
-        .addMigrations(migrationFrom_11_To_12)
+        .addMigrations(migrationFrom11To12)
+        .addMigrations(migrationFrom13To14)
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()
