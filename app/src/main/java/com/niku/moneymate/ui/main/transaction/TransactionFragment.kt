@@ -122,6 +122,19 @@ class TransactionFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        val amountWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                /*val changedText = s.toString()
+                Log.d(TAG, "Changed text: $changedText")*/
+                moneyTransaction.amount = if (count > 0) s.toString().toDouble() else 0.0
+            }
+
+            override fun afterTextChanged(s: Editable?) {  }
+        }
+        amountField.addTextChangedListener(amountWatcher)
+
         accountField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -136,7 +149,6 @@ class TransactionFragment : Fragment() {
                 // Code to perform some action when nothing is selected
             }
         }
-
 
     }
 
