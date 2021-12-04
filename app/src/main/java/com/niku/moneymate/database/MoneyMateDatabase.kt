@@ -16,7 +16,7 @@ import com.niku.moneymate.transaction.MoneyTransaction
             Category::class,
             MoneyTransaction::class
         ]
-    , version = 14)
+    , version = 15)
 
 @TypeConverters(MoneyMateTypeConverters::class)
 

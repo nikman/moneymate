@@ -71,8 +71,8 @@ class MoneyMateRepository private constructor(context: Context) {
                 }
             })*/
         .fallbackToDestructiveMigration()
-        .addMigrations(migrationFrom11To12)
-        .addMigrations(migrationFrom13To14)
+        //.addMigrations(migrationFrom11To12)
+        //.addMigrations(migrationFrom13To14)
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()

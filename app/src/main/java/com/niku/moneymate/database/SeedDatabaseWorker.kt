@@ -1,9 +1,7 @@
 package com.niku.moneymate.database
 
 import android.content.Context
-import android.util.JsonReader
 import android.util.Log
-import androidx.annotation.RequiresPermission
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
@@ -11,8 +9,6 @@ import com.google.gson.reflect.TypeToken
 import com.niku.moneymate.currency.MainCurrency
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.File
 
 //const val TAG = "SeedDatabaseWorker"
 

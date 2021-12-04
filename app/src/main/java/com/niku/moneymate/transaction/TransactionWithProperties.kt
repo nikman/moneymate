@@ -1,10 +1,10 @@
 package com.niku.moneymate.transaction
 
-import androidx.room.*
+import androidx.room.Embedded
+import androidx.room.Relation
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
-import java.util.*
 
 data class TransactionWithProperties(
 

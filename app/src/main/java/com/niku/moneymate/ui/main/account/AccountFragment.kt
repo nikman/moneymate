@@ -24,7 +24,6 @@ import com.niku.moneymate.utils.SharedPrefs
 
 
 private const val ARG_ACCOUNT_ID = "account_id"
-//private const val ARG_CURRENCY_ID = "currency_id"
 private const val TAG = "AccountFragment"
 
 class AccountFragment : Fragment() {
@@ -37,22 +36,24 @@ class AccountFragment : Fragment() {
     private lateinit var titleField: EditText
     private lateinit var noteField: EditText
     private lateinit var currencyField: Spinner
+    private lateinit var balanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
-    //private lateinit var currencyField: EditText
 
     private val accountDetailViewModel: AccountDetailViewModel by lazy {
         ViewModelProvider(this)[AccountDetailViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        //currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
+
         currency = MainCurrency(
             UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
         account = Account(currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
         accountDetailViewModel.loadAccount(accountId)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +63,7 @@ class AccountFragment : Fragment() {
 
         titleField = view.findViewById(R.id.account_title) as EditText
         noteField = view.findViewById(R.id.account_note) as EditText
+        balanceField = view.findViewById(R.id.account_balance) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
 
@@ -154,6 +156,17 @@ class AccountFragment : Fragment() {
             }
         }
 
+        val balanceWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                account.balance = if (count > 0) s.toString().toDouble() else 0.0
+            }
+
+            override fun afterTextChanged(s: Editable?) {  }
+        }
+        balanceField.addTextChangedListener(balanceWatcher)
+
         isDefaultAccountCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 //currency.currency_is_default = isChecked
@@ -174,8 +187,8 @@ class AccountFragment : Fragment() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
+        balanceField.setText(accountWithCurrency.account.balance.toString())
         currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
-        //currencyField.setText(accountWithCurrency.currency.currency_title)
 
         val uuidAsString = context?.applicationContext?.let {
             SharedPrefs().getStoredAccountId(it) }

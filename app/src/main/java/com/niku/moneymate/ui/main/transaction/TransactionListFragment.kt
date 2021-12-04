@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -68,10 +69,6 @@ class TransactionListFragment: Fragment() {
         transactionRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         transactionRecyclerView.layoutManager = LinearLayoutManager(context)
         transactionRecyclerView.adapter = adapter
-        /*accountRecyclerView.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
-                .apply { setOrientation(1) }
-        )*/
 
         return view
 
@@ -99,13 +96,13 @@ class TransactionListFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_transaction -> {
-                Log.d(TAG,"new account pressed")
-                //val currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
+                Log.d(TAG,"new transaction pressed")
 
                 val currency = MainCurrency(
                         UUID.fromString(
                             context?.applicationContext?.let {
                                 SharedPrefs().getStoredCurrencyId(it) }))
+
                 val category = Category(0, "",
                     UUID.fromString(
                         context?.applicationContext?.let {
@@ -153,35 +150,36 @@ class TransactionListFragment: Fragment() {
     }
 
     private inner class TransactionHolder(view: View):
-        RecyclerView.ViewHolder(view), View.OnClickListener {
+        RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         private lateinit var transaction: TransactionWithProperties
 
         private val dateTextView: TextView = itemView.findViewById(R.id.transaction_date)
         private val accountTextView: TextView = itemView.findViewById(R.id.transaction_account_title)
         private val amountTextView: TextView = itemView.findViewById(R.id.transaction_amount)
-        //private val noteTextView: TextView = itemView.findViewById(R.id.account_note)
-        //private val currencySpinner: Spinner = itemView.findViewById(R.id.tra)
 
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View?) {
-
-            //Toast.makeText(context, "${account.title} pressed!", Toast.LENGTH_SHORT).show()
             callbacks?.onTransactionSelected(transaction.transaction.transaction_id)
+        }
 
+        override fun onLongClick(v: View?): Boolean {
+            Toast.makeText(context, "Long click", Toast.LENGTH_LONG).show()
+            return true
         }
 
         fun bind(transactionWithProperties: TransactionWithProperties) {
+
             this.transaction = transactionWithProperties
-            //titleTextView.text = this.account.account.title
-            //noteTextView.text = this.account.account.note
-            //currencyTextView.text = this.account.currency.currency_title
+
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
             accountTextView.text = this.transaction.account.title
             amountTextView.text = this.transaction.transaction.amount.toString()
+
         }
 
     }
@@ -189,7 +187,6 @@ class TransactionListFragment: Fragment() {
     private inner class TransactionAdapter(var transactionsWithProperties: List<TransactionWithProperties>): RecyclerView.Adapter<TransactionHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionHolder {
-            //val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)
             val itemView =
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_item_view_transaction, parent, false)
