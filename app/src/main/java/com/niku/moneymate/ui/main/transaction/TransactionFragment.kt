@@ -53,10 +53,6 @@ class TransactionFragment : Fragment() {
         ViewModelProvider(this)[TransactionDetailViewModel::class.java]
     }
 
-    private val accountDetailViewModel: AccountDetailViewModel by lazy {
-        ViewModelProvider(this)[AccountDetailViewModel::class.java]
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -156,10 +152,11 @@ class TransactionFragment : Fragment() {
                 /*val changedText = s.toString()
                 Log.d(TAG, "Changed text: $changedText")*/
                 moneyTransaction.amount = if (count > 0) s.toString().toDouble() else 0.0
-                if (!moneyTransaction.posted) {
+                /*if (!moneyTransaction.posted) {
                     moneyTransaction.posted = true
-                    account.balance = account.balance + (moneyTransaction.amount * category.category_type)
-                }
+                account.balance =
+                    account.balance + (moneyTransaction.amount * category.category_type)
+                }*/
             }
 
             override fun afterTextChanged(s: Editable?) {  }
@@ -213,9 +210,19 @@ class TransactionFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        moneyTransaction.posted = true
+        if (!moneyTransaction.posted) {
+
+            moneyTransaction.posted = true
+
+            val accountDetailViewModel: AccountDetailViewModel by lazy {
+                ViewModelProvider(this)[AccountDetailViewModel::class.java]
+            }
+            account.balance =
+                account.balance + (moneyTransaction.amount * category.category_type)
+            accountDetailViewModel.saveAccount(account)
+        }
         moneyTransactionDetailViewModel.saveTransaction(moneyTransaction)
-        accountDetailViewModel.saveAccount(account)
+
     }
 
     private fun updateUI() {
