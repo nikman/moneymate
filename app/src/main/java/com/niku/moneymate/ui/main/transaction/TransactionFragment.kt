@@ -210,7 +210,7 @@ class TransactionFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        if (!moneyTransaction.posted) {
+        /*if (!moneyTransaction.posted) {
 
             moneyTransaction.posted = true
 
@@ -220,7 +220,7 @@ class TransactionFragment : Fragment() {
             account.balance =
                 account.balance + (moneyTransaction.amount * category.category_type)
             accountDetailViewModel.saveAccount(account)
-        }
+        }*/
         moneyTransactionDetailViewModel.saveTransaction(moneyTransaction)
 
     }

@@ -90,8 +90,8 @@ class AccountFragment : Fragment() {
             viewLifecycleOwner,
             {
                 account -> account?.let {
-                    this.accountWithCurrency = account
-                    this.account = account.account
+                    this.accountWithCurrency = it
+                    this.account = it.account
                     updateUI()
                 }
             }
