@@ -114,7 +114,7 @@ class AccountFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val changedText = s.toString()
-                Log.d(TAG, "Changed text: $changedText")
+                //Log.d(TAG, "Changed text: $changedText")
                 account.title = changedText
             }
 
