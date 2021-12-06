@@ -89,6 +89,7 @@ class MoneyMateRepository private constructor(context: Context) {
     //fun getDefaultCurrency(): LiveData<MainCurrency?> = moneyMateDao.getDefaultCurrency()
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
     fun getTransaction(id: UUID): LiveData<TransactionWithProperties?> = moneyMateDao.getTransaction(id)
+    fun getAccountBalance(id: UUID): LiveData<Double?> = moneyMateDao.getAccountBalance(id)
 
     fun updateAccount(account: Account) {
         executor.execute {

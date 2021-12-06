@@ -27,4 +27,8 @@ class AccountDetailViewModel: ViewModel() {
         moneyMateRepository.updateAccount(account)
     }
 
+    fun getAccountBalance(id: UUID): LiveData<Double?> {
+        return moneyMateRepository.getAccountBalance(id)
+    }
+
 }

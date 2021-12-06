@@ -25,6 +25,9 @@ interface MoneyMateDao {
     @Query("SELECT * FROM account WHERE account_id=(:id)")
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
 
+    @Query("SELECT SUM(amount) FROM moneyTransaction WHERE account_id=(:id)")
+    fun getAccountBalance(id: UUID): LiveData<Double?>
+
     @Update
     fun updateAccount(account: Account)
 

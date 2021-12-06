@@ -18,7 +18,6 @@ import java.util.*
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
-import androidx.lifecycle.Observer
 import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.utils.SharedPrefs
 
@@ -38,6 +37,7 @@ class AccountFragment : Fragment() {
     private lateinit var currencyField: Spinner
     private lateinit var balanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
+    private var accountBalance: Double = 0.0
 
     private val accountDetailViewModel: AccountDetailViewModel by lazy {
         ViewModelProvider(this)[AccountDetailViewModel::class.java]
@@ -73,7 +73,7 @@ class AccountFragment : Fragment() {
         }
         currencyListViewModel.currencyListLiveData.observe(
             viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateCurrencyList(currencies) } }
+            { currencies -> currencies?.let { updateCurrencyList(currencies) } }
         )
 
         return view
@@ -94,6 +94,16 @@ class AccountFragment : Fragment() {
                     this.account = it.account
                     updateUI()
                 }
+            }
+        )
+
+        accountDetailViewModel.getAccountBalance(accountId).observe(
+            viewLifecycleOwner,
+            {
+                    account -> account?.let {
+                this.accountBalance = it
+                updateBalanceField()
+            }
             }
         )
 
@@ -187,7 +197,7 @@ class AccountFragment : Fragment() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
-        balanceField.setText(accountWithCurrency.account.balance.toString())
+        //balanceField.setText(accountWithCurrency.account.balance.toString())
         currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
 
         val uuidAsString = context?.applicationContext?.let {
@@ -201,11 +211,15 @@ class AccountFragment : Fragment() {
 
     }
 
+    private fun updateBalanceField() {
+        balanceField.setText(accountBalance.toString())
+    }
+
     private fun updateCurrencyList(currencies: List<MainCurrency>) {
 
         this.currencies = currencies
 
-        val currenciesStrings = List<String>(currencies.size)
+        val currenciesStrings = List(currencies.size)
             { i -> currencies[i].currency_title }
 
         val adapter: ArrayAdapter<*>
@@ -215,7 +229,7 @@ class AccountFragment : Fragment() {
             android.R.layout.simple_dropdown_item_1line,
             currenciesStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         currencyField.adapter = adapter
     }
 
