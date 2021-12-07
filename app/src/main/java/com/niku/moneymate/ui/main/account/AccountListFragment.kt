@@ -130,7 +130,7 @@ class AccountListFragment: Fragment() {
                     for (element in accounts) {
                         Log.i(
                             TAG,
-                            "Got elem ${element.account.title} # ${element.account.account_id} note: ${element.account.note} currency: ${element.currency.currency_id}")
+                            "Got elem ${element.account.title} # ${element.account.account_id} note: ${element.account.note} currency: ${element.currency.currency_id} balance: ${element.account.balance}")
                     }
                     updateUI(accounts)
                 }
