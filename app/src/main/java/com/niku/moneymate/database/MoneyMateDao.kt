@@ -55,7 +55,7 @@ interface MoneyMateDao {
                 "   acc.currency_id,cur.currency_code," +
                 "   cur.currency_title"
     )
-    fun getAccountsBalance(): LiveData<List<Double>>
+    fun getAccountsBalance(): LiveData<List<AccountWithCurrency>>
 
     @Update
     fun updateAccount(account: Account)
