@@ -25,4 +25,7 @@
     <string name="default_transaction_date">Wed Dec 02 00:33 EST 2021</string>
     <string name="new_transaction">Add transaction</string>
     <string name="category_default_label">Default</string>
+    <string name="account_initial_balance_label">Initial balance</string>
+    <string name="account_current_balance_label">Current balance</string>
+    <string name="account_initial_balance_hint">Enter initial balance</string>
 </resources>

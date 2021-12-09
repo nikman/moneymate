@@ -109,7 +109,7 @@ class TransactionListFragment: Fragment() {
                             SharedPrefs().getStoredCategoryId(it) }))
 
                 val account = Account(
-                    currency.currency_id,"",0.0,"", UUID.fromString(
+                    currency.currency_id,"",0.0, 0.0,"", UUID.fromString(
                         context?.applicationContext?.let {
                             SharedPrefs().getStoredAccountId(it) }))
 

@@ -8,7 +8,7 @@
     android:layout_margin="8dp"
     tools:context=".ui.main.account.AccountFragment">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="17dp"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/account_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView_account_note"
         android:layout_width="0dp"
         android:layout_height="18dp"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/account_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView_account_note"
         app:layout_constraintTop_toTopOf="@+id/textView_account_note" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView_account_currency"
         android:layout_width="0dp"
         android:layout_height="18dp"
@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="@+id/textView_account_note"
         app:layout_constraintTop_toBottomOf="@+id/textView_account_note" />
 
-    <Spinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,23 +67,54 @@
         app:layout_constraintTop_toTopOf="@+id/textView_account_currency"
         app:layout_constraintVertical_bias="0.0" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView_initial_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/account_initial_balance_label"
+        app:layout_constraintStart_toStartOf="@+id/textView_account_currency"
+        app:layout_constraintTop_toBottomOf="@+id/textView_account_currency" />
+
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/account_balance"
-        android:layout_width="match_parent"
+        android:id="@+id/account_initial_balance"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:ellipsize="middle"
-        android:hint="0.00"
+        android:inputType="numberSigned|number|numberDecimal"
+        android:textSize="28sp"
+        android:hint="@string/account_initial_balance_hint"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_initial_balance"
+        app:layout_constraintStart_toEndOf="@+id/textView_initial_balance"
+        app:layout_constraintTop_toTopOf="@+id/textView_initial_balance" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textView_current_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/account_current_balance_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_initial_balance" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/account_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:ellipsize="middle"
         android:inputType="numberSigned|number|numberDecimal"
         android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_account_currency"
-        app:layout_constraintTop_toBottomOf="@+id/textView_account_currency" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView_current_balance"
+        app:layout_constraintStart_toEndOf="@+id/textView_current_balance"
+        app:layout_constraintTop_toTopOf="@+id/textView_current_balance" />
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/account_isDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:text="@string/category_default_label"
         app:layout_constraintEnd_toEndOf="parent"

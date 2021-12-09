@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.CommonViewModelFactory
@@ -145,7 +144,7 @@ class AccountListFragment: Fragment() {
         private lateinit var account: AccountWithCurrency
 
         private val titleTextView: TextView = itemView.findViewById(R.id.account_title)
-        private val noteTextView: TextView = itemView.findViewById(R.id.account_note)
+        private val balanceTextView: TextView = itemView.findViewById(R.id.account_balance)
         private val currencyTextView: TextView = itemView.findViewById(R.id.account_currency)
 
         init {
@@ -162,7 +161,7 @@ class AccountListFragment: Fragment() {
         fun bind(account: AccountWithCurrency) {
             this.account = account
             titleTextView.text = this.account.account.title
-            noteTextView.text = this.account.account.note
+            balanceTextView.text = this.account.account.balance.toString()
             currencyTextView.text = this.account.currency.currency_title
         }
 

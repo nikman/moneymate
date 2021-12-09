@@ -26,18 +26,19 @@ interface MoneyMateDao {
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
 
     @Query(
-        "SELECT acc.balance + SUM(mt.amount * cat.category_type)" +
-                " FROM moneyTransaction AS mt" +
+        "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) as balance " +
+                " FROM account as acc " +
+                " LEFT JOIN moneyTransaction AS mt" +
+                " ON acc.account_id = mt.account_id " +
                 " LEFT JOIN category as cat" +
                 " ON mt.category_id = cat.category_id" +
-                " LEFT JOIN account as acc" +
-                " ON mt.account_id = acc.account_id" +
-                " WHERE mt.account_id=(:id)"
-    )
+                " WHERE mt.account_id=(:id)" +
+                " GROUP BY acc.account_id")
     fun getAccountBalance(id: UUID): LiveData<Double?>
 
     @Query(
-        "SELECT acc.balance + SUM(mt.amount * cat.category_type) AS balance," +
+        "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) AS balance," +
+                "   acc.initial_balance AS initial_balance," +
                 "   acc.title AS title," +
                 "   acc.note AS note," +
                 "   acc.account_id AS account_id," +
@@ -45,17 +46,16 @@ interface MoneyMateDao {
                 "   cur.currency_code AS currency_code," +
                 "   cur.currency_title AS currency_title" +
                 "   FROM account as acc" +
-                "   LEFT JOIN moneyTransaction AS mt " +
+                "       LEFT JOIN moneyTransaction AS mt " +
+                "           ON acc.account_id = mt.account_id" +
                 "       LEFT JOIN category as cat" +
-                "       ON mt.category_id = cat.category_id" +
-                "   ON acc.account_id = mt.account_id" +
-                "   LEFT JOIN mainCurrency AS cur" +
-                "   ON acc.currency_id = cur.currency_id" +
+                "           ON mt.category_id = cat.category_id" +
+                "       LEFT JOIN mainCurrency AS cur" +
+                "           ON acc.currency_id = cur.currency_id" +
                 "   GROUP BY acc.account_id,acc.title,acc.note," +
                 "   acc.currency_id,cur.currency_code," +
-                "   cur.currency_title"
-    )
-    fun getAccountsBalance(): LiveData<List<AccountWithCurrency>>
+                "   cur.currency_title")
+    fun getAccountsWithBalance(): LiveData<List<AccountWithCurrency>>
 
     @Update
     fun updateAccount(account: Account)

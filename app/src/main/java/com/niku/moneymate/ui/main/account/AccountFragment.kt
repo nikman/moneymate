@@ -36,7 +36,9 @@ class AccountFragment : Fragment() {
     private lateinit var noteField: EditText
     private lateinit var currencyField: Spinner
     private lateinit var balanceField: EditText
+    private lateinit var initialBalanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
+    private var initialAccountBalance: Double = 0.0
     private var accountBalance: Double = 0.0
 
     private val accountDetailViewModel: AccountDetailViewModel by lazy {
@@ -64,6 +66,7 @@ class AccountFragment : Fragment() {
         titleField = view.findViewById(R.id.account_title) as EditText
         noteField = view.findViewById(R.id.account_note) as EditText
         balanceField = view.findViewById(R.id.account_balance) as EditText
+        initialBalanceField = view.findViewById(R.id.account_initial_balance) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
 
@@ -166,16 +169,16 @@ class AccountFragment : Fragment() {
             }
         }
 
-        /*val balanceWatcher = object : TextWatcher {
+        val balanceWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                account.balance = if (count > 0) s.toString().toDouble() else 0.0
+                account.initial_balance = if (count > 0) s.toString().toDouble() else 0.0
             }
 
             override fun afterTextChanged(s: Editable?) {  }
-        }*/
-        //balanceField.addTextChangedListener(balanceWatcher)
+        }
+        initialBalanceField.addTextChangedListener(balanceWatcher)
 
         isDefaultAccountCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->
@@ -197,8 +200,7 @@ class AccountFragment : Fragment() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
-        //balanceField.setText(accountWithCurrency.account.balance.toString())
-        currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
+        initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
 
         val uuidAsString = context?.applicationContext?.let {
             SharedPrefs().getStoredAccountId(it) }
@@ -231,6 +233,9 @@ class AccountFragment : Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         currencyField.adapter = adapter
+
+        currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
+
     }
 
     companion object {

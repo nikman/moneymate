@@ -60,7 +60,7 @@ class TransactionFragment : Fragment() {
         currency = MainCurrency(
             UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
         account = Account(
-            currency.currency_id, "", 0.0, "", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredAccountId(it) }))
+            currency.currency_id, "", 0.0, 0.0,"", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredAccountId(it) }))
         category = Category(
             0, "", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCategoryId(it) }))
 

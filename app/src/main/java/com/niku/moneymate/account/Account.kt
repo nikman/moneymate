@@ -16,6 +16,7 @@ import java.util.*
 data class Account(
     var currency_id: UUID,
     var title: String = "",
+    var initial_balance: Double = 0.0,
     var balance: Double = 0.0,
     var note: String = "",
     @PrimaryKey val account_id: UUID = UUID.randomUUID()
