@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/transactionListFragment">
+
+    <fragment
+        android:id="@+id/accountListFragment"
+        android:name="com.niku.moneymate.ui.main.account.AccountListFragment"
+        android:label="AccountListFragment" >
+        <action
+            android:id="@+id/action_accountListFragment_to_categoryListFragment"
+            app:destination="@id/categoryListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/currencyListFragment"
+        android:name="com.niku.moneymate.ui.main.currency.CurrencyListFragment"
+        android:label="CurrencyListFragment" >
+        <action
+            android:id="@+id/action_currencyListFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionListFragment"
+        android:name="com.niku.moneymate.ui.main.transaction.TransactionListFragment"
+        android:label="TransactionListFragment" >
+        <action
+            android:id="@+id/action_transactionListFragment_to_accountListFragment"
+            app:destination="@id/accountListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryListFragment"
+        android:name="com.niku.moneymate.ui.main.category.CategoryListFragment"
+        android:label="CategoryListFragment" >
+        <action
+            android:id="@+id/action_categoryListFragment_to_currencyListFragment"
+            app:destination="@id/currencyListFragment"
+            app:popUpTo="@id/transactionListFragment" />
+    </fragment>
+</navigation>

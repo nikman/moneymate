@@ -4,6 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.niku.moneymate.ui.main.account.AccountFragment
 import com.niku.moneymate.ui.main.account.AccountListFragment
@@ -25,12 +29,12 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             setCurrentFragment(TransactionListFragment.newInstance())
-        }
+        }*/
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        bottomNavigationView.setOnItemSelectedListener  {
+        /*bottomNavigationView.setOnItemSelectedListener  {
 
             when(it.itemId) {
 
@@ -42,7 +46,21 @@ class MainActivity :
 
             }
             true
-        }
+        }*/
+        /*val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navigation_host) as NavHostFragment
+        val navController: NavController = navHostFragment.navController*/
+
+        val navController = findNavController(this, R.id.nav_host_fragment)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        val appBarConfiguration = AppBarConfiguration.Builder(setOf(
+            R.id.transactionListFragment,
+            R.id.accountListFragment,
+            R.id.categoryListFragment,
+            R.id.currencyListFragment)).build()
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        bottomNavigationView.setupWithNavController(navController)
 
     }
 
@@ -82,12 +100,12 @@ class MainActivity :
             .commit()
     }
 
-    private fun setCurrentFragment(fragment: Fragment) =
+    /*private fun setCurrentFragment(fragment: Fragment) =
         /*supportFragmentManager.beginTransaction().apply {
             replace(R.id.container, fragment)
             commit()*/
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)
             .commitNow()
-
+*/
 }
