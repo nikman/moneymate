@@ -86,6 +86,10 @@ class AccountFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel =
+            ViewModelProvider(
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+
         val accountId = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
         accountDetailViewModel.loadAccount(accountId)
 
@@ -110,13 +114,6 @@ class AccountFragment : Fragment() {
             }
         )
 
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel =
-            ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
     }
 
     override fun onStart() {

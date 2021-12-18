@@ -36,6 +36,7 @@ interface MoneyMateDao {
                 " GROUP BY acc.account_id")
     fun getAccountBalance(id: UUID): LiveData<Double?>
 
+    @RewriteQueriesToDropUnusedColumns
     @Query(
         "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) AS balance," +
                 "   acc.initial_balance AS initial_balance," +
