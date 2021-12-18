@@ -12,6 +12,7 @@
             android:id="@+id/action_accountListFragment_to_categoryListFragment"
             app:destination="@id/categoryListFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/currencyListFragment"
         android:name="com.niku.moneymate.ui.main.currency.CurrencyListFragment"
@@ -24,6 +25,7 @@
             app:popEnterAnim="@animator/nav_default_pop_enter_anim"
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
     </fragment>
+
     <fragment
         android:id="@+id/transactionListFragment"
         android:name="com.niku.moneymate.ui.main.transaction.TransactionListFragment"
@@ -32,6 +34,7 @@
             android:id="@+id/action_transactionListFragment_to_accountListFragment"
             app:destination="@id/accountListFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/categoryListFragment"
         android:name="com.niku.moneymate.ui.main.category.CategoryListFragment"
@@ -41,4 +44,5 @@
             app:destination="@id/currencyListFragment"
             app:popUpTo="@id/transactionListFragment" />
     </fragment>
+    
 </navigation>
