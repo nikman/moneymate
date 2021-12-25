@@ -289,13 +289,16 @@ class TransactionFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(transaction_id: UUID) : TransactionFragment {
+        /*fun newInstance(transaction_id: UUID) : TransactionFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_TRANSACTION_ID, transaction_id)
             }
             return TransactionFragment().apply {
                 arguments = args
             }
+        }*/
+        fun  newBundle(transaction_id: UUID): Bundle {
+            return Bundle().apply { putSerializable(ARG_TRANSACTION_ID, transaction_id) }
         }
     }
 

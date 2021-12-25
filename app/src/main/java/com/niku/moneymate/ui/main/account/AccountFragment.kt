@@ -236,13 +236,16 @@ class AccountFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(account_id: UUID) : AccountFragment {
+        /*fun newInstance(account_id: UUID) : AccountFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_ACCOUNT_ID, account_id)
             }
             return AccountFragment().apply {
                 arguments = args
             }
+        }*/
+        fun newBundle(account_id: UUID): Bundle {
+            return Bundle().apply { putSerializable(ARG_ACCOUNT_ID, account_id) }
         }
     }
 

@@ -30,9 +30,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    dataBinding { enabled = true }
 }
 
+def nav_version = "2.3.5"
+
 dependencies {
+
+    //classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-rc01"
 
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
@@ -45,13 +50,13 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation "com.google.code.gson:gson:2.8.9"
 
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
     // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.3.5")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
     // Testing Navigation
-    androidTestImplementation("androidx.navigation:navigation-testing:2.3.5")
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     // Jetpack Compose Integration
     //implementation("androidx.navigation:navigation-compose:")
 
@@ -62,3 +67,5 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-inline:2.25.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
+
+//apply plugin: "androidx.navigation.safeargs.kotlin"

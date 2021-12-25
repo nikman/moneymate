@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/transactionListFragment">
 
@@ -11,6 +12,9 @@
         <action
             android:id="@+id/action_accountListFragment_to_categoryListFragment"
             app:destination="@id/categoryListFragment" />
+        <action
+            android:id="@+id/action_accountListFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
     </fragment>
 
     <fragment
@@ -24,6 +28,9 @@
             app:exitAnim="@animator/nav_default_exit_anim"
             app:popEnterAnim="@animator/nav_default_pop_enter_anim"
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_currencyListFragment_to_currencyFragment"
+            app:destination="@id/currencyFragment" />
     </fragment>
 
     <fragment
@@ -33,6 +40,9 @@
         <action
             android:id="@+id/action_transactionListFragment_to_accountListFragment"
             app:destination="@id/accountListFragment" />
+        <action
+            android:id="@+id/action_transactionListFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment" />
     </fragment>
 
     <fragment
@@ -43,6 +53,49 @@
             android:id="@+id/action_categoryListFragment_to_currencyListFragment"
             app:destination="@id/currencyListFragment"
             app:popUpTo="@id/transactionListFragment" />
+        <action
+            android:id="@+id/action_categoryListFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
-    
+    <fragment
+        android:id="@+id/currencyFragment"
+        android:name="com.niku.moneymate.ui.main.currency.CurrencyFragment"
+        android:label="currency_fragment"
+        tools:layout="@layout/currency_fragment">
+
+        <action
+            android:id="@+id/action_currencyFragment_to_currencyListFragment"
+            app:destination="@id/currencyListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.niku.moneymate.ui.main.category.CategoryFragment"
+        android:label="category_fragment"
+        tools:layout="@layout/category_fragment" >
+        <action
+            android:id="@+id/action_categoryFragment_to_categoryListFragment"
+            app:destination="@id/categoryListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.niku.moneymate.ui.main.account.AccountFragment"
+        android:label="account_fragment"
+        tools:layout="@layout/account_fragment" >
+
+        <action
+            android:id="@+id/action_accountFragment_to_accountListFragment"
+            app:destination="@id/accountListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/transactionFragment"
+        android:name="com.niku.moneymate.ui.main.transaction.TransactionFragment"
+        android:label="money_transaction_fragment"
+        tools:layout="@layout/money_transaction_fragment" >
+        <action
+            android:id="@+id/action_transactionFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment" />
+    </fragment>
+
 </navigation>

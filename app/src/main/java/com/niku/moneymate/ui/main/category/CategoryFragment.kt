@@ -99,7 +99,7 @@ class CategoryFragment: Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //val changedText = s.toString()
-                category.category_type = if (count > 0) s.toString().toInt() else 0
+                category.category_type = if (count > 0 && s.toString() != "-") s.toString().toInt() else 0
             }
             override fun afterTextChanged(s: Editable?) { }
         }
@@ -137,13 +137,16 @@ class CategoryFragment: Fragment() {
     }
 
     companion object {
-        fun newInstance(category_id: UUID) : CategoryFragment {
-            val args = Bundle().apply {
+        fun newBundle(category_id: UUID) : Bundle {
+            /*val args = Bundle().apply {
                 putSerializable(ARG_CATEGORY_ID, category_id)
             }
 
             return CategoryFragment().apply {
                 arguments = args
+            }*/
+            return Bundle().apply {
+                putSerializable(ARG_CATEGORY_ID, category_id)
             }
         }
     }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.niku.moneymate.currency.MainCurrency
@@ -149,12 +150,18 @@ class CurrencyFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(currency_id: UUID) : CurrencyFragment {
+        /*fun newInstance(currency_id: UUID) : CurrencyFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_CURRENCY_ID, currency_id)
             }
             return CurrencyFragment().apply {
                 arguments = args
+            }
+        }*/
+        fun newBundle(currency_id: UUID): Bundle {
+            //return bundleOf("ARG_CURRENCY_ID" to currency_id)
+            return Bundle().apply {
+                putSerializable(ARG_CURRENCY_ID, currency_id)
             }
         }
     }
