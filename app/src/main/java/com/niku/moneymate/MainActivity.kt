@@ -31,27 +31,8 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        /*if (savedInstanceState == null) {
-            setCurrentFragment(TransactionListFragment.newInstance())
-        }*/
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-        /*bottomNavigationView.setOnItemSelectedListener  {
-
-            when(it.itemId) {
-
-                R.id.budget->setCurrentFragment(TransactionListFragment.newInstance())
-                R.id.accounts->setCurrentFragment(AccountListFragment.newInstance())
-                R.id.categories->setCurrentFragment(CategoryListFragment.newInstance())
-                R.id.projects->setCurrentFragment(CategoryListFragment.newInstance())
-                R.id.currencies->setCurrentFragment(CurrencyListFragment.newInstance())
-
-            }
-            true
-        }*/
-        /*val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.navigation_host) as NavHostFragment
-        val navController: NavController = navHostFragment.navController*/
 
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -81,12 +62,6 @@ class MainActivity :
     }
 
     override fun onAccountSelected(accountId: UUID) {
-        /*val fragment = AccountFragment.newInstance(accountId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()*/
         findNavController(this, R.id.nav_host_fragment).
         navigate(
             R.id.action_accountListFragment_to_accountFragment,
@@ -94,50 +69,24 @@ class MainActivity :
     }
 
     override fun onCurrencySelected(currencyId: UUID) {
-        /*val fragment = CurrencyFragment.newInstance(currencyId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()*/
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        navController.navigate(
+        findNavController(this, R.id.nav_host_fragment).
+        navigate(
             R.id.action_currencyListFragment_to_currencyFragment,
             CurrencyFragment.newBundle(currencyId))
     }
 
     override fun onCategorySelected(categoryId: UUID) {
-        /*val fragment = CategoryFragment.newInstance(categoryId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()*/
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        navController.navigate(
+        findNavController(this, R.id.nav_host_fragment).
+        navigate(
             R.id.action_categoryListFragment_to_categoryFragment,
             CategoryFragment.newBundle(categoryId))
     }
 
     override fun onTransactionSelected(transactionId: UUID) {
-        /*val fragment = TransactionFragment.newInstance(transactionId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()*/
         findNavController(this, R.id.nav_host_fragment).
             navigate(
                 R.id.action_transactionListFragment_to_transactionFragment,
                 TransactionFragment.newBundle(transactionId))
     }
 
-    /*private fun setCurrentFragment(fragment: Fragment) =
-        /*supportFragmentManager.beginTransaction().apply {
-            replace(R.id.container, fragment)
-            commit()*/
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .commitNow()
-*/
 }

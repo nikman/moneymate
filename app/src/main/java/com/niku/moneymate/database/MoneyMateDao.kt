@@ -6,6 +6,7 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
@@ -24,6 +25,10 @@ interface MoneyMateDao {
     @Transaction
     @Query("SELECT * FROM account WHERE account_id=(:id)")
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
+
+    @Transaction
+    @Query("SELECT * FROM project WHERE project_id=(:id)")
+    fun getProject(id: UUID): LiveData<Project?>
 
     @Query(
         "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) as balance " +
@@ -108,5 +113,14 @@ interface MoneyMateDao {
 
     @Insert
     fun addTransaction(transaction: MoneyTransaction)
+
+    @Update
+    fun updateProject(project: Project)
+
+    @Insert
+    fun addProject(project: Project)
+
+    @Transaction
+    fun getProjects(): LiveData<List<Project>>
 
 }

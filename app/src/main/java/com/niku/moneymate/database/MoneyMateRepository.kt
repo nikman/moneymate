@@ -9,6 +9,7 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
@@ -84,6 +85,7 @@ class MoneyMateRepository private constructor(context: Context) {
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
     fun getTransactions(): LiveData<List<TransactionWithProperties>> = moneyMateDao.getTransactions()
+    fun getProjects(): LiveData<List<Project>> = moneyMateDao.getProjects()
 
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?> = moneyMateDao.getAccount(id)
     fun getCurrency(id: UUID): LiveData<MainCurrency?> = moneyMateDao.getCurrency(id)
@@ -91,6 +93,7 @@ class MoneyMateRepository private constructor(context: Context) {
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
     fun getTransaction(id: UUID): LiveData<TransactionWithProperties?> = moneyMateDao.getTransaction(id)
     fun getAccountBalance(id: UUID): LiveData<Double?> = moneyMateDao.getAccountBalance(id)
+    fun getProject(id: UUID): LiveData<Project?> = moneyMateDao.getProject(id)
 
     fun updateAccount(account: Account) {
         executor.execute {
@@ -113,6 +116,12 @@ class MoneyMateRepository private constructor(context: Context) {
     fun updateTransaction(transaction: MoneyTransaction) {
         executor.execute {
             moneyMateDao.updateTransaction(transaction)
+        }
+    }
+
+    fun updateProject(project: Project) {
+        executor.execute {
+            moneyMateDao.updateProject(project)
         }
     }
 
@@ -143,6 +152,12 @@ class MoneyMateRepository private constructor(context: Context) {
     fun addTransaction(transaction: MoneyTransaction) {
         executor.execute {
             moneyMateDao.addTransaction(transaction)
+        }
+    }
+
+    fun addProject(project: Project) {
+        executor.execute {
+            moneyMateDao.addProject(project)
         }
     }
 
