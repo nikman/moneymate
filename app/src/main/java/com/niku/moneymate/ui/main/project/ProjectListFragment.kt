@@ -15,26 +15,28 @@ import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.projects.Project
+import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
 
-private const val TAG = "CurrencyListFragment"
+private const val TAG = "ProjectListFragment"
 
-class CurrencyListFragment: Fragment() {
+class ProjectListFragment: Fragment() {
 
     interface Callbacks {
-        fun onCurrencySelected(currencyId: UUID)
+        fun onProjectSelected(projectId: UUID)
     }
 
     private var callbacks: Callbacks? = null
-    private lateinit var currencyRecyclerView: RecyclerView
-    private var adapter: CurrencyAdapter = CurrencyAdapter(emptyList())
+    private lateinit var projectRecyclerView: RecyclerView
+    private var adapter: ProjectAdapter = ProjectAdapter(emptyList())
 
     private val viewModelFactory = CommonViewModelFactory()
 
-    private val currencyListViewModel: CurrencyListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
+    private val projectListViewModel: ProjectListViewModel by lazy {
+        ViewModelProvider(viewModelStore, viewModelFactory)[ProjectListViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +49,6 @@ class CurrencyListFragment: Fragment() {
         callbacks = context as Callbacks?
     }
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total accounts: ${accountListViewModel.accounts.size}")
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,13 +57,9 @@ class CurrencyListFragment: Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_common_list, container, false)
 
-        currencyRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
-        currencyRecyclerView.layoutManager = LinearLayoutManager(context)
-        currencyRecyclerView.adapter = adapter
-        /*currencyRecyclerView.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
-                .apply { setOrientation(1) }
-        )*/
+        projectRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
+        projectRecyclerView.layoutManager = LinearLayoutManager(context)
+        projectRecyclerView.adapter = adapter
 
         return view
 
@@ -74,9 +67,9 @@ class CurrencyListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        currencyListViewModel.currencyListLiveData.observe(
+        projectListViewModel.projectListLiveData.observe(
             viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateUI(currencies) } }
+            Observer { projects -> projects?.let { updateUI(projects) } }
         )
     }
 
@@ -87,58 +80,57 @@ class CurrencyListFragment: Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.fragment_currency_list, menu)
+        inflater.inflate(R.menu.fragment_project_list, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_currency -> {
-                Log.d(TAG,"new currency pressed")
-                //val currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
-                val currency = MainCurrency()
-                //val account = Account(currency.currency_id)
-                currencyListViewModel.addCurrency(currency)
-                callbacks?.onCurrencySelected(currency.currency_id)
+            R.id.new_project -> {
+                Log.d(TAG,"new project pressed")
+
+                val project = Project()
+
+                projectListViewModel.addProject(project)
+                callbacks?.onProjectSelected(project.project_id)
                 true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    private fun updateUI(currencies: List<MainCurrency>) {
+    private fun updateUI(projects: List<Project>) {
 
-        adapter = CurrencyAdapter(currencies)
-        currencyRecyclerView.adapter = adapter
+        adapter = ProjectAdapter(projects)
+        projectRecyclerView.adapter = adapter
 
     }
 
     override fun onStart() {
         super.onStart()
 
-        currencyListViewModel.currencyListLiveData.observe(
+        projectListViewModel.projectListLiveData.observe(
             viewLifecycleOwner,
-            Observer { currencies ->
-                currencies?.let {
-                    Log.i(TAG, "Got currencyLiveData ${currencies.size}")
-                    for (element in currencies) {
+            Observer { projects ->
+                projects?.let {
+                    Log.i(TAG, "Got projectLiveData ${projects.size}")
+                    for (element in projects) {
                         Log.i(
                             TAG,
-                            "Got elem ${element.currency_title} # ${element.currency_id}")
+                            "Got elem ${element.project_title} # ${element.project_id}")
                     }
-                    updateUI(currencies)
+                    updateUI(projects)
                 }
             }
         )
 
     }
 
-    private inner class CurrencyHolder(view: View):
+    private inner class ProjectHolder(view: View):
         RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private lateinit var currency: MainCurrency
+        private lateinit var project: Project
 
-        private val titleTextView: TextView = itemView.findViewById(R.id.currency_title)
-        private val codeTextView: TextView = itemView.findViewById(R.id.currency_code)
+        private val titleTextView: TextView = itemView.findViewById(R.id.project_title)
 
         init {
             itemView.setOnClickListener(this)
@@ -146,25 +138,22 @@ class CurrencyListFragment: Fragment() {
 
         override fun onClick(v: View?) {
 
-            //Toast.makeText(context, "${account.title} pressed!", Toast.LENGTH_SHORT).show()
-            callbacks?.onCurrencySelected(currency.currency_id)
+            callbacks?.onProjectSelected(project.project_id)
 
         }
 
-        fun bind(currency: MainCurrency) {
-            this.currency = currency
-            titleTextView.text = this.currency.currency_title
-            codeTextView.text = this.currency.currency_code.toString()
+        fun bind(project: Project) {
+            this.project = project
+            titleTextView.text = this.project.project_title
 
             val uuidAsString = context?.applicationContext?.let {
-                SharedPrefs().getStoredCurrencyId(it) }
+                SharedPrefs().getStoredProjectId(it) }
 
             if (uuidAsString != null) {
                 if (uuidAsString.isNotEmpty() &&
-                            currency.currency_id == UUID.fromString(uuidAsString)) {
-                    val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                    titleTextView.typeface = boldTypeface
-                    codeTextView.typeface = boldTypeface
+                    project.project_id == UUID.fromString(uuidAsString)) {
+                        val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                        titleTextView.typeface = boldTypeface
                 }
             }
 
@@ -172,34 +161,34 @@ class CurrencyListFragment: Fragment() {
 
     }
 
-    private inner class CurrencyAdapter(var currencies: List<MainCurrency>): RecyclerView.Adapter<CurrencyHolder>() {
+    private inner class ProjectAdapter(var projects: List<Project>): RecyclerView.Adapter<ProjectHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyHolder {
-            //val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectHolder {
+
             val itemView =
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_view_currency, parent, false)
+                    .inflate(R.layout.list_item_view_project, parent, false)
 
-            return CurrencyHolder(itemView)
+            return ProjectHolder(itemView)
         }
 
         override fun getItemCount() : Int {
-            val currenciesSize = currencies.size
-            Log.d(TAG, "currencies Size: $currenciesSize")
-            return currenciesSize
+            val projectsSize = projects.size
+            Log.d(TAG, "projects Size: $projectsSize")
+            return projectsSize
         }
 
-        override fun onBindViewHolder(holder: CurrencyHolder, position: Int) {
-            val currency = currencies[position]
-            //holder.apply { titleTextView.text = account.title }
+        override fun onBindViewHolder(holder: ProjectHolder, position: Int) {
+            val project = projects[position]
+
             Log.d(TAG, "Position: $position")
-            holder.bind(currency)
+            holder.bind(project)
         }
 
     }
 
     companion object {
-        fun newInstance(): CurrencyListFragment {return CurrencyListFragment()}
+        fun newInstance(): ProjectListFragment {return ProjectListFragment()}
     }
 }
 

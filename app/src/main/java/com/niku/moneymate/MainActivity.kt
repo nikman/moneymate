@@ -2,9 +2,6 @@ package com.niku.moneymate
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,6 +14,7 @@ import com.niku.moneymate.ui.main.category.CategoryFragment
 import com.niku.moneymate.ui.main.category.CategoryListFragment
 import com.niku.moneymate.ui.main.currency.CurrencyFragment
 import com.niku.moneymate.ui.main.currency.CurrencyListFragment
+import com.niku.moneymate.ui.main.project.ProjectListFragment
 import com.niku.moneymate.ui.main.transaction.TransactionFragment
 import com.niku.moneymate.ui.main.transaction.TransactionListFragment
 import java.util.*
@@ -26,7 +24,8 @@ class MainActivity :
     AccountListFragment.Callbacks,
     CurrencyListFragment.Callbacks,
     CategoryListFragment.Callbacks,
-    TransactionListFragment.Callbacks {
+    TransactionListFragment.Callbacks,
+    ProjectListFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +51,7 @@ class MainActivity :
                 R.id.budget->navController.navigate(R.id.transactionListFragment)
                 R.id.accounts->navController.navigate(R.id.accountListFragment)
                 R.id.categories->navController.navigate(R.id.categoryListFragment)
-                R.id.projects->navController.navigate(R.id.categoryListFragment) // todo
+                R.id.projects->navController.navigate(R.id.projectListFragment)
                 R.id.currencies->navController.navigate(R.id.currencyListFragment)
 
             }
@@ -87,6 +86,13 @@ class MainActivity :
             navigate(
                 R.id.action_transactionListFragment_to_transactionFragment,
                 TransactionFragment.newBundle(transactionId))
+    }
+
+    override fun onProjectSelected(projectId: UUID) {
+        findNavController(this, R.id.nav_host_fragment).
+        navigate(
+            R.id.action_projectListFragment_to_projectFragment,
+            TransactionFragment.newBundle(projectId))
     }
 
 }

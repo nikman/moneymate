@@ -9,7 +9,7 @@ class ProjectListViewModel: ViewModel() {
     private val moneyMateRepository = MoneyMateRepository.get()
     val projectListLiveData = moneyMateRepository.getProjects()
 
-    fun addCurrency(project: Project) {
+    fun addProject(project: Project) {
         moneyMateRepository.addProject(project)
     }
 

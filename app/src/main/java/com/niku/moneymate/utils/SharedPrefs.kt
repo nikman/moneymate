@@ -7,6 +7,7 @@ private const val KEY_NAME = "money-mate-shared-prefs-key"
 private const val CURRENCY_PREFS_KEY = "currency-code-key"
 private const val CATEGORY_PREFS_KEY = "category-code-key"
 private const val ACCOUNT_PREFS_KEY = "account-code-key"
+private const val PROJECT_PREFS_KEY = "project-code-key"
 
 class SharedPrefs {
 
@@ -37,6 +38,15 @@ class SharedPrefs {
 
     }
 
+    fun storeProjectId(context: Context, value: UUID) {
+
+        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor.putString(PROJECT_PREFS_KEY, value.toString())
+        editor.apply()
+
+    }
+
     fun getStoredCurrencyId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
@@ -55,6 +65,13 @@ class SharedPrefs {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
         return preferences.getString(ACCOUNT_PREFS_KEY, "")
+
+    }
+
+    fun getStoredProjectId(context: Context): String? {
+
+        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+        return preferences.getString(PROJECT_PREFS_KEY, "")
 
     }
 

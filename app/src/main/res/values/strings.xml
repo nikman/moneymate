@@ -28,4 +28,7 @@
     <string name="account_initial_balance_label">Initial balance</string>
     <string name="account_current_balance_label">Current balance</string>
     <string name="account_initial_balance_hint">Enter initial balance</string>
+    <string name="project_title_hint">Enter project tite</string>
+    <string name="project_title_label">Title</string>
+    <string name="new_project">New project</string>
 </resources>
