@@ -25,11 +25,17 @@
     <string name="bottom_nav_item_currencies">Валюты</string>
     <string name="default_transaction_date">Wed Dec 02 00:33 EST 2021</string>
     <string name="new_transaction">Добавить</string>
-    <string name="category_default_label">Default</string>
-    <string name="account_initial_balance_label">Initial balance</string>
-    <string name="account_current_balance_label">Current balance</string>
-    <string name="account_initial_balance_hint">Enter initial balance</string>
-    <string name="project_title_hint">Enter project tite</string>
-    <string name="project_title_label">Title</string>
+    <string name="category_default_label">По-умолчанию</string>
+    <string name="account_initial_balance_label">Начальный баланс</string>
+    <string name="account_current_balance_label">Текущий баланс</string>
+    <string name="account_initial_balance_hint">Введите начальный баланс</string>
+    <string name="project_title_hint">Введите имя проекта</string>
+    <string name="project_title_label">Имя</string>
     <string name="new_project">Новый проект</string>
+    <string name="project_default_label">По-умолчанию</string>
+    <string name="fragment_name_account">Счет</string>
+    <string name="fragment_name_transaction">Транзакция</string>
+    <string name="fragment_name_currency">Валюта</string>
+    <string name="fragment_name_project">Проект</string>
+    <string name="fragment_name_category">Категрия</string>
 </resources>

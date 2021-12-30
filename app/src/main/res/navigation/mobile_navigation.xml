@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/accountListFragment"
         android:name="com.niku.moneymate.ui.main.account.AccountListFragment"
-        android:label="AccountListFragment" >
+        android:label="@string/bottom_nav_item_accounts">
         <action
             android:id="@+id/action_accountListFragment_to_categoryListFragment"
             app:destination="@id/categoryListFragment" />
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/currencyListFragment"
         android:name="com.niku.moneymate.ui.main.currency.CurrencyListFragment"
-        android:label="CurrencyListFragment" >
+        android:label="@string/bottom_nav_item_currencies">
         <action
             android:id="@+id/action_currencyListFragment_to_transactionListFragment"
             app:destination="@id/transactionListFragment"
@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/transactionListFragment"
         android:name="com.niku.moneymate.ui.main.transaction.TransactionListFragment"
-        android:label="TransactionListFragment" >
+        android:label="@string/bottom_nav_item_budget">
         <action
             android:id="@+id/action_transactionListFragment_to_accountListFragment"
             app:destination="@id/accountListFragment" />
@@ -48,7 +48,7 @@
     <fragment
         android:id="@+id/categoryListFragment"
         android:name="com.niku.moneymate.ui.main.category.CategoryListFragment"
-        android:label="CategoryListFragment" >
+        android:label="@string/bottom_nav_item_categories">
         <action
             android:id="@+id/action_categoryListFragment_to_currencyListFragment"
             app:destination="@id/currencyListFragment"
@@ -63,7 +63,7 @@
     <fragment
         android:id="@+id/currencyFragment"
         android:name="com.niku.moneymate.ui.main.currency.CurrencyFragment"
-        android:label="currency_fragment"
+        android:label="@string/fragment_name_currency"
         tools:layout="@layout/currency_fragment">
 
         <action
@@ -73,8 +73,8 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.niku.moneymate.ui.main.category.CategoryFragment"
-        android:label="category_fragment"
-        tools:layout="@layout/category_fragment" >
+        android:label="@string/fragment_name_category"
+        tools:layout="@layout/category_fragment">
         <action
             android:id="@+id/action_categoryFragment_to_categoryListFragment"
             app:destination="@id/categoryListFragment" />
@@ -83,8 +83,8 @@
     <fragment
         android:id="@+id/accountFragment"
         android:name="com.niku.moneymate.ui.main.account.AccountFragment"
-        android:label="account_fragment"
-        tools:layout="@layout/account_fragment" >
+        android:label="@string/fragment_name_account"
+        tools:layout="@layout/account_fragment">
 
         <action
             android:id="@+id/action_accountFragment_to_accountListFragment"
@@ -94,8 +94,8 @@
     <fragment
         android:id="@+id/transactionFragment"
         android:name="com.niku.moneymate.ui.main.transaction.TransactionFragment"
-        android:label="money_transaction_fragment"
-        tools:layout="@layout/money_transaction_fragment" >
+        android:label="@string/fragment_name_transaction"
+        tools:layout="@layout/money_transaction_fragment">
         <action
             android:id="@+id/action_transactionFragment_to_transactionListFragment"
             app:destination="@id/transactionListFragment" />
@@ -103,7 +103,7 @@
     <fragment
         android:id="@+id/projectListFragment"
         android:name="com.niku.moneymate.ui.main.project.ProjectListFragment"
-        android:label="ProjectListFragment" >
+        android:label="@string/bottom_nav_item_projects">
         <action
             android:id="@+id/action_projectListFragment_to_projectFragment"
             app:destination="@id/projectFragment" />
@@ -111,7 +111,7 @@
     <fragment
         android:id="@+id/projectFragment"
         android:name="com.niku.moneymate.ui.main.project.ProjectFragment"
-        android:label="ProjectFragment" >
+        android:label="@string/fragment_name_project">
         <action
             android:id="@+id/action_projectFragment_to_projectListFragment"
             app:destination="@id/projectListFragment" />

@@ -8,12 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.R
-import com.niku.moneymate.currency.CurrencyDetailViewModel
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectDetailViewModel
 import com.niku.moneymate.ui.main.common.MainViewModel
@@ -46,7 +43,7 @@ class ProjectFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-        val view = inflater.inflate(R.layout.currency_fragment, container, false)
+        val view = inflater.inflate(R.layout.project_fragment, container, false)
 
         titleField = view.findViewById(R.id.project_title) as EditText
         isDefaultProjectCheckBox = view.findViewById(R.id.project_isDefault) as CheckBox
@@ -104,7 +101,7 @@ class ProjectFragment : Fragment() {
         isDefaultProjectCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    SharedPrefs().storeCurrencyId(context, project.project_id)
+                    SharedPrefs().storeProjectId(context, project.project_id)
                 }
             }
         }

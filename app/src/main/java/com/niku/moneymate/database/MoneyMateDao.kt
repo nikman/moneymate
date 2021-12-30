@@ -121,6 +121,7 @@ interface MoneyMateDao {
     fun addProject(project: Project)
 
     @Transaction
+    @Query("SELECT * FROM project")
     fun getProjects(): LiveData<List<Project>>
 
 }

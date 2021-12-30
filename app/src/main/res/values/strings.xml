@@ -31,4 +31,10 @@
     <string name="project_title_hint">Enter project tite</string>
     <string name="project_title_label">Title</string>
     <string name="new_project">New project</string>
+    <string name="project_default_label">Default</string>
+    <string name="fragment_name_account">Account</string>
+    <string name="fragment_name_transaction">Transaction</string>
+    <string name="fragment_name_currency">Currency</string>
+    <string name="fragment_name_project">Project</string>
+    <string name="fragment_name_category">Category</string>
 </resources>

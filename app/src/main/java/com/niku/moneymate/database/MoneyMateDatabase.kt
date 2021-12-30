@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.category.Category
+import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 
 @Database(
@@ -14,9 +15,10 @@ import com.niku.moneymate.transaction.MoneyTransaction
             Account::class,
             MainCurrency::class,
             Category::class,
-            MoneyTransaction::class
+            MoneyTransaction::class,
+            Project::class
         ]
-    , version = 17)
+    , version = 18)
 
 @TypeConverters(MoneyMateTypeConverters::class)
 

@@ -1,5 +1,7 @@
 package com.niku.moneymate.ui.main.transaction
 
+import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,6 +26,8 @@ import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.SharedPrefs
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
@@ -64,7 +68,8 @@ class TransactionFragment : Fragment() {
         category = Category(
             0, "", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCategoryId(it) }))
 
-        moneyTransaction = MoneyTransaction(account.account_id, currency.currency_id, category.category_id)
+        moneyTransaction = MoneyTransaction(
+            account.account_id, currency.currency_id, category.category_id)
         transactionWithProperties = TransactionWithProperties(moneyTransaction, account, currency, category)
 
         val moneyTransactionId: UUID = arguments?.getSerializable(ARG_TRANSACTION_ID) as UUID
@@ -144,6 +149,24 @@ class TransactionFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        dateButton.setOnClickListener {
+
+            val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener {
+                    _, year, monthOfYear, dayOfMonth ->
+                // Display Selected date in TextView
+                val selectedDate = GregorianCalendar(year, monthOfYear, dayOfMonth).time
+                //dateButton.text = "$dayOfMonth.${month+1}.$year"
+                dateButton.text = selectedDate.toString()
+                moneyTransaction.transactionDate = selectedDate
+            }, year, month, day)
+            dpd.show()
+        }
 
         val amountWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -228,6 +251,7 @@ class TransactionFragment : Fragment() {
     private fun updateUI() {
 
         amountField.setText(moneyTransaction.amount.toString())
+        dateButton.text = moneyTransaction.transactionDate.toString()
         accountField.setSelection(accounts.indexOf(account), true)
         currencyField.setSelection(currencies.indexOf(currency), true)
         categoryField.setSelection(categories.indexOf(category), true)
@@ -289,14 +313,7 @@ class TransactionFragment : Fragment() {
     }
 
     companion object {
-        /*fun newInstance(transaction_id: UUID) : TransactionFragment {
-            val args = Bundle().apply {
-                putSerializable(ARG_TRANSACTION_ID, transaction_id)
-            }
-            return TransactionFragment().apply {
-                arguments = args
-            }
-        }*/
+
         fun  newBundle(transaction_id: UUID): Bundle {
             return Bundle().apply { putSerializable(ARG_TRANSACTION_ID, transaction_id) }
         }

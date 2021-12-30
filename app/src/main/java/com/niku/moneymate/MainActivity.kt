@@ -8,12 +8,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.niku.moneymate.projects.Project
 import com.niku.moneymate.ui.main.account.AccountFragment
 import com.niku.moneymate.ui.main.account.AccountListFragment
 import com.niku.moneymate.ui.main.category.CategoryFragment
 import com.niku.moneymate.ui.main.category.CategoryListFragment
 import com.niku.moneymate.ui.main.currency.CurrencyFragment
 import com.niku.moneymate.ui.main.currency.CurrencyListFragment
+import com.niku.moneymate.ui.main.project.ProjectFragment
 import com.niku.moneymate.ui.main.project.ProjectListFragment
 import com.niku.moneymate.ui.main.transaction.TransactionFragment
 import com.niku.moneymate.ui.main.transaction.TransactionListFragment
@@ -92,7 +94,7 @@ class MainActivity :
         findNavController(this, R.id.nav_host_fragment).
         navigate(
             R.id.action_projectListFragment_to_projectFragment,
-            TransactionFragment.newBundle(projectId))
+            ProjectFragment.newBundle(projectId))
     }
 
 }
