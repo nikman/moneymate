@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.CommonViewModelFactory
@@ -60,6 +61,23 @@ class ProjectListFragment: Fragment() {
         projectRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         projectRecyclerView.layoutManager = LinearLayoutManager(context)
         projectRecyclerView.adapter = adapter
+
+        // swipe actions
+        val swipeRightCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val projectsAdapter: ProjectAdapter = viewHolder.bindingAdapter as ProjectAdapter
+                //projectsAdapter.adapterProjects
+            }
+        }
+
+        val swipeRightHelper = ItemTouchHelper(swipeRightCallback)
+        swipeRightHelper.attachToRecyclerView(projectRecyclerView)
 
         return view
 
@@ -162,6 +180,8 @@ class ProjectListFragment: Fragment() {
     }
 
     private inner class ProjectAdapter(var projects: List<Project>): RecyclerView.Adapter<ProjectHolder>() {
+
+        val adapterProjects = projects
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectHolder {
 

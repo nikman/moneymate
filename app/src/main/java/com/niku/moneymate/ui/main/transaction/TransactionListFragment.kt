@@ -176,7 +176,6 @@ class TransactionListFragment: Fragment() {
 
             this.transaction = transactionWithProperties
 
-            //dateTextView.text = this.transaction.transaction.transactionDate.toString()
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
             accountTextView.text = this.transaction.account.title
             amountTextView.text = this.transaction.transaction.amount.toString()
@@ -185,7 +184,9 @@ class TransactionListFragment: Fragment() {
 
     }
 
-    private inner class TransactionAdapter(var transactionsWithProperties: List<TransactionWithProperties>): RecyclerView.Adapter<TransactionHolder>() {
+    private inner class TransactionAdapter(
+        var transactionsWithProperties: List<TransactionWithProperties>):
+            RecyclerView.Adapter<TransactionHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionHolder {
             val itemView =
