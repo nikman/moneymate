@@ -71,8 +71,10 @@ class ProjectListFragment: Fragment() {
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val projectsAdapter: ProjectAdapter = viewHolder.bindingAdapter as ProjectAdapter
+                //val projectsAdapter: ProjectAdapter = viewHolder.bindingAdapter as ProjectAdapter
                 //projectsAdapter.adapterProjects
+                val projectHolder = viewHolder as ProjectHolder
+                //projectHolder.
             }
         }
 
@@ -181,7 +183,7 @@ class ProjectListFragment: Fragment() {
 
     private inner class ProjectAdapter(var projects: List<Project>): RecyclerView.Adapter<ProjectHolder>() {
 
-        val adapterProjects = projects
+        //val adapterProjects = projects
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectHolder {
 
