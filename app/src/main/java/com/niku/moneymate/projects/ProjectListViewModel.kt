@@ -13,4 +13,8 @@ class ProjectListViewModel: ViewModel() {
         moneyMateRepository.addProject(project)
     }
 
+    fun deleteProject(project: Project) {
+        moneyMateRepository.deleteProject(project)
+    }
+
 }
