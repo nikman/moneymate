@@ -124,4 +124,8 @@ interface MoneyMateDao {
     @Query("SELECT * FROM project")
     fun getProjects(): LiveData<List<Project>>
 
+    @Transaction
+    @Delete
+    fun deleteProject(project: Project)
+
 }

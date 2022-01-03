@@ -161,6 +161,10 @@ class MoneyMateRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteProject(project: Project) {
+        executor.execute { moneyMateDao.deleteProject(project) }
+    }
+
     companion object{
 
         private var INSTANCE: MoneyMateRepository? = null

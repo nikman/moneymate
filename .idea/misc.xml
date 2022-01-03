@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/drawable/ic_background_swipe_for_delete_item_background.xml" value="0.1" />
+        <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/drawable/ic_background_swipe_for_delete_item_foreground.xml" value="0.1" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/account_fragment.xml" value="0.4" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/account_list_fragment.xml" value="0.1" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/layout/currency_fragment.xml" value="0.1" />

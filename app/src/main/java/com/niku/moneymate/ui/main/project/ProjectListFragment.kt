@@ -1,6 +1,9 @@
 package com.niku.moneymate.ui.main.project
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +23,7 @@ import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
+import kotlin.math.roundToInt
 
 
 private const val TAG = "ProjectListFragment"
@@ -63,7 +67,14 @@ class ProjectListFragment: Fragment() {
         projectRecyclerView.adapter = adapter
 
         // swipe actions
-        val swipeRightCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        val trashBinIcon =
+            resources.getDrawable(
+                R.drawable.ic_background_swipe_for_delete_item_foreground, null)
+
+        //val textMargin = resources.getDimension(R.dimen.)
+
+        val swipeRightCallback = object: ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -73,8 +84,39 @@ class ProjectListFragment: Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 //val projectsAdapter: ProjectAdapter = viewHolder.bindingAdapter as ProjectAdapter
                 //projectsAdapter.adapterProjects
-                val projectHolder = viewHolder as ProjectHolder
+                //val projectHolder = viewHolder as ProjectHolder
                 //projectHolder.
+                //viewHolder.bindingAdapterPosition
+
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                c.clipRect(dX, viewHolder.itemView.top.toFloat(), 0f, viewHolder.itemView.bottom.toFloat())
+                c.drawColor(Color.RED)
+                trashBinIcon.bounds =
+                    Rect(
+                        dX.roundToInt(),
+                        viewHolder.itemView.top,
+                        trashBinIcon.intrinsicWidth,
+                        viewHolder.itemView.top + trashBinIcon.intrinsicHeight)
+                trashBinIcon.draw(c)
             }
         }
 
