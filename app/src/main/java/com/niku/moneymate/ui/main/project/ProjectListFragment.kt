@@ -69,7 +69,8 @@ class ProjectListFragment: Fragment() {
         // swipe actions
         val trashBinIcon =
             resources.getDrawable(
-                R.drawable.ic_background_swipe_for_delete_item_foreground, null)
+                //R.drawable.ic_background_swipe_for_delete_item_foreground, null)
+                R.drawable.ic_baseline_delete_forever_24, null)
 
         //val textMargin = resources.getDimension(R.dimen.)
 
@@ -109,11 +110,16 @@ class ProjectListFragment: Fragment() {
                     actionState,
                     isCurrentlyActive
                 )
-                c.clipRect(dX, viewHolder.itemView.top.toFloat(), 0f, viewHolder.itemView.bottom.toFloat())
+                c.clipRect(
+                    viewHolder.itemView.right.toFloat() + dX,
+                    viewHolder.itemView.top.toFloat(),
+                    viewHolder.itemView.right.toFloat(),
+                    viewHolder.itemView.bottom.toFloat())
                 c.drawColor(Color.RED)
+
                 trashBinIcon.bounds =
                     Rect(
-                        dX.roundToInt(),
+                        viewHolder.itemView.right + dX.roundToInt(),
                         viewHolder.itemView.top,
                         trashBinIcon.intrinsicWidth,
                         viewHolder.itemView.top + trashBinIcon.intrinsicHeight)
