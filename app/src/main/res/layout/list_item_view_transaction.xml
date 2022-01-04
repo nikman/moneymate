@@ -4,23 +4,28 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/transaction_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/transaction_account_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/transaction_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/transaction_account_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/transaction_project"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

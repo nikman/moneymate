@@ -1,7 +1,6 @@
 package com.niku.moneymate.ui.main.transaction
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,19 +14,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
-import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.account.AccountListViewModel
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryListViewModel
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.projects.Project
+import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.SharedPrefs
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
@@ -42,16 +40,19 @@ class TransactionFragment : Fragment() {
     private lateinit var currency: MainCurrency
     private lateinit var account: Account
     private lateinit var category: Category
+    private lateinit var project: Project
 
     private lateinit var currencies: List<MainCurrency>
     private lateinit var accounts: List<Account>
     private lateinit var categories: List<Category>
+    private lateinit var projects: List<Project>
 
     private lateinit var dateButton: Button
     private lateinit var accountField: Spinner
     private lateinit var currencyField: Spinner
     private lateinit var categoryField: Spinner
     private lateinit var amountField: EditText
+    private lateinit var projectField: Spinner
 
     private val moneyTransactionDetailViewModel: TransactionDetailViewModel by lazy {
         ViewModelProvider(this)[TransactionDetailViewModel::class.java]
@@ -63,14 +64,24 @@ class TransactionFragment : Fragment() {
 
         currency = MainCurrency(
             UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
+
         account = Account(
             currency.currency_id, "", 0.0, 0.0,"", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredAccountId(it) }))
+
         category = Category(
             0, "", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCategoryId(it) }))
 
+        project = Project(
+            "",
+            UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredProjectId(it) }))
+
         moneyTransaction = MoneyTransaction(
-            account.account_id, currency.currency_id, category.category_id)
-        transactionWithProperties = TransactionWithProperties(moneyTransaction, account, currency, category)
+            account.account_id, currency.currency_id, category.category_id, project.project_id)
+
+        project = Project("", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredProjectId(it) }))
+
+        transactionWithProperties =
+            TransactionWithProperties(moneyTransaction, account, currency, category, project)
 
         val moneyTransactionId: UUID = arguments?.getSerializable(ARG_TRANSACTION_ID) as UUID
         moneyTransactionDetailViewModel.loadTransaction(moneyTransactionId)
@@ -87,6 +98,7 @@ class TransactionFragment : Fragment() {
         currencyField = view.findViewById(R.id.currency_spinner) as Spinner
         amountField = view.findViewById(R.id.transaction_amount) as EditText
         categoryField = view.findViewById(R.id.category_spinner) as Spinner
+        projectField = view.findViewById(R.id.project_spinner) as Spinner
 
         val viewModelFactory = CommonViewModelFactory()
 
@@ -112,6 +124,14 @@ class TransactionFragment : Fragment() {
         categoryListViewModel.categoryListLiveData.observe(
             viewLifecycleOwner,
             Observer { categories -> categories?.let { updateCategoriesList(categories) } }
+        )
+
+        val projectListViewModel: ProjectListViewModel by lazy {
+            ViewModelProvider(viewModelStore, viewModelFactory)[ProjectListViewModel::class.java]
+        }
+        projectListViewModel.projectListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { projects -> projects?.let { updateProjectsList(projects) } }
         )
 
         return view
@@ -310,6 +330,24 @@ class TransactionFragment : Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryField.adapter = adapter
+    }
+
+    private fun updateProjectsList(projects: List<Project>) {
+
+        this.projects = projects
+
+        val projectsStrings = List<String>(projects.size)
+        { i -> projects[i].project_title }
+
+        val adapter: ArrayAdapter<*>
+
+        adapter = ArrayAdapter(
+            this.requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            projectsStrings)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        projectField.adapter = adapter
     }
 
     companion object {

@@ -5,6 +5,7 @@ import androidx.room.Relation
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.projects.Project
 
 data class TransactionWithProperties(
 
@@ -18,6 +19,9 @@ data class TransactionWithProperties(
     val currency: MainCurrency,
 
     @Relation(parentColumn = "category_id", entityColumn = "category_id")
-    val category: Category
+    val category: Category,
+
+    @Relation(parentColumn = "project_id", entityColumn = "project_id")
+    val project: Project
 
 )

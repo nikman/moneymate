@@ -23,12 +23,12 @@ interface MoneyMateDao {
     fun getAccounts(): LiveData<List<AccountWithCurrency>>
 
     @Transaction
-    @Query("SELECT * FROM account WHERE account_id=(:id)")
-    fun getAccount(id: UUID): LiveData<AccountWithCurrency?>
+    @Query("SELECT * FROM account WHERE account_id=(:account_id)")
+    fun getAccount(account_id: UUID): LiveData<AccountWithCurrency?>
 
     @Transaction
-    @Query("SELECT * FROM project WHERE project_id=(:id)")
-    fun getProject(id: UUID): LiveData<Project?>
+    @Query("SELECT * FROM project WHERE project_id=(:project_id)")
+    fun getProject(project_id: UUID): LiveData<Project?>
 
     @Query(
         "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) as balance " +
@@ -127,5 +127,11 @@ interface MoneyMateDao {
     @Transaction
     @Delete
     fun deleteProject(project: Project)
+
+    @Query("SELECT COUNT(transaction_id) FROM moneyTransaction WHERE category_id=(:category_id)")
+    fun getTransactionsCountByCategory(category_id: UUID): LiveData<Int?>
+
+    @Query("SELECT COUNT(transaction_id) FROM moneyTransaction WHERE project_id=(:project_id)")
+    fun getTransactionsCountByProject(project_id: UUID): LiveData<Int?>
 
 }

@@ -4,8 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -16,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.R
-import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.transaction.MoneyTransaction
@@ -114,7 +111,12 @@ class TransactionListFragment: Fragment() {
                             SharedPrefs().getStoredAccountId(it) }))
 
                 val transaction = MoneyTransaction(
-                    account.account_id, currency.currency_id, category.category_id)
+                    account.account_id,
+                    currency.currency_id,
+                    category.category_id,
+                    UUID.fromString(
+                        context?.applicationContext?.let {
+                            SharedPrefs().getStoredProjectId(it) }))
                 transactionListViewModel.addTransaction(transaction)
                 callbacks?.onTransactionSelected(transaction.transaction_id)
                 true
@@ -157,6 +159,7 @@ class TransactionListFragment: Fragment() {
         private val dateTextView: TextView = itemView.findViewById(R.id.transaction_date)
         private val accountTextView: TextView = itemView.findViewById(R.id.transaction_account_title)
         private val amountTextView: TextView = itemView.findViewById(R.id.transaction_amount)
+        private val projectTextView: TextView = itemView.findViewById(R.id.transaction_project)
 
         init {
             itemView.setOnClickListener(this)
@@ -179,6 +182,7 @@ class TransactionListFragment: Fragment() {
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
             accountTextView.text = this.transaction.account.title
             amountTextView.text = this.transaction.transaction.amount.toString()
+            projectTextView.text = this.transaction.project.project_title
 
         }
 

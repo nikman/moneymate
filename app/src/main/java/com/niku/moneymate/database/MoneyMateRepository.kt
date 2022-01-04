@@ -165,7 +165,15 @@ class MoneyMateRepository private constructor(context: Context) {
         executor.execute { moneyMateDao.deleteProject(project) }
     }
 
-    companion object{
+    fun getTransactionsCountByCategory(category_id: UUID) {
+        executor.execute { moneyMateDao.getTransactionsCountByCategory(category_id) }
+    }
+
+    fun getTransactionsCountByProject(project_id: UUID) {
+        executor.execute { moneyMateDao.getTransactionsCountByProject(project_id) }
+    }
+
+    companion object {
 
         private var INSTANCE: MoneyMateRepository? = null
 
