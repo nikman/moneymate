@@ -74,6 +74,7 @@ class MoneyMateRepository private constructor(context: Context) {
         .fallbackToDestructiveMigration()
         //.addMigrations(migrationFrom11To12)
         //.addMigrations(migrationFrom13To14)
+        .createFromAsset("database/$DATABASE_NAME.db")
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()

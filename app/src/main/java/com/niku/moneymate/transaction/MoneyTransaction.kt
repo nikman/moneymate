@@ -43,7 +43,7 @@ data class MoneyTransaction(
     @NonNull
     var category_id: UUID,
     @Nullable
-    var project_id: UUID,
+    var project_id: UUID?,
 
     @ColumnInfo(name = "transaction_date") var transactionDate: Date = Date(),
     @ColumnInfo(name = "amount") var amount: Double = 0.0,
