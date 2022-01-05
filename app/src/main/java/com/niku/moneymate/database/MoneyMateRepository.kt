@@ -16,9 +16,11 @@ import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
 import java.util.concurrent.Executors
 import androidx.room.RoomDatabase
+import com.niku.moneymate.R
 import com.niku.moneymate.utils.UUID_CURRENCY_EUR
 import com.niku.moneymate.utils.UUID_CURRENCY_RUB
 import com.niku.moneymate.utils.UUID_CURRENCY_USD
+import com.niku.moneymate.utils.UUID_PROJECT_EMPTY
 
 
 const val DATABASE_NAME = "money-mate-database"
@@ -27,6 +29,7 @@ const val TAG = "MoneyMateRepository"
 class MoneyMateRepository private constructor(context: Context) {
 
     private val context = context
+    private val executor = Executors.newSingleThreadExecutor()
 
     var rdc: RoomDatabase.Callback = object : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
@@ -38,6 +41,12 @@ class MoneyMateRepository private constructor(context: Context) {
                 moneyMateDao.addCurrency(currencyUsd)
                 val currencyEur = MainCurrency(UUID.fromString(UUID_CURRENCY_EUR), 978, "EUR")
                 moneyMateDao.addCurrency(currencyEur)
+
+                val projectEmpty =
+                    Project(
+                        context.resources.getString(R.string.empty_project_title),
+                        UUID.fromString(UUID_PROJECT_EMPTY))
+                moneyMateDao.addProject(projectEmpty)
             }
         }
 
@@ -57,7 +66,6 @@ class MoneyMateRepository private constructor(context: Context) {
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()
-    private val executor = Executors.newSingleThreadExecutor()
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
     fun getAccounts(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccounts()

@@ -37,4 +37,5 @@
     <string name="fragment_name_currency">Currency</string>
     <string name="fragment_name_project">Project</string>
     <string name="fragment_name_category">Category</string>
+    <string name="empty_project_title">Empty</string>
 </resources>

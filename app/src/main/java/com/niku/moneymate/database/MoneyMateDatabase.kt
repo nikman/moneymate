@@ -24,5 +24,4 @@ import com.niku.moneymate.transaction.MoneyTransaction
 
 abstract class MoneyMateDatabase: RoomDatabase() {
     abstract fun moneyMateDao(): MoneyMateDao
-
 }
