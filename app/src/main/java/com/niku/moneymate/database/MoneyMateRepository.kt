@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
@@ -19,8 +18,6 @@ import androidx.room.RoomDatabase
 import com.niku.moneymate.R
 import com.niku.moneymate.utils.*
 
-
-const val DATABASE_NAME = "money-mate-database"
 const val TAG = "MoneyMateRepository"
 
 class MoneyMateRepository private constructor(context: Context) {
@@ -32,11 +29,13 @@ class MoneyMateRepository private constructor(context: Context) {
         override fun onCreate(db: SupportSQLiteDatabase) {
             Log.d(TAG, "on create db")
             Executors.newSingleThreadScheduledExecutor().execute {
+
                 val currencyRub =
                     MainCurrency(
                         UUID.fromString(UUID_CURRENCY_RUB),
                         CODE_CURRENCY_RUB,
                         TITLE_CURRENCY_RUB)
+
                 moneyMateDao.addCurrency(currencyRub)
                 val currencyUsd =
                     MainCurrency(
@@ -44,6 +43,7 @@ class MoneyMateRepository private constructor(context: Context) {
                         CODE_CURRENCY_USD,
                         TITLE_CURRENCY_USD)
                 moneyMateDao.addCurrency(currencyUsd)
+
                 val currencyEur =
                     MainCurrency(
                         UUID.fromString(UUID_CURRENCY_EUR),
@@ -53,9 +53,37 @@ class MoneyMateRepository private constructor(context: Context) {
 
                 val projectEmpty =
                     Project(
-                        context.resources.getString(R.string.empty_project_title),
-                        UUID.fromString(UUID_PROJECT_EMPTY))
+                        context.resources.getString(R.string.predef_empty_project_title),
+                        UUID.fromString(UUID_PROJECT_EMPTY)
+                    )
                 moneyMateDao.addProject(projectEmpty)
+
+                val categoryFood =
+                    Category(
+                        CategoryType.OUTCOME,
+                        context.resources.getString(R.string.predef_category_title_food),
+                        UUID.fromString(UUID_CATEGORY_FOOD)
+                    )
+                moneyMateDao.addCategory(categoryFood)
+
+                val categorySalary =
+                    Category(
+                        CategoryType.INCOME,
+                        context.resources.getString(R.string.predef_category_title_salary),
+                        UUID.fromString(UUID_CATEGORY_SALARY)
+                    )
+                moneyMateDao.addCategory(categorySalary)
+
+                val accountCash =
+                    Account(
+                        UUID.fromString(UUID_CURRENCY_RUB),
+                        context.resources.getString(R.string.predef_account_title_cash),
+                        0.0,
+                        0.0,
+                        "",
+                        UUID.fromString(UUID_ACCOUNT_CASH)
+                    )
+                moneyMateDao.addAccount(accountCash)
             }
         }
 

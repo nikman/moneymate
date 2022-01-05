@@ -37,6 +37,9 @@
     <string name="fragment_name_transaction">Транзакция</string>
     <string name="fragment_name_currency">Валюта</string>
     <string name="fragment_name_project">Проект</string>
-    <string name="fragment_name_category">Категрия</string>
-    <string name="empty_project_title">Пусто</string>
+    <string name="fragment_name_category">Категория</string>
+    <string name="predef_empty_project_title">Пусто</string>
+    <string name="predef_category_title_food">Продукты</string>
+    <string name="predef_category_title_salary">ЗП</string>
+    <string name="predef_account_title_cash">Наличные</string>
 </resources>

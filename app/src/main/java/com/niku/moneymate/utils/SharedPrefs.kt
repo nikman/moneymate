@@ -50,28 +50,28 @@ class SharedPrefs {
     fun getStoredCurrencyId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(CURRENCY_PREFS_KEY, "")
+        return preferences.getString(CURRENCY_PREFS_KEY, UUID_CURRENCY_RUB)
 
     }
 
     fun getStoredCategoryId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(CATEGORY_PREFS_KEY, "")
+        return preferences.getString(CATEGORY_PREFS_KEY, UUID_CATEGORY_FOOD)
 
     }
 
     fun getStoredAccountId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(ACCOUNT_PREFS_KEY, "")
+        return preferences.getString(ACCOUNT_PREFS_KEY, UUID_ACCOUNT_CASH)
 
     }
 
     fun getStoredProjectId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(PROJECT_PREFS_KEY, "")
+        return preferences.getString(PROJECT_PREFS_KEY, UUID_PROJECT_EMPTY)
 
     }
 
