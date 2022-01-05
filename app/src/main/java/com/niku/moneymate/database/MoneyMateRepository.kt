@@ -1,6 +1,7 @@
 package com.niku.moneymate.database
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import androidx.room.migration.Migration
@@ -14,40 +15,34 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
 import java.util.concurrent.Executors
+import androidx.room.RoomDatabase
+import com.niku.moneymate.utils.UUID_CURRENCY_EUR
+import com.niku.moneymate.utils.UUID_CURRENCY_RUB
+import com.niku.moneymate.utils.UUID_CURRENCY_USD
+
 
 const val DATABASE_NAME = "money-mate-database"
 const val TAG = "MoneyMateRepository"
 
 class MoneyMateRepository private constructor(context: Context) {
 
-    //private val context = context
-    private val migrationFrom11To12: Migration = object : Migration(11, 12) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            // https://developer.android.com/reference/android/arch/persistence/room/ColumnInfo
-            /*
-            database.execSQL("ALTER TABLE pin "
-                    + " ADD COLUMN is_location_accurate INTEGER")
-            database.execSQL("ALTER TABLE pin "
-                    + " ADD COLUMN is_location_accurate INTEGER NOT NULL DEFAULT 0")
-            database.execSQL("UPDATE pin "
-                    + " SET is_location_accurate = 0 WHERE lat IS NULL")
-            database.execSQL("UPDATE pin "
-                    + " SET is_location_accurate = 1 WHERE lat IS NOT NULL")*/
-        }
-    }
+    private val context = context
 
-    private val migrationFrom13To14: Migration = object : Migration(13, 14) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            // https://developer.android.com/reference/android/arch/persistence/room/ColumnInfo
-            /*
-            database.execSQL("ALTER TABLE pin "
-                    + " ADD COLUMN is_location_accurate INTEGER")
-            database.execSQL("ALTER TABLE account "
-                    + " ADD COLUMN is_location_accurate INTEGER NOT NULL DEFAULT 0")
-            database.execSQL("UPDATE pin "
-                    + " SET is_location_accurate = 0 WHERE lat IS NULL")
-            database.execSQL("UPDATE pin "
-                    + " SET is_location_accurate = 1 WHERE lat IS NOT NULL")*/
+    var rdc: RoomDatabase.Callback = object : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            Log.d(TAG, "on create db")
+            Executors.newSingleThreadScheduledExecutor().execute {
+                val currencyRub = MainCurrency(UUID.fromString(UUID_CURRENCY_RUB), 643, "RUB")
+                moneyMateDao.addCurrency(currencyRub)
+                val currencyUsd = MainCurrency(UUID.fromString(UUID_CURRENCY_USD), 810, "USD")
+                moneyMateDao.addCurrency(currencyUsd)
+                val currencyEur = MainCurrency(UUID.fromString(UUID_CURRENCY_EUR), 978, "EUR")
+                moneyMateDao.addCurrency(currencyEur)
+            }
+        }
+
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            Log.d(TAG, "on open db")
         }
     }
 
@@ -55,26 +50,10 @@ class MoneyMateRepository private constructor(context: Context) {
             context.applicationContext,
             MoneyMateDatabase::class.java,
             DATABASE_NAME)
-        /*.addCallback(
-            object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    Log.d(TAG, "onCreate DB")
-                    val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
-                        .setInputData(workDataOf(SeedDatabaseWorker.KEY_FILENAME to SeedDatabaseWorker.CURRENCY_DATA_FILENAME))
-                        .build()
-                    WorkManager.getInstance(context).enqueue(request)
-                }
-
-                override fun onOpen(db: SupportSQLiteDatabase) {
-                    super.onOpen(db)
-                    Log.d(TAG, "onOpen database")
-                }
-            })*/
         .fallbackToDestructiveMigration()
         //.addMigrations(migrationFrom11To12)
-        //.addMigrations(migrationFrom13To14)
-        .createFromAsset("database/$DATABASE_NAME.db")
+        //.createFromAsset("database/$DATABASE_NAME.db")
+        .addCallback(rdc)
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()

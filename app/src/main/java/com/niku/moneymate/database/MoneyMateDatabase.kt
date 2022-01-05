@@ -18,10 +18,11 @@ import com.niku.moneymate.transaction.MoneyTransaction
             MoneyTransaction::class,
             Project::class
         ]
-    , version = 20)
+    , version = 2)
 
 @TypeConverters(MoneyMateTypeConverters::class)
 
 abstract class MoneyMateDatabase: RoomDatabase() {
     abstract fun moneyMateDao(): MoneyMateDao
+
 }
