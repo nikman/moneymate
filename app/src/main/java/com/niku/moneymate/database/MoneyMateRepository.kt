@@ -17,10 +17,7 @@ import java.util.*
 import java.util.concurrent.Executors
 import androidx.room.RoomDatabase
 import com.niku.moneymate.R
-import com.niku.moneymate.utils.UUID_CURRENCY_EUR
-import com.niku.moneymate.utils.UUID_CURRENCY_RUB
-import com.niku.moneymate.utils.UUID_CURRENCY_USD
-import com.niku.moneymate.utils.UUID_PROJECT_EMPTY
+import com.niku.moneymate.utils.*
 
 
 const val DATABASE_NAME = "money-mate-database"
@@ -35,11 +32,23 @@ class MoneyMateRepository private constructor(context: Context) {
         override fun onCreate(db: SupportSQLiteDatabase) {
             Log.d(TAG, "on create db")
             Executors.newSingleThreadScheduledExecutor().execute {
-                val currencyRub = MainCurrency(UUID.fromString(UUID_CURRENCY_RUB), 643, "RUB")
+                val currencyRub =
+                    MainCurrency(
+                        UUID.fromString(UUID_CURRENCY_RUB),
+                        CODE_CURRENCY_RUB,
+                        TITLE_CURRENCY_RUB)
                 moneyMateDao.addCurrency(currencyRub)
-                val currencyUsd = MainCurrency(UUID.fromString(UUID_CURRENCY_USD), 810, "USD")
+                val currencyUsd =
+                    MainCurrency(
+                        UUID.fromString(UUID_CURRENCY_USD),
+                        CODE_CURRENCY_USD,
+                        TITLE_CURRENCY_USD)
                 moneyMateDao.addCurrency(currencyUsd)
-                val currencyEur = MainCurrency(UUID.fromString(UUID_CURRENCY_EUR), 978, "EUR")
+                val currencyEur =
+                    MainCurrency(
+                        UUID.fromString(UUID_CURRENCY_EUR),
+                        CODE_CURRENCY_EUR,
+                        TITLE_CURRENCY_EUR)
                 moneyMateDao.addCurrency(currencyEur)
 
                 val projectEmpty =
