@@ -42,4 +42,7 @@
     <string name="predef_category_title_food">Essen</string>
     <string name="predef_category_title_salary">Salary</string>
     <string name="predef_account_title_cash">Bargeld</string>
+    <string name="transaction_account_label">Account</string>
+    <string name="transaction_category_label">Category</string>
+    <string name="transaction_project_label">Project</string>
 </resources>

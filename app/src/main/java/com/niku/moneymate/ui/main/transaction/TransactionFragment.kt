@@ -179,9 +179,7 @@ class TransactionFragment : Fragment() {
 
             val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener {
                     _, year, monthOfYear, dayOfMonth ->
-                // Display Selected date in TextView
                 val selectedDate = GregorianCalendar(year, monthOfYear, dayOfMonth).time
-                //dateButton.text = "$dayOfMonth.${month+1}.$year"
                 dateButton.text = selectedDate.toString()
                 moneyTransaction.transactionDate = selectedDate
             }, year, month, day)
@@ -192,14 +190,7 @@ class TransactionFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                /*val changedText = s.toString()
-                Log.d(TAG, "Changed text: $changedText")*/
                 moneyTransaction.amount = if (count > 0) s.toString().toDouble() else 0.0
-                /*if (!moneyTransaction.posted) {
-                    moneyTransaction.posted = true
-                account.balance =
-                    account.balance + (moneyTransaction.amount * category.category_type)
-                }*/
             }
 
             override fun afterTextChanged(s: Editable?) {  }
@@ -220,6 +211,7 @@ class TransactionFragment : Fragment() {
                 // Code to perform some action when nothing is selected
             }
         }
+
         currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -234,6 +226,7 @@ class TransactionFragment : Fragment() {
                 // Code to perform some action when nothing is selected
             }
         }
+
         categoryField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -253,17 +246,6 @@ class TransactionFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        /*if (!moneyTransaction.posted) {
-
-            moneyTransaction.posted = true
-
-            val accountDetailViewModel: AccountDetailViewModel by lazy {
-                ViewModelProvider(this)[AccountDetailViewModel::class.java]
-            }
-            account.balance =
-                account.balance + (moneyTransaction.amount * category.category_type)
-            accountDetailViewModel.saveAccount(account)
-        }*/
         moneyTransactionDetailViewModel.saveTransaction(moneyTransaction)
 
     }
@@ -307,7 +289,7 @@ class TransactionFragment : Fragment() {
 
         adapter = ArrayAdapter(
             this.requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
+            android.R.layout.simple_spinner_dropdown_item,
             currenciesStrings)
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
