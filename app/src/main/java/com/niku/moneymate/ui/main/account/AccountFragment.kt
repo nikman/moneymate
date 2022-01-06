@@ -10,6 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
@@ -20,6 +23,10 @@ import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.utils.SharedPrefs
+import com.github.mikephil.charting.data.LineDataSet
+
+
+
 
 
 private const val ARG_ACCOUNT_ID = "account_id"
@@ -38,6 +45,8 @@ class AccountFragment : Fragment() {
     private lateinit var balanceField: EditText
     private lateinit var initialBalanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
+    private lateinit var accountChartField: LineChart
+
     private var initialAccountBalance: Double = 0.0
     private var accountBalance: Double = 0.0
 
@@ -69,6 +78,7 @@ class AccountFragment : Fragment() {
         initialBalanceField = view.findViewById(R.id.account_initial_balance) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
+        accountChartField = view.findViewById(R.id.account_chart) as LineChart
 
         val viewModelFactory = CommonViewModelFactory()
         val currencyListViewModel: CurrencyListViewModel by lazy {
@@ -207,6 +217,20 @@ class AccountFragment : Fragment() {
                 uuidAsString.isNotEmpty() &&
                         account.account_id == UUID.fromString(uuidAsString)
         }
+
+        val entries: ArrayList<Entry> = ArrayList()
+
+        entries.add(Entry(1.0F, 10000F, "1"))
+        entries.add(Entry(2.0F, 12000F, "2"))
+        entries.add(Entry(3.0F, 7000F, "3"))
+        entries.add(Entry(4.0F, 9000F, "4"))
+
+        val lineDataSet = LineDataSet(entries, "Label")
+
+        val data = LineData(lineDataSet)
+        accountChartField.data = data
+
+        accountChartField.invalidate()
 
     }
 

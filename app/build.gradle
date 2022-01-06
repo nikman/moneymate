@@ -53,11 +53,11 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-    implementation "com.github.PhilJay:MPAndroidChart:v3.0.1"
+    implementation "com.github.PhilJay:MPAndroidChart:3.1.0"
 
     // Feature module Support
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-    implementation files('libs\\mpandroidchartlibrary-2-2-4.jar')
+    //implementation files('libs\\mpandroidchartlibrary-2-2-4.jar')
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     // Jetpack Compose Integration

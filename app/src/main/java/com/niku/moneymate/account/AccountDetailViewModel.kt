@@ -31,4 +31,8 @@ class AccountDetailViewModel: ViewModel() {
         return moneyMateRepository.getAccountBalance(id)
     }
 
+    fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>> {
+        return moneyMateRepository.getAccountExpensesData(account_id)
+    }
+
 }

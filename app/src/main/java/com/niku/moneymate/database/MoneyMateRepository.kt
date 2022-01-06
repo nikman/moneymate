@@ -198,6 +198,9 @@ class MoneyMateRepository private constructor(context: Context) {
         executor.execute { moneyMateDao.getTransactionsCountByProject(project_id) }
     }
 
+    fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>> =
+        moneyMateDao.getAccountExpensesData(account_id)
+
     companion object {
 
         private var INSTANCE: MoneyMateRepository? = null

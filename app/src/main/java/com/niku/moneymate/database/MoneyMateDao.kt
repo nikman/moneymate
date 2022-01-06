@@ -134,4 +134,7 @@ interface MoneyMateDao {
     @Query("SELECT COUNT(transaction_id) FROM moneyTransaction WHERE project_id=(:project_id)")
     fun getTransactionsCountByProject(project_id: UUID): LiveData<Int?>
 
+    @Query("SELECT amount FROM moneyTransaction WHERE account_id=(:account_id)")
+    fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>>
+
 }
