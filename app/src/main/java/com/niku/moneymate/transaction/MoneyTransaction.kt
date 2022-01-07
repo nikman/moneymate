@@ -17,11 +17,18 @@ import java.util.*
         ForeignKey(
             entity = Account::class,
             parentColumns = ["account_id"],
-            childColumns = ["account_id"]),
+            childColumns = ["account_id_from"],
+            onDelete = ForeignKey.SET_NULL),
+        ForeignKey(
+            entity = Account::class,
+            parentColumns = ["account_id"],
+            childColumns = ["account_id_to"],
+            onDelete = ForeignKey.SET_NULL),
         ForeignKey(
             entity = MainCurrency::class,
             parentColumns = ["currency_id"],
-            childColumns = ["currency_id"]),
+            childColumns = ["currency_id"],
+            onDelete = ForeignKey.SET_NULL),
         ForeignKey(
             entity = Category::class,
             parentColumns = ["category_id"],
@@ -29,7 +36,8 @@ import java.util.*
             onDelete = ForeignKey.SET_NULL)
     ],
     indices = [
-        Index("account_id"),
+        Index("account_id_from"),
+        Index("account_id_to"),
         Index("currency_id"),
         Index("category_id")
     ]
@@ -37,16 +45,19 @@ import java.util.*
 data class MoneyTransaction(
 
     @NonNull
-    var account_id: UUID,
+    var account_id_from: UUID,
+    @NonNull
+    var account_id_to: UUID,
     @NonNull
     var currency_id: UUID,
     @NonNull
     var category_id: UUID,
-    @Nullable
-    var project_id: UUID?,
+    @NonNull
+    var project_id: UUID,
 
     @ColumnInfo(name = "transaction_date") var transactionDate: Date = Date(),
-    @ColumnInfo(name = "amount") var amount: Double = 0.0,
+    @ColumnInfo(name = "amount_from") var amount_from: Double = 0.0,
+    @ColumnInfo(name = "amount_to") var amount_to: Double = 0.0,
     @ColumnInfo(name = "transaction_id") @PrimaryKey val transaction_id: UUID = UUID.randomUUID(),
     var posted: Boolean = false
 )

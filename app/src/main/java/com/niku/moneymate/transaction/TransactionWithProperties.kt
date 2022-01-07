@@ -12,8 +12,11 @@ data class TransactionWithProperties(
     @Embedded
     val transaction: MoneyTransaction,
 
-    @Relation(parentColumn = "account_id", entityColumn = "account_id")
-    val account: Account,
+    @Relation(parentColumn = "account_id_from", entityColumn = "account_id")
+    val accountFrom: Account,
+
+    @Relation(parentColumn = "account_id_to", entityColumn = "account_id")
+    val accountTo: Account,
 
     @Relation(parentColumn = "currency_id", entityColumn = "currency_id")
     val currency: MainCurrency,
