@@ -38,7 +38,8 @@ class TransactionFragment : Fragment() {
 
     private lateinit var moneyTransaction: MoneyTransaction
     private lateinit var currency: MainCurrency
-    private lateinit var account: Account
+    private lateinit var accountFrom: Account
+    private lateinit var accountTo: Account
     private lateinit var category: Category
     private lateinit var project: Project
 
@@ -48,7 +49,8 @@ class TransactionFragment : Fragment() {
     private lateinit var projects: List<Project>
 
     private lateinit var dateButton: Button
-    private lateinit var accountField: Spinner
+    private lateinit var accountFromField: Spinner
+    private lateinit var accountToField: Spinner
     private lateinit var currencyField: Spinner
     private lateinit var categoryField: Spinner
     private lateinit var amountField: EditText
@@ -63,25 +65,52 @@ class TransactionFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         currency = MainCurrency(
-            UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
+            UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
 
-        account = Account(
-            currency.currency_id, "", 0.0, 0.0,"", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredAccountId(it) }))
+        accountFrom = Account(
+            currency.currency_id,
+            "",
+            0.0,
+            0.0,
+            "",
+            UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+
+        accountTo = Account(
+            currency.currency_id,
+            "",
+            0.0,
+            0.0,
+            "",
+            UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
 
         category = Category(
-            0, "", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCategoryId(it) }))
+            0,
+            "",
+            UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
 
         project = Project(
             "",
-            UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredProjectId(it) }))
+            UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
 
         moneyTransaction = MoneyTransaction(
-            account.account_id, currency.currency_id, category.category_id, project.project_id)
+            accountFrom.account_id,
+            accountTo.account_id,
+            currency.currency_id,
+            category.category_id,
+            project.project_id)
 
-        project = Project("", UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredProjectId(it) }))
+        project = Project(
+            "",
+            UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
 
         transactionWithProperties =
-            TransactionWithProperties(moneyTransaction, account, currency, category, project)
+            TransactionWithProperties(
+                moneyTransaction,
+                accountFrom,
+                accountTo,
+                currency,
+                category,
+                project)
 
         val moneyTransactionId: UUID = arguments?.getSerializable(ARG_TRANSACTION_ID) as UUID
         moneyTransactionDetailViewModel.loadTransaction(moneyTransactionId)
@@ -94,7 +123,8 @@ class TransactionFragment : Fragment() {
         val view = inflater.inflate(R.layout.money_transaction_fragment, container, false)
 
         dateButton = view.findViewById(R.id.transaction_date) as Button
-        accountField = view.findViewById(R.id.account_spinner) as Spinner
+        accountFromField = view.findViewById(R.id.account_from_spinner) as Spinner
+        accountToField = view.findViewById(R.id.account_to_spinner) as Spinner
         currencyField = view.findViewById(R.id.currency_spinner) as Spinner
         amountField = view.findViewById(R.id.transaction_amount) as EditText
         categoryField = view.findViewById(R.id.category_spinner) as Spinner
@@ -150,7 +180,8 @@ class TransactionFragment : Fragment() {
                     transaction -> transaction?.let {
                 this.transactionWithProperties = transaction
                 this.moneyTransaction = transactionWithProperties.transaction
-                this.account = transactionWithProperties.account
+                this.accountFrom = transactionWithProperties.accountFrom
+                this.accountTo = transactionWithProperties.accountTo
                 this.currency = transactionWithProperties.currency
                 this.category = transactionWithProperties.category
                 updateUI()
@@ -190,21 +221,36 @@ class TransactionFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                moneyTransaction.amount = if (count > 0) s.toString().toDouble() else 0.0
+                moneyTransaction.amount_from = if (count > 0) s.toString().toDouble() else 0.0
             }
 
             override fun afterTextChanged(s: Editable?) {  }
         }
         amountField.addTextChangedListener(amountWatcher)
 
-        accountField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                moneyTransaction.account_id = accounts[position].account_id
+                moneyTransaction.account_id_from = accounts[position].account_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
+        accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                moneyTransaction.account_id_to = accounts[position].account_id
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -252,9 +298,10 @@ class TransactionFragment : Fragment() {
 
     private fun updateUI() {
 
-        amountField.setText(moneyTransaction.amount.toString())
+        amountField.setText(moneyTransaction.amount_from.toString())
         dateButton.text = moneyTransaction.transactionDate.toString()
-        accountField.setSelection(accounts.indexOf(account), true)
+        accountFromField.setSelection(accounts.indexOf(accountFrom), true)
+        accountToField.setSelection(accounts.indexOf(accountTo), true)
         currencyField.setSelection(currencies.indexOf(currency), true)
         categoryField.setSelection(categories.indexOf(category), true)
 
@@ -275,7 +322,8 @@ class TransactionFragment : Fragment() {
             accountsStrings)
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        accountField.adapter = adapter
+        accountFromField.adapter = adapter
+        accountToField.adapter = adapter
     }
 
     private fun updateCurrenciesList(currencies: List<MainCurrency>) {

@@ -30,37 +30,39 @@ interface MoneyMateDao {
     @Query("SELECT * FROM project WHERE project_id=(:project_id)")
     fun getProject(project_id: UUID): LiveData<Project?>
 
-    @Query(
-        "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) as balance " +
-                " FROM account as acc " +
-                " LEFT JOIN moneyTransaction AS mt" +
-                " ON acc.account_id = mt.account_id " +
-                " LEFT JOIN category as cat" +
-                " ON mt.category_id = cat.category_id" +
-                " WHERE mt.account_id=(:id)" +
-                " GROUP BY acc.account_id")
+    @Query("""
+        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * cat.category_type), 0.0) as balance
+        FROM account as acc
+        LEFT JOIN moneyTransaction AS mt
+        ON acc.account_id = mt.account_id_from
+        LEFT JOIN category as cat
+        ON mt.category_id = cat.category_id
+        WHERE mt.account_id_from=(:id)
+        GROUP BY acc.account_id
+        """)
     fun getAccountBalance(id: UUID): LiveData<Double?>
 
     @RewriteQueriesToDropUnusedColumns
-    @Query(
-        "SELECT acc.initial_balance + ifnull(SUM(mt.amount * cat.category_type), 0.0) AS balance," +
-                "   acc.initial_balance AS initial_balance," +
-                "   acc.title AS title," +
-                "   acc.note AS note," +
-                "   acc.account_id AS account_id," +
-                "   acc.currency_id AS currency_id," +
-                "   cur.currency_code AS currency_code," +
-                "   cur.currency_title AS currency_title" +
-                "   FROM account as acc" +
-                "       LEFT JOIN moneyTransaction AS mt " +
-                "           ON acc.account_id = mt.account_id" +
-                "       LEFT JOIN category as cat" +
-                "           ON mt.category_id = cat.category_id" +
-                "       LEFT JOIN mainCurrency AS cur" +
-                "           ON acc.currency_id = cur.currency_id" +
-                "   GROUP BY acc.account_id,acc.title,acc.note," +
-                "   acc.currency_id,cur.currency_code," +
-                "   cur.currency_title")
+    @Query("""
+        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * cat.category_type), 0.0) AS balance,
+            acc.initial_balance AS initial_balance,
+            acc.title AS title,
+            acc.note AS note,
+            acc.account_id AS account_id,
+            acc.currency_id AS currency_id,
+            cur.currency_code AS currency_code,
+            cur.currency_title AS currency_title
+        FROM account as acc
+        LEFT JOIN moneyTransaction AS mt 
+            ON acc.account_id = mt.account_id_from
+        LEFT JOIN category as cat
+            ON mt.category_id = cat.category_id
+        LEFT JOIN mainCurrency AS cur
+            ON acc.currency_id = cur.currency_id
+        GROUP BY acc.account_id,acc.title,acc.note,
+            acc.currency_id,cur.currency_code,
+            cur.currency_title
+            """)
     fun getAccountsWithBalance(): LiveData<List<AccountWithCurrency>>
 
     @Update
@@ -134,7 +136,7 @@ interface MoneyMateDao {
     @Query("SELECT COUNT(transaction_id) FROM moneyTransaction WHERE project_id=(:project_id)")
     fun getTransactionsCountByProject(project_id: UUID): LiveData<Int?>
 
-    @Query("SELECT amount FROM moneyTransaction WHERE account_id=(:account_id)")
+    @Query("SELECT amount_from FROM moneyTransaction WHERE account_id_from=(:account_id)")
     fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>>
 
 }

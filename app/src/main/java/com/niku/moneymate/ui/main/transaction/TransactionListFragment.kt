@@ -16,6 +16,7 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
@@ -106,17 +107,28 @@ class TransactionListFragment: Fragment() {
                             SharedPrefs().getStoredCategoryId(it) }))
 
                 val account = Account(
-                    currency.currency_id,"",0.0, 0.0,"", UUID.fromString(
-                        context?.applicationContext?.let {
-                            SharedPrefs().getStoredAccountId(it) }))
+                    currency.currency_id,
+                    "",
+                    0.0,
+                    0.0,
+                    "",
+                    UUID.fromString(
+                        SharedPrefs().getStoredAccountId(requireContext())))
+
+                val project = Project(
+                    "",
+                    UUID.fromString(
+                        SharedPrefs().getStoredProjectId(requireContext()))
+                )
 
                 val transaction = MoneyTransaction(
+                    account.account_id,
                     account.account_id,
                     currency.currency_id,
                     category.category_id,
                     UUID.fromString(
-                        context?.applicationContext?.let {
-                            SharedPrefs().getStoredProjectId(it) }))
+                        SharedPrefs().getStoredProjectId(requireContext())))
+
                 transactionListViewModel.addTransaction(transaction)
                 callbacks?.onTransactionSelected(transaction.transaction_id)
                 true
@@ -142,7 +154,7 @@ class TransactionListFragment: Fragment() {
                     for (element in transactions) {
                         Log.i(
                             TAG,
-                            "Got elem ${element.account.title} # ${element.account.account_id} ${element.transaction.amount} currency: ${element.currency.currency_title}")
+                            "Got elem ${element.accountFrom.title} # ${element.accountFrom.account_id} ${element.transaction.amount_from} currency: ${element.currency.currency_title}")
                     }
                     updateUI(transactions)
                 }
@@ -180,8 +192,8 @@ class TransactionListFragment: Fragment() {
             this.transaction = transactionWithProperties
 
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
-            accountTextView.text = this.transaction.account.title
-            amountTextView.text = this.transaction.transaction.amount.toString()
+            accountTextView.text = this.transaction.accountFrom.title
+            amountTextView.text = this.transaction.transaction.amount_from.toString()
             projectTextView.text = this.transaction.project.project_title
 
         }
