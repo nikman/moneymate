@@ -118,7 +118,7 @@ class ProjectFragment : Fragment() {
         titleField.setText(project.project_title)
 
         val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredCurrencyId(it) }
+            SharedPrefs().getStoredProjectId(it) }
 
         if (uuidAsString != null) {
             isDefaultProjectCheckBox.isChecked =
