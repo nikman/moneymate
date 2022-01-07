@@ -222,6 +222,7 @@ class TransactionFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 moneyTransaction.amount_from = if (count > 0) s.toString().toDouble() else 0.0
+                moneyTransaction.amount_to = -moneyTransaction.amount_from
             }
 
             override fun afterTextChanged(s: Editable?) {  }
