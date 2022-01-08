@@ -3,7 +3,7 @@ package com.niku.moneymate.database
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.room.Room
+import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
@@ -14,8 +14,8 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
 import java.util.concurrent.Executors
-import androidx.room.RoomDatabase
 import com.niku.moneymate.R
+import com.niku.moneymate.payee.Payee
 import com.niku.moneymate.utils.*
 
 const val TAG = "MoneyMateRepository"
@@ -103,6 +103,7 @@ class MoneyMateRepository private constructor(context: Context) {
         .build() // !
 
     private val moneyMateDao = database.moneyMateDao()
+    private val payeeDao = database.payeeDao()
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
     fun getAccounts(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccounts()
@@ -200,6 +201,14 @@ class MoneyMateRepository private constructor(context: Context) {
 
     fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>> =
         moneyMateDao.getAccountExpensesData(account_id)
+
+    fun getPayees(): LiveData<List<Payee>> = payeeDao.getPayees()
+
+    fun getPayee(payee_id: UUID): LiveData<Payee?> = payeeDao.getPayee(payee_id)
+
+    fun updatePayee(payee: Payee) = executor.execute{ payeeDao.updatePayee(payee) }
+
+    fun addPayee(payee: Payee) = executor.execute{ payeeDao.addPayee(payee) }
 
     companion object {
 

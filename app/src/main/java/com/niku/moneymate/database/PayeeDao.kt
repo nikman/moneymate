@@ -12,11 +12,11 @@ interface PayeeDao {
 
     @Transaction
     @Query("SELECT * FROM payee")
-    fun getAccounts(): LiveData<List<Payee>>
+    fun getPayees(): LiveData<List<Payee>>
 
     @Transaction
     @Query("SELECT * FROM payee WHERE payee_id=(:payee_id)")
-    fun getAccount(payee_id: UUID): LiveData<Payee?>
+    fun getPayee(payee_id: UUID): LiveData<Payee?>
 
     @Update
     fun updatePayee(payee: Payee)
