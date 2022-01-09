@@ -32,7 +32,7 @@ import com.github.mikephil.charting.data.LineDataSet
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"
 
-class AccountFragment : Fragment() {
+class AccountFragment: Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var account: Account

@@ -1,10 +1,17 @@
 package com.niku.moneymate.files
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.view.View
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
+import com.google.android.material.internal.ContextUtils.getActivity
 import java.io.File
+
+private const val TAG = "FileUtils"
 
 class FileUtils {
 
