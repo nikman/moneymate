@@ -25,10 +25,6 @@ import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.utils.SharedPrefs
 import com.github.mikephil.charting.data.LineDataSet
 
-
-
-
-
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"
 
