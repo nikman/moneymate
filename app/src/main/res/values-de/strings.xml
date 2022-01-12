@@ -45,4 +45,6 @@
     <string name="transaction_account_label">Account</string>
     <string name="transaction_category_label">Category</string>
     <string name="transaction_project_label">Project</string>
+    <string name="btn_load_from_cvs_title">Load from CVS</string>
+    <string name="settings_menu_title">Settings</string>
 </resources>

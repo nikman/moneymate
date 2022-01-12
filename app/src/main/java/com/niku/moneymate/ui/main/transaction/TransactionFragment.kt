@@ -68,29 +68,18 @@ class TransactionFragment : Fragment() {
             UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
 
         accountFrom = Account(
-            currency.currency_id,
-            "",
-            0.0,
-            0.0,
-            "",
-            UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+            currency_id = currency.currency_id,
+            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
 
         accountTo = Account(
-            currency.currency_id,
-            "",
-            0.0,
-            0.0,
-            "",
-            UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+            currency_id = currency.currency_id,
+            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
 
         category = Category(
-            0,
-            "",
-            UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
+            category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
 
         project = Project(
-            "",
-            UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
+            project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
 
         moneyTransaction = MoneyTransaction(
             accountFrom.account_id,
@@ -98,10 +87,6 @@ class TransactionFragment : Fragment() {
             currency.currency_id,
             category.category_id,
             project.project_id)
-
-        project = Project(
-            "",
-            UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
 
         transactionWithProperties =
             TransactionWithProperties(

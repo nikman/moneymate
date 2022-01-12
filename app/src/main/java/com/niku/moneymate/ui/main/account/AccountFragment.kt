@@ -25,14 +25,10 @@ import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.utils.SharedPrefs
 import com.github.mikephil.charting.data.LineDataSet
 
-
-
-
-
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"
 
-class AccountFragment : Fragment() {
+class AccountFragment: Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
@@ -59,7 +55,7 @@ class AccountFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         currency = MainCurrency(
-            UUID.fromString(context?.applicationContext?.let { SharedPrefs().getStoredCurrencyId(it) }))
+            UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
         account = Account(currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID

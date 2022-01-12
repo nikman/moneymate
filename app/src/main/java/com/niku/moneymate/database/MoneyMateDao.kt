@@ -42,6 +42,7 @@ interface MoneyMateDao {
         """)
     fun getAccountBalance(id: UUID): LiveData<Double?>
 
+    @Transaction
     @RewriteQueriesToDropUnusedColumns
     @Query("""
         SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * cat.category_type), 0.0) AS balance,
