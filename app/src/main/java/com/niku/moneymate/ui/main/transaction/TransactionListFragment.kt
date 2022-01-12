@@ -29,6 +29,7 @@ class TransactionListFragment: Fragment() {
 
     interface Callbacks {
         fun onTransactionSelected(transactionId: UUID)
+        fun onSettingsSelected()
     }
 
     private var callbacks: Callbacks? = null
@@ -131,6 +132,10 @@ class TransactionListFragment: Fragment() {
 
                 transactionListViewModel.addTransaction(transaction)
                 callbacks?.onTransactionSelected(transaction.transaction_id)
+                true
+            }
+            R.id.settings -> {
+                callbacks?.onSettingsSelected()
                 true
             }
             else -> return super.onOptionsItemSelected(item)

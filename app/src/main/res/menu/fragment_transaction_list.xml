@@ -7,4 +7,10 @@
         android:title="@string/new_transaction"
         app:showAsAction="ifRoom|withText"/>
 
+    <item
+        android:id="@+id/settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/settings_menu_title"
+        app:showAsAction="ifRoom|withText"/>
+
 </menu>

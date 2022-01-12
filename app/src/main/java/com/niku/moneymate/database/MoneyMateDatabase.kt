@@ -20,10 +20,11 @@ import com.niku.moneymate.transaction.MoneyTransaction
             Project::class,
             Payee::class
         ]
-    , version = 3, exportSchema = false)
+    , version = 4, exportSchema = false)
 
 @TypeConverters(MoneyMateTypeConverters::class)
 
 abstract class MoneyMateDatabase: RoomDatabase() {
     abstract fun moneyMateDao(): MoneyMateDao
+    abstract fun payeeDao(): PayeeDao
 }

@@ -1,7 +1,9 @@
 package com.niku.moneymate
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,9 +19,12 @@ import com.niku.moneymate.ui.main.currency.CurrencyFragment
 import com.niku.moneymate.ui.main.currency.CurrencyListFragment
 import com.niku.moneymate.ui.main.project.ProjectFragment
 import com.niku.moneymate.ui.main.project.ProjectListFragment
+import com.niku.moneymate.ui.main.settings.MainSettingsFragment
 import com.niku.moneymate.ui.main.transaction.TransactionFragment
 import com.niku.moneymate.ui.main.transaction.TransactionListFragment
 import java.util.*
+
+private const val TAG = "MainActivity"
 
 class MainActivity :
     AppCompatActivity(),
@@ -62,6 +67,14 @@ class MainActivity :
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 111 && resultCode == RESULT_OK) {
+            val selectedFile = data?.data
+            selectedFile?.let { Log.d(TAG, it.toString()) }
+        }
+    }
+
     override fun onAccountSelected(accountId: UUID) {
         findNavController(this, R.id.nav_host_fragment).
         navigate(
@@ -97,4 +110,10 @@ class MainActivity :
             ProjectFragment.newBundle(projectId))
     }
 
+    override fun onSettingsSelected() {
+        findNavController(this, R.id.nav_host_fragment).
+        navigate(
+            R.id.action_transactionListFragment_to_mainSettingsFragment,
+            MainSettingsFragment.newBundle())
+    }
 }

@@ -13,7 +13,6 @@ class MoneyMateTypeConverters {
     fun fromUUID(uuid: UUID?): String? = uuid?.toString()
 
     @TypeConverter
-
     fun fromDate(date: Date?): Long? = date?.time
 
     @TypeConverter

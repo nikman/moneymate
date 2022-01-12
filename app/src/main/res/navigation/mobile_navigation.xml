@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_transactionListFragment_to_transactionFragment"
             app:destination="@id/transactionFragment" />
+        <action
+            android:id="@+id/action_transactionListFragment_to_mainSettingsFragment"
+            app:destination="@id/mainSettingsFragment" />
     </fragment>
 
     <fragment
@@ -69,6 +72,9 @@
         <action
             android:id="@+id/action_currencyFragment_to_currencyListFragment"
             app:destination="@id/currencyListFragment" />
+        <action
+            android:id="@+id/action_currencyFragment_to_mainSettingsFragment"
+            app:destination="@id/mainSettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
@@ -78,6 +84,9 @@
         <action
             android:id="@+id/action_categoryFragment_to_categoryListFragment"
             app:destination="@id/categoryListFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_mainSettingsFragment"
+            app:destination="@id/mainSettingsFragment" />
     </fragment>
 
     <fragment
@@ -89,6 +98,9 @@
         <action
             android:id="@+id/action_accountFragment_to_accountListFragment"
             app:destination="@id/accountListFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_mainSettingsFragment"
+            app:destination="@id/mainSettingsFragment" />
     </fragment>
 
     <fragment
@@ -99,6 +111,9 @@
         <action
             android:id="@+id/action_transactionFragment_to_transactionListFragment"
             app:destination="@id/transactionListFragment" />
+        <action
+            android:id="@+id/action_transactionFragment_to_mainSettingsFragment"
+            app:destination="@id/mainSettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/projectListFragment"
@@ -115,6 +130,17 @@
         <action
             android:id="@+id/action_projectFragment_to_projectListFragment"
             app:destination="@id/projectListFragment" />
+        <action
+            android:id="@+id/action_projectFragment_to_mainSettingsFragment"
+            app:destination="@id/mainSettingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainSettingsFragment"
+        android:name="com.niku.moneymate.ui.main.settings.MainSettingsFragment"
+        android:label="MainSettingsFragment" >
+        <action
+            android:id="@+id/action_mainSettingsFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment" />
     </fragment>
 
 </navigation>
