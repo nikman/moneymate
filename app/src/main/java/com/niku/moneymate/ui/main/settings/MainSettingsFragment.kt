@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.internal.ContextUtils
 import com.niku.moneymate.R
 import com.niku.moneymate.databinding.MainSettingsFragmentBinding
@@ -17,9 +18,13 @@ import java.util.*
 
 private const val TAG = "MainSettingsFragment"
 
-class MainSettingsFragment: Fragment() {
+class MainSettingsFragment: PreferenceFragmentCompat() {
 
-    fun interface Callbacks {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preference_screen, rootKey)
+    }
+
+    /*fun interface Callbacks {
         fun onLoadFromCSVClick()
     }
 
@@ -41,7 +46,7 @@ class MainSettingsFragment: Fragment() {
             Log.d(TAG, "onClick")
 
             val intent = Intent()
-                .setType("*/*")
+                .setType("*/   /*")
                 .setAction(Intent.ACTION_GET_CONTENT)
 
             val act: Activity = requireActivity()
@@ -58,7 +63,7 @@ class MainSettingsFragment: Fragment() {
         if (resultCode == 111) {
             Log.d(TAG, data.toString())
         }
-    }
+    }*/
 
     companion object {
         fun newBundle(): Bundle {
