@@ -1,20 +1,8 @@
 package com.niku.moneymate.ui.main.settings
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceFragmentCompat
-import com.google.android.material.internal.ContextUtils
 import com.niku.moneymate.R
-import com.niku.moneymate.databinding.MainSettingsFragmentBinding
-import java.util.*
 
 private const val TAG = "MainSettingsFragment"
 
