@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.Fragment
-import org.w3c.dom.Text
 
 class PayeeFragment: Fragment() {
 

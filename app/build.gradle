@@ -30,7 +30,17 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     dataBinding { enabled = true }
+
+    buildFeatures {
+        // Enables Jetpack Compose for this module
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.0.5'
+        //kotlinCompilerVersion kotlin_version
+    }
 }
 
 def nav_version = "2.3.5"
@@ -53,7 +63,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-    implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
+    implementation "com.github.PhilJay:MPAndroidChart:3.1.0"
 
     // Feature module Support
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
