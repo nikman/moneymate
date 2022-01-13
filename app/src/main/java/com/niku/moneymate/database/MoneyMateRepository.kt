@@ -210,6 +210,7 @@ class MoneyMateRepository private constructor(context: Context) {
 
     fun addPayee(payee: Payee) = executor.execute{ payeeDao.addPayee(payee) }
 
+
     companion object {
 
         private var INSTANCE: MoneyMateRepository? = null

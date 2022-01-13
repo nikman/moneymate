@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:key="advanced"
+        app:title="Learning Preferences"
+        app:initialExpandedChildrenCount="1">
+
+        <Preference
+            app:key="load_from_csv"
+            app:title="Load from CSV"
+            app:summary="Load from CSV">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/nikman" />
+
+        </Preference>
+
+        <Preference
+            app:key="expandable_example"
+            app:title="Hello I am Simple text"
+            app:summary="I am the preference that will be showed when the preference is not expanded"/>
+
+        <Preference
+            app:title="About"
+            app:summary="Go to developer web-site">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/nikman"/>
+
+        </Preference>
+
+        <SwitchPreferenceCompat
+            app:key="parent"
+            app:title="test switch"
+            app:summary="Toggle me!"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
