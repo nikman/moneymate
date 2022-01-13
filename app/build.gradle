@@ -84,7 +84,8 @@ dependencies {
     // viewModel support
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
 
-    implementation("androidx.preference:preference:1.1.1")
+    implementation("androidx.preference:preference-ktx:1.1.1")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
 
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.5")
