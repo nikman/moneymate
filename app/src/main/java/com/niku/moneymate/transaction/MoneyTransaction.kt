@@ -60,5 +60,6 @@ data class MoneyTransaction(
     @ColumnInfo(name = "amount_to") var amount_to: Double = 0.0,
     @ColumnInfo(name = "transaction_id") @PrimaryKey val transaction_id: UUID = UUID.randomUUID(),
     var note: String = "",
-    var posted: Boolean = false
+    var posted: Boolean = false,
+    var transaction_type: Int = 0
 )

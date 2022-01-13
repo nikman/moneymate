@@ -25,7 +25,9 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.common.MainViewModel
+import com.niku.moneymate.utils.CategoryType
 import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.TransactionType
 import java.util.*
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
@@ -35,6 +37,8 @@ class TransactionFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var transactionWithProperties: TransactionWithProperties
+
+    //private var multiplier: Byte = 0
 
     private lateinit var moneyTransaction: MoneyTransaction
     private lateinit var currency: MainCurrency
@@ -55,6 +59,7 @@ class TransactionFragment : Fragment() {
     private lateinit var categoryField: Spinner
     private lateinit var amountField: EditText
     private lateinit var projectField: Spinner
+    private lateinit var transactionTypeImageButton: ImageButton
 
     private val moneyTransactionDetailViewModel: TransactionDetailViewModel by lazy {
         ViewModelProvider(this)[TransactionDetailViewModel::class.java]
@@ -114,6 +119,7 @@ class TransactionFragment : Fragment() {
         amountField = view.findViewById(R.id.transaction_amount) as EditText
         categoryField = view.findViewById(R.id.category_spinner) as Spinner
         projectField = view.findViewById(R.id.project_spinner) as Spinner
+        transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
 
         val viewModelFactory = CommonViewModelFactory()
 
@@ -162,15 +168,15 @@ class TransactionFragment : Fragment() {
         moneyTransactionDetailViewModel.transactionLiveData.observe(
             viewLifecycleOwner,
             {
-                    transaction -> transaction?.let {
-                this.transactionWithProperties = transaction
-                this.moneyTransaction = transactionWithProperties.transaction
-                this.accountFrom = transactionWithProperties.accountFrom
-                this.accountTo = transactionWithProperties.accountTo
-                this.currency = transactionWithProperties.currency
-                this.category = transactionWithProperties.category
-                updateUI()
-            }
+                transaction -> transaction?.let {
+                    this.transactionWithProperties = transaction
+                    this.moneyTransaction = transactionWithProperties.transaction
+                    this.accountFrom = transactionWithProperties.accountFrom
+                    this.accountTo = transactionWithProperties.accountTo
+                    this.currency = transactionWithProperties.currency
+                    this.category = transactionWithProperties.category
+                    updateUI()
+                }
             }
         )
 
@@ -207,7 +213,7 @@ class TransactionFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 moneyTransaction.amount_from = if (count > 0) s.toString().toDouble() else 0.0
-                moneyTransaction.amount_to = -moneyTransaction.amount_from
+                moneyTransaction.amount_to = moneyTransaction.amount_from
             }
 
             override fun afterTextChanged(s: Editable?) {  }
@@ -274,6 +280,39 @@ class TransactionFragment : Fragment() {
             }
         }
 
+        transactionTypeImageButton.apply {
+            setOnClickListener { _, ->
+                setImageButton(revert = true)
+            }
+        }
+
+    }
+
+    private fun setImageButton(revert: Boolean = false) {
+
+        if (revert) {
+            when (transactionWithProperties.transaction.transaction_type) {
+                TransactionType.INCOME -> {
+                    transactionTypeImageButton.setImageResource(R.drawable.ic_outcom_36)
+                    transactionWithProperties.transaction.transaction_type = TransactionType.OUTCOME
+                }
+                TransactionType.OUTCOME -> {
+                    transactionTypeImageButton.setImageResource(R.drawable.ic_income_36)
+                    transactionWithProperties.transaction.transaction_type = TransactionType.INCOME
+                }
+            }
+        } else
+            when (transactionWithProperties.transaction.transaction_type) {
+                        TransactionType.OUTCOME -> transactionTypeImageButton.setImageResource(R.drawable.ic_outcom_36)
+                        TransactionType.INCOME -> transactionTypeImageButton.setImageResource(R.drawable.ic_income_36)
+                        else -> if (transactionWithProperties.category.category_type == CategoryType.INCOME) {
+                            transactionTypeImageButton.setImageResource(R.drawable.ic_income_36)
+                            transactionWithProperties.transaction.transaction_type = TransactionType.INCOME
+                        } else {
+                            transactionTypeImageButton.setImageResource(R.drawable.ic_outcom_36)
+                            transactionWithProperties.transaction.transaction_type = TransactionType.OUTCOME
+                        }
+            }
     }
 
     override fun onStop() {
@@ -290,6 +329,8 @@ class TransactionFragment : Fragment() {
         accountToField.setSelection(accounts.indexOf(accountTo), true)
         currencyField.setSelection(currencies.indexOf(currency), true)
         categoryField.setSelection(categories.indexOf(category), true)
+
+        setImageButton(revert = false)
 
     }
 

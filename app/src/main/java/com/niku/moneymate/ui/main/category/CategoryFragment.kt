@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryDetailViewModel
 import com.niku.moneymate.ui.main.common.MainViewModel
+import com.niku.moneymate.utils.CategoryType
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -27,6 +29,7 @@ class CategoryFragment: Fragment() {
     private lateinit var titleField: EditText
     private lateinit var typeField: EditText
     private lateinit var isDefaultCategoryCheckBox: CheckBox
+    private lateinit var categoryTypeImageButton: ImageButton
     //private lateinit var noteField: EditText
 
     private val categoryDetailViewModel: CategoryDetailViewModel by lazy {
@@ -52,6 +55,7 @@ class CategoryFragment: Fragment() {
         titleField = view.findViewById(R.id.category_title)
         typeField = view.findViewById(R.id.category_type)
         isDefaultCategoryCheckBox = view.findViewById(R.id.category_isDefault) as CheckBox
+        categoryTypeImageButton = view.findViewById(R.id.image_button_category_type)
 
         return view
 
@@ -114,6 +118,32 @@ class CategoryFragment: Fragment() {
             }
         }
 
+        categoryTypeImageButton.apply {
+            setOnClickListener { _, ->
+                setImageButton(revert = true)
+            }
+        }
+
+    }
+
+    private fun setImageButton(revert: Boolean = false) {
+
+        if (revert) {
+            if (category.category_type == CategoryType.INCOME) {
+                categoryTypeImageButton.setImageResource(R.drawable.ic_outcom_36)
+                category.category_type = CategoryType.OUTCOME
+            } else {
+                categoryTypeImageButton.setImageResource(R.drawable.ic_income_36)
+                category.category_type = CategoryType.INCOME
+            }
+        } else {
+            if (category.category_type == CategoryType.INCOME) {
+                categoryTypeImageButton.setImageResource(R.drawable.ic_income_36)
+            } else {
+                categoryTypeImageButton.setImageResource(R.drawable.ic_outcom_36)
+            }
+        }
+
     }
 
     override fun onStop() {
@@ -124,6 +154,7 @@ class CategoryFragment: Fragment() {
     private fun updateUI() {
         titleField.setText(category.category_title)
         typeField.setText(category.category_type.toString())
+        setImageButton(revert = false)
 
         val uuidAsString = context?.applicationContext?.let {
             SharedPrefs().getStoredCategoryId(it) }

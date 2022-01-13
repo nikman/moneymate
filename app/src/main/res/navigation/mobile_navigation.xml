@@ -14,7 +14,9 @@
             app:destination="@id/categoryListFragment" />
         <action
             android:id="@+id/action_accountListFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
+            app:destination="@id/accountFragment"
+            app:popUpTo="@+id/accountListFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -30,7 +32,9 @@
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
         <action
             android:id="@+id/action_currencyListFragment_to_currencyFragment"
-            app:destination="@id/currencyFragment" />
+            app:destination="@id/currencyFragment"
+            app:popUpTo="@+id/currencyListFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -42,7 +46,9 @@
             app:destination="@id/accountListFragment" />
         <action
             android:id="@+id/action_transactionListFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
+            app:destination="@id/transactionFragment"
+
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_transactionListFragment_to_mainSettingsFragment"
             app:destination="@id/mainSettingsFragment" />
@@ -55,10 +61,12 @@
         <action
             android:id="@+id/action_categoryListFragment_to_currencyListFragment"
             app:destination="@id/currencyListFragment"
-            app:popUpTo="@id/transactionListFragment" />
+            app:popUpTo="@id/categoryListFragment" />
         <action
             android:id="@+id/action_categoryListFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment" />
+            app:destination="@id/categoryFragment"
+            app:popUpTo="@+id/categoryListFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_categoryListFragment_to_projectListFragment"
             app:destination="@id/projectListFragment" />

@@ -4,6 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.core.app.ActivityCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -23,7 +29,7 @@ class MainSettingsFragment: PreferenceFragmentCompat() {
             return when (preference.key) {
                 "load_from_csv" -> {
                     val intent = Intent()
-                        .setType("*/   /*")
+                        .setType("*/*")
                         .setAction(Intent.ACTION_GET_CONTENT)
 
                     val act: Activity = requireActivity()
@@ -43,6 +49,23 @@ class MainSettingsFragment: PreferenceFragmentCompat() {
 
     fun interface Callbacks {
         fun onLoadFromCSVClick()
+    }
+
+    @Composable
+    fun SimpleComposable() {
+        Text(
+            text = "Under construction",
+            color = androidx.compose.ui.graphics.Color.Magenta,
+            fontSize = TextUnit.Unspecified,
+            letterSpacing = TextUnit.Unspecified,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+
+    @Preview
+    @Composable
+    fun ComposablePreview() {
+        SimpleComposable()
     }
 
     /*private lateinit var binding: MainSettingsFragmentBinding

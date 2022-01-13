@@ -31,7 +31,7 @@ interface MoneyMateDao {
     fun getProject(project_id: UUID): LiveData<Project?>
 
     @Query("""
-        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * cat.category_type), 0.0) as balance
+        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * mt.transaction_type), 0.0) as balance
         FROM account as acc
         LEFT JOIN moneyTransaction AS mt
         ON acc.account_id = mt.account_id_from
@@ -45,7 +45,7 @@ interface MoneyMateDao {
     @Transaction
     @RewriteQueriesToDropUnusedColumns
     @Query("""
-        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * cat.category_type), 0.0) AS balance,
+        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * mt.transaction_type), 0.0) AS balance,
             acc.initial_balance AS initial_balance,
             acc.title AS title,
             acc.note AS note,

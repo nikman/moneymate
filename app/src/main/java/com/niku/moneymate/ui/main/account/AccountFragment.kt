@@ -112,8 +112,7 @@ class AccountFragment: Fragment() {
 
         accountDetailViewModel.getAccountBalance(accountId).observe(
             viewLifecycleOwner,
-            {
-                    account -> account?.let {
+            { account -> account?.let {
                 this.accountBalance = it
                 updateBalanceField()
             }

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/transaction_account_currency"
+        android:id="@+id/transaction_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

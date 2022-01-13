@@ -97,29 +97,16 @@ class TransactionListFragment: Fragment() {
             R.id.new_transaction -> {
                 Log.d(TAG,"new transaction pressed")
 
-                val currency = MainCurrency(
-                        UUID.fromString(
-                            context?.applicationContext?.let {
-                                SharedPrefs().getStoredCurrencyId(it) }))
+                val currency = MainCurrency(currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
 
-                val category = Category(0, "",
-                    UUID.fromString(
-                        context?.applicationContext?.let {
-                            SharedPrefs().getStoredCategoryId(it) }))
+                val category = Category(category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
 
                 val account = Account(
-                    currency.currency_id,
-                    "",
-                    0.0,
-                    0.0,
-                    "",
-                    UUID.fromString(
-                        SharedPrefs().getStoredAccountId(requireContext())))
+                    currency_id = currency.currency_id,
+                    account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
 
                 val project = Project(
-                    "",
-                    UUID.fromString(
-                        SharedPrefs().getStoredProjectId(requireContext()))
+                    project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext()))
                 )
 
                 val transaction = MoneyTransaction(
@@ -176,6 +163,7 @@ class TransactionListFragment: Fragment() {
         private val dateTextView: TextView = itemView.findViewById(R.id.transaction_date)
         private val accountTextView: TextView = itemView.findViewById(R.id.transaction_account_title)
         private val amountTextView: TextView = itemView.findViewById(R.id.transaction_amount)
+        private val categoryTextView: TextView = itemView.findViewById(R.id.transaction_category)
         private val projectTextView: TextView = itemView.findViewById(R.id.transaction_project)
 
         init {
@@ -198,8 +186,9 @@ class TransactionListFragment: Fragment() {
 
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
             accountTextView.text = this.transaction.accountFrom.title
-            amountTextView.text = this.transaction.transaction.amount_from.toString()
+            amountTextView.text = (this.transaction.transaction.amount_from * this.transaction.transaction.transaction_type).toString()
             projectTextView.text = this.transaction.project.project_title
+            categoryTextView.text = this.transaction.category.category_title
 
         }
 

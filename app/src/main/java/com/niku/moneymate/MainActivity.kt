@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -34,19 +35,22 @@ class MainActivity :
     TransactionListFragment.Callbacks,
     ProjectListFragment.Callbacks {
 
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration.Builder(setOf(
             R.id.transactionListFragment,
             R.id.accountListFragment,
             R.id.categoryListFragment,
+            R.id.projectListFragment,
             R.id.currencyListFragment)).build()
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
@@ -76,44 +80,43 @@ class MainActivity :
     }
 
     override fun onAccountSelected(accountId: UUID) {
-        findNavController(this, R.id.nav_host_fragment).
-        navigate(
-            R.id.action_accountListFragment_to_accountFragment,
-            AccountFragment.newBundle(accountId))
+        navController.navigate(
+                R.id.action_accountListFragment_to_accountFragment,
+                AccountFragment.newBundle(accountId))
     }
 
     override fun onCurrencySelected(currencyId: UUID) {
-        findNavController(this, R.id.nav_host_fragment).
-        navigate(
-            R.id.action_currencyListFragment_to_currencyFragment,
-            CurrencyFragment.newBundle(currencyId))
+        //findNavController(this, R.id.nav_host_fragment).
+        navController.navigate(
+                R.id.action_currencyListFragment_to_currencyFragment,
+                CurrencyFragment.newBundle(currencyId))
     }
 
     override fun onCategorySelected(categoryId: UUID) {
-        findNavController(this, R.id.nav_host_fragment).
-        navigate(
-            R.id.action_categoryListFragment_to_categoryFragment,
-            CategoryFragment.newBundle(categoryId))
+        //findNavController(this, R.id.nav_host_fragment).
+        navController.navigate(
+                R.id.action_categoryListFragment_to_categoryFragment,
+                CategoryFragment.newBundle(categoryId))
     }
 
     override fun onTransactionSelected(transactionId: UUID) {
-        findNavController(this, R.id.nav_host_fragment).
-            navigate(
+        //findNavController(this, R.id.nav_host_fragment).
+        navController.navigate(
                 R.id.action_transactionListFragment_to_transactionFragment,
                 TransactionFragment.newBundle(transactionId))
     }
 
     override fun onProjectSelected(projectId: UUID) {
-        findNavController(this, R.id.nav_host_fragment).
-        navigate(
-            R.id.action_projectListFragment_to_projectFragment,
-            ProjectFragment.newBundle(projectId))
+        //findNavController(this, R.id.nav_host_fragment).
+        navController.navigate(
+                R.id.action_projectListFragment_to_projectFragment,
+                ProjectFragment.newBundle(projectId))
     }
 
     override fun onSettingsSelected() {
-        findNavController(this, R.id.nav_host_fragment).
-        navigate(
-            R.id.action_transactionListFragment_to_mainSettingsFragment,
-            MainSettingsFragment.newBundle())
+        //findNavController(this, R.id.nav_host_fragment).
+        navController.navigate(
+                R.id.action_transactionListFragment_to_mainSettingsFragment,
+                MainSettingsFragment.newBundle())
     }
 }
