@@ -24,6 +24,7 @@ import com.niku.moneymate.ui.main.settings.MainSettingsFragment
 import com.niku.moneymate.ui.main.transaction.TransactionFragment
 import com.niku.moneymate.ui.main.transaction.TransactionListFragment
 import java.util.*
+import java.util.concurrent.Executors
 
 private const val TAG = "MainActivity"
 
@@ -71,13 +72,25 @@ class MainActivity :
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 111 && resultCode == RESULT_OK) {
             val selectedFile = data?.data
-            selectedFile?.let { Log.d(TAG, it.toString()) }
+            selectedFile?.let {
+                Log.d(TAG, it.toString())
+                val filePath: String? = selectedFile.path
+                val segment = selectedFile.lastPathSegment
+                segment?.let { Log.d(TAG, segment) }
+                filePath?.let {
+                    Log.d(TAG, filePath)
+                    val executor = Executors.newSingleThreadExecutor()
+                    executor.execute {
+                        com.niku.moneymate.files.FileUtils().readFileLineByLine(filePath)
+                    }
+                }
+            }
         }
-    }
+    }*/
 
     override fun onAccountSelected(accountId: UUID) {
         navController.navigate(

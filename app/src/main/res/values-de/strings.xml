@@ -38,7 +38,7 @@
     <string name="fragment_name_currency">Currency</string>
     <string name="fragment_name_project">Project</string>
     <string name="fragment_name_category">Category</string>
-    <string name="predef_empty_project_title">Null</string>
+    <string name="predef_empty_project_title">No project</string>
     <string name="predef_category_title_food">Essen</string>
     <string name="predef_category_title_salary">Salary</string>
     <string name="predef_account_title_cash">Bargeld</string>

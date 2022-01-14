@@ -24,4 +24,5 @@
             android:onClick="@{() -> callbacks.onLoadFromCSVClick()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

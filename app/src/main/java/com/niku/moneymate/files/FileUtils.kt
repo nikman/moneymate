@@ -4,11 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.view.View
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
-import com.google.android.material.internal.ContextUtils.getActivity
 import java.io.File
 
 private const val TAG = "FileUtils"
@@ -22,8 +18,13 @@ class FileUtils {
         startActivity(Intent.createChooser(intent, "Select Application"))
     }
 
-    fun readFileLineByLine(fileName: String)
-        = File(fileName).forEachLine { println(it) }
+    object AssetsLoader {
+
+        fun loadTextFromAsset(context: Context, file: String): String {
+            return context.assets.open(file).bufferedReader().use { reader ->
+                reader.readText()
+            }
+        }
 
     fun getAccountsDataFromFile(text: String) {
         for (line in text.lines()) {
@@ -35,4 +36,10 @@ class FileUtils {
         }
     }
 
+    }
+
+    fun readFileFromAssetsLineByLine(context: Context) {
+        val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
+        Log.d(TAG, text)
+    }
 }

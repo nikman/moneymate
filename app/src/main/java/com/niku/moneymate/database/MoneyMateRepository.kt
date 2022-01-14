@@ -76,12 +76,9 @@ class MoneyMateRepository private constructor(context: Context) {
 
                 val accountCash =
                     Account(
-                        UUID.fromString(UUID_CURRENCY_RUB),
-                        context.resources.getString(R.string.predef_account_title_cash),
-                        0.0,
-                        0.0,
-                        "",
-                        UUID.fromString(UUID_ACCOUNT_CASH)
+                        currency_id = UUID.fromString(UUID_CURRENCY_RUB),
+                        title = context.resources.getString(R.string.predef_account_title_cash),
+                        account_id = UUID.fromString(UUID_ACCOUNT_CASH)
                     )
                 moneyMateDao.addAccount(accountCash)
             }
@@ -106,7 +103,7 @@ class MoneyMateRepository private constructor(context: Context) {
     private val payeeDao = database.payeeDao()
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
-    fun getAccounts(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccounts()
+    //fun getAccounts(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccounts()
     fun getAccountsWithBalance(): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccountsWithBalance()
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()

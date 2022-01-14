@@ -5,17 +5,17 @@
     <PreferenceCategory
         app:key="advanced"
         app:title="Learning Preferences"
-        app:initialExpandedChildrenCount="1">
+        app:initialExpandedChildrenCount="2">
 
         <Preference
             app:key="load_from_csv"
             app:title="Load from CSV"
-            app:summary="Load from CSV">
+            app:summary="Load from CSV" />
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://github.com/nikman" />
-
-        </Preference>
+        <Preference
+            app:key="load_from_assets"
+            app:title="Load from assets"
+            app:summary="Load from assets" />
 
         <Preference
             app:key="expandable_example"

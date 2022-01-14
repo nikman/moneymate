@@ -3,6 +3,7 @@ package com.niku.moneymate.ui.main.settings
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.FileUtils
 import android.util.Log
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import com.niku.moneymate.R
+import java.util.concurrent.Executors
 
 private const val TAG = "MainSettingsFragment"
 
@@ -37,6 +39,10 @@ class MainSettingsFragment: PreferenceFragmentCompat() {
                     ActivityCompat.startActivityForResult(
                         act, Intent.createChooser(intent, "Select a file"), 111,
                         null)
+                    true
+                }
+                "load_from_assets" -> {
+                    com.niku.moneymate.files.FileUtils().readFileFromAssetsLineByLine(requireContext())
                     true
                 }
                 else -> {
@@ -68,42 +74,18 @@ class MainSettingsFragment: PreferenceFragmentCompat() {
         SimpleComposable()
     }
 
-    /*private lateinit var binding: MainSettingsFragmentBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        //return super.onCreateView(inflater, container, savedInstanceState)
-        binding = DataBindingUtil.inflate(inflater,
-                R.layout.main_settings_fragment,
-                container,
-            false)
-        //initInstances(savedInstanceState)
-        binding.callbacks = Callbacks {
 
-            Log.d(TAG, "onClick")
-
-            val intent = Intent()
-                .setType("*/   /*")
-                .setAction(Intent.ACTION_GET_CONTENT)
-
-            val act: Activity = requireActivity()
-
-            ActivityCompat.startActivityForResult(
-                act, Intent.createChooser(intent, "Select a file"), 111,
-                null) }
-
-        return binding.root
-    }
-*/
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 111) {
             Log.d(TAG, data.toString())
+            val executor = Executors.newSingleThreadExecutor()
+            executor.execute {
+                com.niku.moneymate.files.FileUtils().readFileLineByLine(data.toString())
+            }
         }
-    }
+    }*/
 
     companion object {
         fun newBundle(): Bundle {
