@@ -94,9 +94,7 @@ class CurrencyListFragment: Fragment() {
         return when (item.itemId) {
             R.id.new_currency -> {
                 Log.d(TAG,"new currency pressed")
-                //val currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
                 val currency = MainCurrency()
-                //val account = Account(currency.currency_id)
                 currencyListViewModel.addCurrency(currency)
                 callbacks?.onCurrencySelected(currency.currency_id)
                 true
@@ -129,7 +127,6 @@ class CurrencyListFragment: Fragment() {
                 }
             }
         )
-
     }
 
     private inner class CurrencyHolder(view: View):

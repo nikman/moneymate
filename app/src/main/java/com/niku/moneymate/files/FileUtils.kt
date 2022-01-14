@@ -25,4 +25,14 @@ class FileUtils {
     fun readFileLineByLine(fileName: String)
         = File(fileName).forEachLine { println(it) }
 
+    fun getAccountsDataFromFile(text: String) {
+        for (line in text.lines()) {
+            // string.removePrefix("Кот")
+            // string.removeSuffix("себе")
+            /*string.removeSurrounding(
+                "та" // delimiter
+            )*/
+        }
+    }
+
 }
