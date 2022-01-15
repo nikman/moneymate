@@ -145,15 +145,15 @@ interface MoneyMateDao {
     @Query("SELECT amount_from FROM moneyTransaction WHERE account_id_from=(:account_id)")
     fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>>
 
-    @Query("SELECT account_id FROM account WHERE account_external_id=(:externaId)")
-    fun getAccountByExternalId(externaId: Int): UUID?
+    @Query("SELECT account_id FROM account WHERE account_external_id=(:externalId)")
+    fun getAccountByExternalId(externalId: Int): UUID?
 
-    @Query("SELECT category_id FROM category WHERE category_external_id=(:externaId)")
-    fun getCategoryByExternalId(externaId: Int): UUID?
+    @Query("SELECT category_id FROM category WHERE category_external_id=(:externalId)")
+    fun getCategoryByExternalId(externalId: Int): UUID?
 
-    @Query("SELECT payee_id FROM payee WHERE payee_external_id=(:externaId)")
-    fun getPayeeByExternalId(externaId: Int): UUID?
+    @Query("SELECT payee_id FROM payee WHERE payee_external_id=(:externalId)")
+    fun getPayeeByExternalId(externalId: Int): UUID?
 
-    @Query("SELECT project_id FROM project WHERE project_external_id=(:externaId)")
-    fun getProjectByExternalId(externaId: Int): UUID?
+    @Query("SELECT project_id FROM project WHERE project_external_id=(:externalId)")
+    fun getProjectByExternalId(externalId: Int): UUID?
 }
