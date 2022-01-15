@@ -327,7 +327,7 @@ class TransactionFragment : Fragment() {
         dateButton.text = moneyTransaction.transactionDate.toString()
         accountFromField.setSelection(accounts.indexOf(accountFrom), true)
         accountToField.setSelection(accounts.indexOf(accountTo), true)
-        if (currencies.isNotEmpty()) {
+        if (!currencies.isNullOrEmpty()) {
             currencyField.setSelection(currencies.indexOf(currency), true)
         }
         categoryField.setSelection(categories.indexOf(category), true)
