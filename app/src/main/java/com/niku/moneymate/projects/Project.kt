@@ -7,6 +7,8 @@ import java.util.*
 
 @Entity
 data class Project(
+    @PrimaryKey val project_id: UUID = UUID.randomUUID(),
     var project_title: String = "",
-    @PrimaryKey val project_id: UUID = UUID.randomUUID()
+    var is_active: Boolean = true,
+    val project_external_id: Int = 0
 )

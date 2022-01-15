@@ -119,10 +119,10 @@ class ProjectListFragment: Fragment() {
 
                 trashBinIcon.bounds =
                     Rect(
-                        viewHolder.itemView.left - dX.roundToInt(),
-                        viewHolder.itemView.top,
-                        trashBinIcon.intrinsicWidth,
-                        viewHolder.itemView.top + trashBinIcon.intrinsicHeight)
+                        viewHolder.itemView.right - trashBinIcon.intrinsicWidth - 16,
+                        viewHolder.itemView.top + 16,
+                        viewHolder.itemView.right - 16,
+                        viewHolder.itemView.top + trashBinIcon.intrinsicHeight + 16)
                 trashBinIcon.draw(c)
             }
         }

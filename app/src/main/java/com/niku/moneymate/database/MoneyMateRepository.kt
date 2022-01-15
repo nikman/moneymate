@@ -53,16 +53,16 @@ class MoneyMateRepository private constructor(context: Context) {
 
                 val projectEmpty =
                     Project(
-                        context.resources.getString(R.string.predef_empty_project_title),
-                        UUID.fromString(UUID_PROJECT_EMPTY)
+                        project_title = context.resources.getString(R.string.predef_empty_project_title),
+                        project_id = UUID.fromString(UUID_PROJECT_EMPTY)
                     )
                 moneyMateDao.addProject(projectEmpty)
 
-                val categoryFood =
+                /*val categoryFood =
                     Category(
-                        CategoryType.OUTCOME,
-                        context.resources.getString(R.string.predef_category_title_food),
-                        UUID.fromString(UUID_CATEGORY_FOOD)
+                        category_type = CategoryType.OUTCOME,
+                        category_title = context.resources.getString(R.string.predef_category_title_food),
+                        category_id = UUID.fromString(UUID_CATEGORY_FOOD)
                     )
                 moneyMateDao.addCategory(categoryFood)
 
@@ -72,7 +72,7 @@ class MoneyMateRepository private constructor(context: Context) {
                         context.resources.getString(R.string.predef_category_title_salary),
                         UUID.fromString(UUID_CATEGORY_SALARY)
                     )
-                moneyMateDao.addCategory(categorySalary)
+                moneyMateDao.addCategory(categorySalary)*/
 
                 val accountCash =
                     Account(
@@ -207,6 +207,18 @@ class MoneyMateRepository private constructor(context: Context) {
 
     fun addPayee(payee: Payee) = executor.execute{ payeeDao.addPayee(payee) }
 
+    fun getAccountByExternalId(externaId: Int): UUID? {
+        return moneyMateDao.getAccountByExternalId(externaId)
+    }
+    fun getCategoryByExternalId(externaId: Int): UUID? {
+        return moneyMateDao.getCategoryByExternalId(externaId)
+    }
+    fun getPayeeByExternalId(externaId: Int): UUID? {
+        return moneyMateDao.getPayeeByExternalId(externaId)
+    }
+    fun getProjectByExternalId(externaId: Int): UUID? {
+        return moneyMateDao.getProjectByExternalId(externaId)
+    }
 
     companion object {
 

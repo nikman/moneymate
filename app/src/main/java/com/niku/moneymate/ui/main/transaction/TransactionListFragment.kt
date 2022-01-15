@@ -97,9 +97,13 @@ class TransactionListFragment: Fragment() {
             R.id.new_transaction -> {
                 Log.d(TAG,"new transaction pressed")
 
-                val currency = MainCurrency(currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+                val currency =
+                    MainCurrency(
+                        currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
 
-                val category = Category(category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
+                val category =
+                    Category(
+                        category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
 
                 val account = Account(
                     currency_id = currency.currency_id,

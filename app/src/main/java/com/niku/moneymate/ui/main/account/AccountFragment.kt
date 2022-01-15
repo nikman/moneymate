@@ -56,7 +56,7 @@ class AccountFragment: Fragment() {
 
         currency = MainCurrency(
             UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
-        account = Account(currency.currency_id)
+        account = Account(currency_id = currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
         accountDetailViewModel.loadAccount(accountId)

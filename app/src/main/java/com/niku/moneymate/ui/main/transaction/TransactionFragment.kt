@@ -325,12 +325,17 @@ class TransactionFragment : Fragment() {
 
         amountField.setText(moneyTransaction.amount_from.toString())
         dateButton.text = moneyTransaction.transactionDate.toString()
-        accountFromField.setSelection(accounts.indexOf(accountFrom), true)
-        accountToField.setSelection(accounts.indexOf(accountTo), true)
-        if (!currencies.isNullOrEmpty()) {
+
+        if (this::accounts.isInitialized) {
+            accountToField.setSelection(accounts.indexOf(accountTo), true)
+            accountFromField.setSelection(accounts.indexOf(accountFrom), true)
+        }
+        if (this::currencies.isInitialized) {
             currencyField.setSelection(currencies.indexOf(currency), true)
         }
-        categoryField.setSelection(categories.indexOf(category), true)
+        if (this::categories.isInitialized) {
+            categoryField.setSelection(categories.indexOf(category), true)
+        }
 
         setImageButton(revert = false)
     }

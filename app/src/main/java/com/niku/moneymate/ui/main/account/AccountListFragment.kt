@@ -102,7 +102,7 @@ class AccountListFragment: Fragment() {
                                 SharedPrefs().getStoredCurrencyId(it) }))
 
                 //val currency = MoneyMateRepository().getDefaultCurrency()
-                val account = Account(currency.currency_id)
+                val account = Account(currency_id = currency.currency_id)
                 accountListViewModel.addAccount(account)
                 callbacks?.onAccountSelected(account.account_id)
                 true

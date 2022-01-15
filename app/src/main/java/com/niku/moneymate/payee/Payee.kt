@@ -10,9 +10,13 @@ data class Payee (
 
     @NotNull
     @PrimaryKey(autoGenerate = true)
-    val payee_id: Int,
+    val payee_id: Int = 0,
 
     @NotNull
-    var payee_name: String = ""
+    var payee_title: String = "",
+
+    var is_active: Boolean = true,
+
+    val payee_external_id: Int = 0
 
 )

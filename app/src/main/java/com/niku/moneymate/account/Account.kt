@@ -14,10 +14,14 @@ import java.util.*
     ], indices = [Index("currency_id")]
 )
 data class Account(
+    @PrimaryKey val account_id: UUID = UUID.randomUUID(),
     var currency_id: UUID,
     var title: String = "",
     var initial_balance: Double = 0.0,
     var balance: Double = 0.0,
     var note: String = "",
-    @PrimaryKey val account_id: UUID = UUID.randomUUID()
+    var is_active: Boolean = true,
+    var is_include_into_totals: Boolean = true,
+    var sort_order: Int = 0,
+    val account_external_id: Int = 0
 )

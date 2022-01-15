@@ -15,7 +15,7 @@ import java.util.*
 interface MoneyMateDao {
 
     @Transaction
-    @Query("SELECT * FROM account")
+    @Query("SELECT * FROM account WHERE is_active")
     fun getAllAccounts(): LiveData<List<Account>>
 
     @Transaction
@@ -52,7 +52,10 @@ interface MoneyMateDao {
             acc.account_id AS account_id,
             acc.currency_id AS currency_id,
             cur.currency_code AS currency_code,
-            cur.currency_title AS currency_title
+            cur.currency_title AS currency_title,
+            acc.is_active AS is_active,
+            acc.is_include_into_totals AS is_include_into_totals,
+            acc.sort_order AS sort_order
         FROM account as acc
         LEFT JOIN moneyTransaction AS mt 
             ON acc.account_id = mt.account_id_from
@@ -63,6 +66,7 @@ interface MoneyMateDao {
         GROUP BY acc.account_id,acc.title,acc.note,
             acc.currency_id,cur.currency_code,
             cur.currency_title
+        ORDER BY sort_order DESC
             """)
     fun getAccountsWithBalance(): LiveData<List<AccountWithCurrency>>
 
@@ -140,4 +144,15 @@ interface MoneyMateDao {
     @Query("SELECT amount_from FROM moneyTransaction WHERE account_id_from=(:account_id)")
     fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>>
 
+    @Query("SELECT account_id FROM account WHERE account_external_id=(:externaId)")
+    fun getAccountByExternalId(externaId: Int): UUID?
+
+    @Query("SELECT category_id FROM category WHERE category_external_id=(:externaId)")
+    fun getCategoryByExternalId(externaId: Int): UUID?
+
+    @Query("SELECT payee_id FROM payee WHERE payee_external_id=(:externaId)")
+    fun getPayeeByExternalId(externaId: Int): UUID?
+
+    @Query("SELECT project_id FROM project WHERE project_external_id=(:externaId)")
+    fun getProjectByExternalId(externaId: Int): UUID?
 }
