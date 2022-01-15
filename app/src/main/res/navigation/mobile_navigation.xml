@@ -12,10 +12,21 @@
 
         <action
             android:id="@+id/action_accountListFragment_to_accountFragment"
-            app:destination="@id/accountFragment"
-            app:popUpTo="@+id/accountListFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/accountFragment" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.niku.moneymate.ui.main.account.AccountFragment"
+        android:label="@string/fragment_name_account"
+        tools:layout="@layout/account_fragment">
+
+        <action
+            android:id="@+id/action_accountFragment_to_accountListFragment"
+            app:destination="@id/accountListFragment"
+            app:popUpTo="@+id/accountListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -25,6 +36,18 @@
         <action
             android:id="@+id/action_currencyListFragment_to_currencyFragment"
             app:destination="@id/currencyFragment"
+             />
+    </fragment>
+
+    <fragment
+        android:id="@+id/currencyFragment"
+        android:name="com.niku.moneymate.ui.main.currency.CurrencyFragment"
+        android:label="@string/fragment_name_currency"
+        tools:layout="@layout/currency_fragment">
+
+        <action
+            android:id="@+id/action_currencyFragment_to_currencyListFragment"
+            app:destination="@id/currencyListFragment"
             app:popUpTo="@+id/currencyListFragment"
             app:popUpToInclusive="true"/>
     </fragment>
@@ -37,62 +60,12 @@
         <action
             android:id="@+id/action_transactionListFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"
-            app:popUpTo="@+id/transactionListFragment"
-            app:popUpToInclusive="true"/>
+             />
 
         <action
             android:id="@+id/action_transactionListFragment_to_mainSettingsFragment"
             app:destination="@id/mainSettingsFragment"
-            app:popUpTo="@+id/transactionListFragment"
-            app:popUpToInclusive="true"/>
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/categoryListFragment"
-        android:name="com.niku.moneymate.ui.main.category.CategoryListFragment"
-        android:label="@string/bottom_nav_item_categories">
-
-        <action
-            android:id="@+id/action_categoryListFragment_to_categoryFragment"
-            app:destination="@id/categoryFragment"
-            app:popUpTo="@+id/categoryListFragment"
-            app:popUpToInclusive="true"/>
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/projectListFragment"
-        android:name="com.niku.moneymate.ui.main.project.ProjectListFragment"
-        android:label="@string/bottom_nav_item_projects">
-        <action
-            android:id="@+id/action_projectListFragment_to_projectFragment"
-            app:destination="@id/projectFragment"
-            app:popUpTo="@+id/projectListFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/currencyFragment"
-        android:name="com.niku.moneymate.ui.main.currency.CurrencyFragment"
-        android:label="@string/fragment_name_currency"
-        tools:layout="@layout/currency_fragment">
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/categoryFragment"
-        android:name="com.niku.moneymate.ui.main.category.CategoryFragment"
-        android:label="@string/fragment_name_category"
-        tools:layout="@layout/category_fragment">
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/accountFragment"
-        android:name="com.niku.moneymate.ui.main.account.AccountFragment"
-        android:label="@string/fragment_name_account"
-        tools:layout="@layout/account_fragment">
+            app:popUpTo="@+id/transactionListFragment" />
 
     </fragment>
 
@@ -102,13 +75,11 @@
         android:label="@string/fragment_name_transaction"
         tools:layout="@layout/money_transaction_fragment">
 
-    </fragment>
-
-    <fragment
-        android:id="@+id/projectFragment"
-        android:name="com.niku.moneymate.ui.main.project.ProjectFragment"
-        android:label="@string/fragment_name_project">
-
+        <action
+            android:id="@+id/action_transactionFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment"
+            app:popUpTo="@+id/transactionListFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -116,6 +87,56 @@
         android:name="com.niku.moneymate.ui.main.settings.MainSettingsFragment"
         android:label="MainSettingsFragment" >
 
+        <action
+            android:id="@+id/action_mainSettingsFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment"
+            app:popUpTo="@+id/transactionListFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryListFragment"
+        android:name="com.niku.moneymate.ui.main.category.CategoryListFragment"
+        android:label="@string/bottom_nav_item_categories">
+
+        <action
+            android:id="@+id/action_categoryListFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.niku.moneymate.ui.main.category.CategoryFragment"
+        android:label="@string/fragment_name_category"
+        tools:layout="@layout/category_fragment">
+
+        <action
+            android:id="@+id/action_categoryFragment_to_categoryListFragment"
+            app:destination="@id/categoryListFragment"
+            app:popUpTo="@+id/categoryListFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/projectListFragment"
+        android:name="com.niku.moneymate.ui.main.project.ProjectListFragment"
+        android:label="@string/bottom_nav_item_projects">
+        <action
+            android:id="@+id/action_projectListFragment_to_projectFragment"
+            app:destination="@id/projectFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/projectFragment"
+        android:name="com.niku.moneymate.ui.main.project.ProjectFragment"
+        android:label="@string/fragment_name_project">
+
+        <action
+            android:id="@+id/action_projectFragment_to_projectListFragment"
+            app:destination="@id/projectListFragment"
+            app:popUpTo="@+id/projectListFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 </navigation>

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
+import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -103,41 +104,77 @@ class MainActivity :
     override fun onAccountSelected(accountId: UUID) {
         navController.navigate(
                 R.id.action_accountListFragment_to_accountFragment,
-                AccountFragment.newBundle(accountId))
+                AccountFragment.newBundle(accountId),
+                navOptions { // Use the Kotlin DSL for building NavOptions
+                    anim {
+                        enter = android.R.animator.fade_in
+                        exit = android.R.animator.fade_out
+                    }
+                })
     }
 
     override fun onCurrencySelected(currencyId: UUID) {
         //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_currencyListFragment_to_currencyFragment,
-                CurrencyFragment.newBundle(currencyId))
+                CurrencyFragment.newBundle(currencyId),
+                navOptions { // Use the Kotlin DSL for building NavOptions
+                    anim {
+                        enter = android.R.animator.fade_in
+                        exit = android.R.animator.fade_out
+                    }
+                })
     }
 
     override fun onCategorySelected(categoryId: UUID) {
         //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_categoryListFragment_to_categoryFragment,
-                CategoryFragment.newBundle(categoryId))
+                CategoryFragment.newBundle(categoryId),
+                navOptions { // Use the Kotlin DSL for building NavOptions
+                    anim {
+                        enter = android.R.animator.fade_in
+                        exit = android.R.animator.fade_out
+                    }
+                })
     }
 
     override fun onTransactionSelected(transactionId: UUID) {
         //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_transactionListFragment_to_transactionFragment,
-                TransactionFragment.newBundle(transactionId))
+                TransactionFragment.newBundle(transactionId),
+                navOptions { // Use the Kotlin DSL for building NavOptions
+                    anim {
+                        enter = android.R.animator.fade_in
+                        exit = android.R.animator.fade_out
+                    }
+                })
     }
 
     override fun onProjectSelected(projectId: UUID) {
         //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_projectListFragment_to_projectFragment,
-                ProjectFragment.newBundle(projectId))
+                ProjectFragment.newBundle(projectId),
+                navOptions { // Use the Kotlin DSL for building NavOptions
+                    anim {
+                        enter = android.R.animator.fade_in
+                        exit = android.R.animator.fade_out
+                    }
+                })
     }
 
     override fun onSettingsSelected() {
         //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_transactionListFragment_to_mainSettingsFragment,
-                MainSettingsFragment.newBundle())
+                MainSettingsFragment.newBundle(),
+                navOptions { // Use the Kotlin DSL for building NavOptions
+                        anim {
+                            enter = android.R.animator.fade_in
+                            exit = android.R.animator.fade_out
+                        }
+                    })
     }
 }

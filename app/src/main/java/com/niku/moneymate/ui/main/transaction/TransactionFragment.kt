@@ -327,11 +327,12 @@ class TransactionFragment : Fragment() {
         dateButton.text = moneyTransaction.transactionDate.toString()
         accountFromField.setSelection(accounts.indexOf(accountFrom), true)
         accountToField.setSelection(accounts.indexOf(accountTo), true)
-        currencyField.setSelection(currencies.indexOf(currency), true)
+        if (currencies.isNotEmpty()) {
+            currencyField.setSelection(currencies.indexOf(currency), true)
+        }
         categoryField.setSelection(categories.indexOf(category), true)
 
         setImageButton(revert = false)
-
     }
 
     private fun updateAccountsList(accounts: List<Account>) {
@@ -348,7 +349,7 @@ class TransactionFragment : Fragment() {
             android.R.layout.simple_dropdown_item_1line,
             accountsStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         accountFromField.adapter = adapter
         accountToField.adapter = adapter
     }
