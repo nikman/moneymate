@@ -62,11 +62,13 @@ class MainActivity :
 
                 R.id.budget -> {
                     navController.navigate(R.id.transactionListFragment)
-                    navController.clearBackStack(R.id.transactionListFragment)
+                    //navController.clearBackStack(R.id.transactionListFragment)
+                    //navController.popBackStack()
                 }
                 R.id.accounts -> {
                     navController.navigate(R.id.accountListFragment)
-                    navController.clearBackStack(R.id.accountListFragment)
+                    //navController.clearBackStack(R.id.accountListFragment)
+                    //navController.popBackStack()
                 }
                 R.id.categories->navController.navigate(R.id.categoryListFragment)
                 R.id.projects->navController.navigate(R.id.projectListFragment)
