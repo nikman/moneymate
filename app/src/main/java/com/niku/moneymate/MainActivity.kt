@@ -60,8 +60,14 @@ class MainActivity :
 
             when(it.itemId) {
 
-                R.id.budget->navController.navigate(R.id.transactionListFragment)
-                R.id.accounts->navController.navigate(R.id.accountListFragment)
+                R.id.budget -> {
+                    navController.navigate(R.id.transactionListFragment)
+                    navController.clearBackStack(R.id.transactionListFragment)
+                }
+                R.id.accounts -> {
+                    navController.navigate(R.id.accountListFragment)
+                    navController.clearBackStack(R.id.accountListFragment)
+                }
                 R.id.categories->navController.navigate(R.id.categoryListFragment)
                 R.id.projects->navController.navigate(R.id.projectListFragment)
                 R.id.currencies->navController.navigate(R.id.currencyListFragment)
