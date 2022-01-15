@@ -55,7 +55,8 @@ interface MoneyMateDao {
             cur.currency_title AS currency_title,
             acc.is_active AS is_active,
             acc.is_include_into_totals AS is_include_into_totals,
-            acc.sort_order AS sort_order
+            acc.sort_order AS sort_order,
+            acc.account_external_id AS account_external_id
         FROM account as acc
         LEFT JOIN moneyTransaction AS mt 
             ON acc.account_id = mt.account_id_from

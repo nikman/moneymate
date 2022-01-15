@@ -24,6 +24,8 @@ private const val TAG = "FileUtils"
 
 class FileUtils {
 
+    var context: Context? = null
+
     fun Context.launchFileIntent(filePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = FileProvider.getUriForFile(this, packageName, File(filePath))
@@ -32,6 +34,7 @@ class FileUtils {
     }
 
     fun readFileFromAssetsLineByLine(context: Context) {
+        this.context = context
         Executors.newSingleThreadExecutor().apply {
             val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
             AssetsLoader.getAccountsDataFromFile(context, text)
