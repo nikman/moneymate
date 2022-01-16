@@ -65,6 +65,9 @@ dependencies {
 
     implementation "com.github.PhilJay:MPAndroidChart:3.1.0"
 
+    //implementation "ru.surfstudio.android:recycler-decorator:0.5.0"
+    //implementation "ru.surfstudio.android:recycler-decorator-easyadapter"
+
     // Feature module Support
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
 
