@@ -15,6 +15,7 @@ import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryListViewModel
+import com.niku.moneymate.ui.main.MateItemDecorator
 import java.util.*
 
 private const val TAG = "CategoryListFragment"
@@ -65,6 +66,9 @@ class CategoryListFragment: Fragment() {
             DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
                 .apply { setOrientation(1) }
         )*/
+        categoryRecyclerView.addItemDecoration(
+            MateItemDecorator(requireContext(), R.drawable.divider)
+        )
 
         return view
 

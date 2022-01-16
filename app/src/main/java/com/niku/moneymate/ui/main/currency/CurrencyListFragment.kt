@@ -15,6 +15,7 @@ import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -63,10 +64,9 @@ class CurrencyListFragment: Fragment() {
         currencyRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         currencyRecyclerView.layoutManager = LinearLayoutManager(context)
         currencyRecyclerView.adapter = adapter
-        /*currencyRecyclerView.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
-                .apply { setOrientation(1) }
-        )*/
+        currencyRecyclerView.addItemDecoration(
+            MateItemDecorator(requireContext(), R.drawable.divider)
+        )
 
         return view
 

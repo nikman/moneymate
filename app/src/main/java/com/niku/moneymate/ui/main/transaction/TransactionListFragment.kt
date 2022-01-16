@@ -20,6 +20,7 @@ import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
+import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -68,6 +69,10 @@ class TransactionListFragment: Fragment() {
         transactionRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         transactionRecyclerView.layoutManager = LinearLayoutManager(context)
         transactionRecyclerView.adapter = adapter
+
+        transactionRecyclerView.addItemDecoration(
+            MateItemDecorator(requireContext(), R.drawable.divider)
+        )
 
         return view
 

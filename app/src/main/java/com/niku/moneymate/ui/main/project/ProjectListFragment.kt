@@ -21,6 +21,7 @@ import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectListViewModel
+import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 import kotlin.math.roundToInt
@@ -65,6 +66,9 @@ class ProjectListFragment: Fragment() {
         projectRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         projectRecyclerView.layoutManager = LinearLayoutManager(context)
         projectRecyclerView.adapter = adapter
+        projectRecyclerView.addItemDecoration(
+            MateItemDecorator(requireContext(), R.drawable.divider)
+        )
 
         // swipe actions
         val trashBinIcon =

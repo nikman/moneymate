@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.CommonViewModelFactory
@@ -16,6 +17,7 @@ import com.niku.moneymate.account.AccountListViewModel
 import com.niku.moneymate.R
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -67,6 +69,15 @@ class AccountListFragment: Fragment() {
             DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
                 .apply { setOrientation(1) }
         )*/
+        /*accountRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    LinearLayoutManager.HORIZONTAL
+                )
+            )*/
+
+        accountRecyclerView.addItemDecoration(
+            MateItemDecorator(requireContext(), R.drawable.divider))
 
         return view
 
