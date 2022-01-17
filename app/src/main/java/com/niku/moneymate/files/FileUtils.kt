@@ -312,7 +312,7 @@ class FileUtils {
                                         account_id_to = accountUUIDTo ?: UUID.fromString(UUID_ACCOUNT_EMPTY),
                                         category_id = categoryUUID,
                                         project_id = projectUUID,
-                                        transactionDate = Date(datetime / 1000),
+                                        transactionDate = Date(datetime),
                                         amount_from = from_amount.toDouble() / 100,
                                         amount_to = to_amount.toDouble() / 100,
                                         note = transaction_note,
