@@ -34,10 +34,12 @@ interface MoneyMateDao {
     fun getProject(project_id: UUID): LiveData<Project?>
 
     @Query("""
-        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * mt.transaction_type), 0.0) as balance
+        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * mt.transaction_type), 0.0) + ifnull(SUM(mt_to.amount_to), 0.0) as balance
         FROM account as acc
         LEFT JOIN moneyTransaction AS mt
         ON acc.account_id = mt.account_id_from
+        LEFT JOIN moneyTransaction AS mt_to
+        ON acc.account_id = mt.account_id_to
         LEFT JOIN category as cat
         ON mt.category_id = cat.category_id
         WHERE mt.account_id_from=(:id)
@@ -48,7 +50,7 @@ interface MoneyMateDao {
     @Transaction
     @RewriteQueriesToDropUnusedColumns
     @Query("""
-        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from * mt.transaction_type), 0.0) AS balance,
+        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from), 0.0) + ifnull(SUM(mt_to.amount_to), 0.0) AS balance,
             acc.initial_balance AS initial_balance,
             acc.title AS title,
             acc.note AS note,
@@ -63,6 +65,8 @@ interface MoneyMateDao {
         FROM account as acc
         LEFT JOIN moneyTransaction AS mt 
             ON acc.account_id = mt.account_id_from
+        LEFT JOIN moneyTransaction AS mt_to 
+            ON acc.account_id = mt_to.account_id_to
         LEFT JOIN category as cat
             ON mt.category_id = cat.category_id
         LEFT JOIN mainCurrency AS cur
@@ -112,7 +116,7 @@ interface MoneyMateDao {
     fun addCategory(category: Category)
 
     @Transaction
-    @Query("SELECT * FROM moneyTransaction")
+    @Query("SELECT * FROM moneyTransaction ORDER BY transaction_date DESC")
     fun getTransactions(): LiveData<List<TransactionWithProperties>>
 
     @Transaction

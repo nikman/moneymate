@@ -197,7 +197,8 @@ class TransactionListFragment: Fragment() {
 
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
             accountTextView.text = this.transaction.accountFrom.title
-            amountTextView.text = (this.transaction.transaction.amount_from * this.transaction.transaction.transaction_type).toString()
+            //amountTextView.text = "%.2f".format(this.transaction.transaction.amount_from * this.transaction.transaction.transaction_type)
+            amountTextView.text = "%.2f".format(this.transaction.transaction.amount_from)
             projectTextView.text = this.transaction.project.project_title
             categoryTextView.text = this.transaction.category.category_title
 

@@ -54,7 +54,8 @@ class MoneyMateRepository private constructor(context: Context) {
                 val projectEmpty =
                     Project(
                         project_title = context.resources.getString(R.string.predef_empty_project_title),
-                        project_id = UUID.fromString(UUID_PROJECT_EMPTY)
+                        project_id = UUID.fromString(UUID_PROJECT_EMPTY),
+                        is_active = false
                     )
                 moneyMateDao.addProject(projectEmpty)
 
@@ -81,13 +82,23 @@ class MoneyMateRepository private constructor(context: Context) {
                         account_id = UUID.fromString(UUID_ACCOUNT_CASH)
                     )
                 moneyMateDao.addAccount(accountCash)*/
-                val accountCash =
+                val accountEmpty =
                     Account(
                         currency_id = UUID.fromString(UUID_CURRENCY_RUB),
-                        title = context.resources.getString(R.string.predef_account_title_cash),
-                        account_id = UUID.fromString(UUID_ACCOUNT_EMPTY)
+                        title = "no account",
+                        account_id = UUID.fromString(UUID_ACCOUNT_EMPTY),
+                        is_active = false
                     )
-                moneyMateDao.addAccount(accountCash)
+                moneyMateDao.addAccount(accountEmpty)
+
+                val categoryEmpty =
+                    Category(
+                        category_type = 0,
+                        category_title = "no category",
+                        category_id = UUID.fromString(UUID_CATEGORY_EMPTY),
+                        is_active = false
+                    )
+                moneyMateDao.addCategory(categoryEmpty)
             }
         }
 

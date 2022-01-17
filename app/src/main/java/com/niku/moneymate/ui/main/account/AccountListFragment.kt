@@ -172,7 +172,7 @@ class AccountListFragment: Fragment() {
         fun bind(account: AccountWithCurrency) {
             this.account = account
             titleTextView.text = this.account.account.title
-            balanceTextView.text = this.account.account.balance.toString()
+            balanceTextView.text = "%.2f".format(this.account.account.balance)
             currencyTextView.text = this.account.currency.currency_title
         }
 

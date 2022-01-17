@@ -30,6 +30,7 @@ import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
 import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.util.*
+import kotlin.math.abs
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
 private const val TAG = "TransactionFragment"
@@ -214,8 +215,8 @@ class TransactionFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                moneyTransaction.amount_from = if (count > 0) s.toString().toDouble() else 0.0
-                moneyTransaction.amount_to = moneyTransaction.amount_from
+                moneyTransaction.amount_from = if (count > 0) s.toString().toDouble() * moneyTransaction.transaction_type else 0.0
+                moneyTransaction.amount_to = 0.0 //-moneyTransaction.amount_from
             }
 
             override fun afterTextChanged(s: Editable?) {  }
@@ -325,7 +326,7 @@ class TransactionFragment : Fragment() {
 
     private fun updateUI() {
 
-        amountField.setText(moneyTransaction.amount_from.toString())
+        amountField.setText(abs(moneyTransaction.amount_from).toString())
         dateButton.text = moneyTransaction.transactionDate.toString()
 
         if (this::accounts.isInitialized) {

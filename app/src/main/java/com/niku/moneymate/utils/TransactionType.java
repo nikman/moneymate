@@ -7,4 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface TransactionType {
     int OUTCOME = -1;
     int INCOME = 1;
+    //int CONVERT = -1;
 }

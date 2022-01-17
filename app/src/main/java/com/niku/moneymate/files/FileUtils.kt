@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.Math.abs
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
@@ -38,8 +39,10 @@ class FileUtils {
 
     fun readFileFromAssetsLineByLine(context: Context) = runBlocking {
         //this.context = context
-        val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
-        AssetsLoader.getAccountsDataFromFile(context, text)
+        withContext(Dispatchers.IO) {
+            val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
+            AssetsLoader.getAccountsDataFromFile(text)
+        }
     }
 
     object AssetsLoader {
@@ -50,7 +53,7 @@ class FileUtils {
             }
         }
 
-        suspend fun getAccountsDataFromFile(context: Context, text: String) {
+        fun getAccountsDataFromFile(text: String) {
 
             val accountList: ArrayList<com.niku.moneymate.account.Account> = ArrayList()
             var isAccountLoading = false
@@ -86,8 +89,6 @@ class FileUtils {
             var account_external_id:  Int = 0
             var category_external_id:  Int = 0
             var project_external_id:  Int = 0
-
-            withContext(Dispatchers.IO) {
 
                 for (line in text.lines()) {
 
@@ -215,6 +216,7 @@ class FileUtils {
                 }
 
                 val moneyMateRepository = MoneyMateRepository.get()
+
                 for (account in accountList) {
                     moneyMateRepository.addAccount(account)
                 }
@@ -251,10 +253,15 @@ class FileUtils {
                 var accountTo: Account
                 var categoryUUID: UUID?
                 var projectUUID: UUID?
-                var category: Category?
+                var category: Category? = null
                 var transaction_type: Int
 
+                //var trCount = 0
+
                 for (line in text.lines()) {
+
+                    /*if (trCount > 300) { break }
+                    else {  }*/
 
                     if (isTransactionLoading) {
                         when (line.substringBefore(":")) {
@@ -270,11 +277,10 @@ class FileUtils {
                         }
                     }
 
-                    when (line) {
-                        "\$ENTITY:transactions" -> isTransactionLoading = true
-                    }
-
-                    if (line == "\$\$" && isTransactionLoading) {
+                    if (line == "\$ENTITY:transactions") {
+                        isTransactionLoading = true
+                        //trCount++
+                    } else if (line == "\$\$" && isTransactionLoading) {
 
                         isTransactionLoading = false
 
@@ -284,44 +290,37 @@ class FileUtils {
                         categoryUUID = moneyMateRepository.getCategoryByExternalId(category_id)
                         projectUUID = moneyMateRepository.getProjectByExternalId(project_id)
 
-                        if (accountUUIDFrom != null
-                            //&& accountUUIDTo != null
-                            && categoryUUID != null
-                            && projectUUID != null
-                        ) {
+                        if (accountUUIDFrom != null) {
 
                             accountFrom = moneyMateRepository.getAccountDirect(accountUUIDFrom)
-                            category = moneyMateRepository.getCategoryDirect(categoryUUID)
+                            if (categoryUUID != null && categoryUUID != UUID.fromString(UUID_CATEGORY_EMPTY)) {
+                                category = moneyMateRepository.getCategoryDirect(categoryUUID)
+                            }
 
-                            if (accountFrom != null
-                                && category != null
-                            ) {
+                            if (accountFrom != null) {
 
-                                /*if (from_amount > 0 && category.category_type == CategoryType.OUTCOME) {
-                                transaction_type = TransactionType.INCOME
-                            } else  if (from_amount < 0 && category.category_type == CategoryType.INCOME) {
-                                transaction_type = TransactionType.OUTCOME
-                            } else {
-                                transaction_type = category.category_type
-                            }*/
+                                if (category != null) {
+                                    if (from_amount > 0 && category.category_type == CategoryType.OUTCOME)
+                                        transaction_type = TransactionType.INCOME
+                                    else if (from_amount < 0 && category.category_type == CategoryType.INCOME)
+                                        transaction_type = TransactionType.OUTCOME
+                                    else transaction_type = category.category_type
+                                } else {
+                                    transaction_type = if (from_amount > 0) TransactionType.INCOME else TransactionType.OUTCOME
+                                }
 
                                 val transaction =
                                     MoneyTransaction(
                                         currency_id = accountFrom.currency_id,
                                         account_id_from = accountUUIDFrom,
                                         account_id_to = accountUUIDTo ?: UUID.fromString(UUID_ACCOUNT_EMPTY),
-                                        category_id = categoryUUID,
-                                        project_id = projectUUID,
+                                        category_id = categoryUUID ?: UUID.fromString(UUID_CATEGORY_EMPTY),
+                                        project_id = projectUUID ?: UUID.fromString(UUID_PROJECT_EMPTY),
                                         transactionDate = Date(datetime),
-                                        amount_from = from_amount.toDouble() / 100,
-                                        amount_to = to_amount.toDouble() / 100,
+                                        amount_from = (from_amount / 100).toDouble(),
+                                        amount_to = (to_amount / 100).toDouble(),
                                         note = transaction_note,
-                                        transaction_type =
-                                        if (from_amount > 0 && category.category_type == CategoryType.OUTCOME)
-                                            TransactionType.INCOME
-                                        else if (from_amount < 0 && category.category_type == CategoryType.INCOME)
-                                            TransactionType.OUTCOME
-                                        else category.category_type
+                                        transaction_type = transaction_type
                                     )
 
                                 transactionList.add(transaction)
@@ -329,12 +328,22 @@ class FileUtils {
 
                         }
 
+                        from_account_id = 0
+                        to_account_id = 0
+                        category_id = 0
+                        project_id = 0
+                        from_amount = 0
+                        to_amount = 0
+                        datetime = 0
+                        payee_id = 0
+                        transaction_note = ""
+                        transaction_type = 0
+
                     }
                 }
                 for (transaction in transactionList) {
                     moneyMateRepository.addTransaction(transaction)
                 }
-            }
         }
     }
 }
