@@ -28,6 +28,7 @@ import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.CategoryType
 import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
+import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.util.*
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
@@ -88,7 +89,8 @@ class TransactionFragment : Fragment() {
 
         moneyTransaction = MoneyTransaction(
             accountFrom.account_id,
-            accountTo.account_id,
+            //accountTo.account_id,
+            UUID.fromString(UUID_ACCOUNT_EMPTY),
             currency.currency_id,
             category.category_id,
             project.project_id)
@@ -242,7 +244,7 @@ class TransactionFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                moneyTransaction.account_id_to = accounts[position].account_id
+                //moneyTransaction.account_id_to = accounts[position].account_id
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {

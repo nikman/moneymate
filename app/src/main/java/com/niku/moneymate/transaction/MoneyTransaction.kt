@@ -7,6 +7,7 @@ import androidx.room.ForeignKey.CASCADE
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.time.Clock
 import java.time.LocalDate
 import java.util.*
@@ -47,7 +48,7 @@ data class MoneyTransaction(
     @NonNull
     var account_id_from: UUID,
     @NonNull
-    var account_id_to: UUID,
+    var account_id_to: UUID = UUID.fromString(UUID_ACCOUNT_EMPTY),
     @NonNull
     var currency_id: UUID,
     @NonNull

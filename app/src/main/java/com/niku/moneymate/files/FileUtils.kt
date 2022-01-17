@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
@@ -13,8 +14,10 @@ import com.niku.moneymate.database.MoneyMateRepository
 import com.niku.moneymate.payee.Payee
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
-import com.niku.moneymate.utils.CategoryType
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
@@ -24,7 +27,7 @@ private const val TAG = "FileUtils"
 
 class FileUtils {
 
-    var context: Context? = null
+    //var context: Context? = null
 
     fun Context.launchFileIntent(filePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
@@ -33,12 +36,10 @@ class FileUtils {
         startActivity(Intent.createChooser(intent, "Select Application"))
     }
 
-    fun readFileFromAssetsLineByLine(context: Context) {
-        this.context = context
-        Executors.newSingleThreadExecutor().apply {
-            val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
-            AssetsLoader.getAccountsDataFromFile(context, text)
-        }
+    fun readFileFromAssetsLineByLine(context: Context) = runBlocking {
+        //this.context = context
+        val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
+        AssetsLoader.getAccountsDataFromFile(context, text)
     }
 
     object AssetsLoader {
@@ -49,7 +50,7 @@ class FileUtils {
             }
         }
 
-        fun getAccountsDataFromFile(context: Context, text: String) {
+        suspend fun getAccountsDataFromFile(context: Context, text: String) {
 
             val accountList: ArrayList<com.niku.moneymate.account.Account> = ArrayList()
             var isAccountLoading = false
@@ -59,6 +60,7 @@ class FileUtils {
             var isActive = true
             var isIncludeIntoTotals = false
             var sortOrder = 0
+            var accountCurrencyId = ""
 
             val categoryList: ArrayList<Category> = ArrayList()
             var isCategoryLoading = false
@@ -80,192 +82,258 @@ class FileUtils {
             var projectTitle = ""
             var projectIsActive = true
 
-            for (line in text.lines()) {
+            var payee_external_id:  Int = 0
+            var account_external_id:  Int = 0
+            var category_external_id:  Int = 0
+            var project_external_id:  Int = 0
 
-                if (isAccountLoading) {
-                    when (line.substringBefore(":")) {
-                        "title" -> accountTitle = line.substringAfter(":")
-                        "number" -> accountNote = line.substringAfter(":")
-                        "is_active" -> isActive = line.substringAfter(":") == "1"
-                        "is_include_into_totals" -> isIncludeIntoTotals = line.substringAfter(":") == "1"
-                        "sort_order"  -> sortOrder = line.substringAfter(":").toInt()
+            withContext(Dispatchers.IO) {
+
+                for (line in text.lines()) {
+
+                    if (isAccountLoading) {
+                        when (line.substringBefore(":")) {
+                            "title" -> accountTitle = line.substringAfter(":")
+                            "number" -> accountNote = line.substringAfter(":")
+                            "is_active" -> isActive = line.substringAfter(":") == "1"
+                            "is_include_into_totals" -> isIncludeIntoTotals =
+                                line.substringAfter(":") == "1"
+                            "sort_order" -> sortOrder = line.substringAfter(":").toInt()
+                            "currency_id" -> accountCurrencyId = line.substringAfter(":")
+                            "_id" -> account_external_id = line.substringAfter(":").toInt()
+                        }
+                    } else if (isCategoryLoading) {
+                        if (line.substringBefore(":") == "title") {
+                            categoryTitle = line.substringAfter(":")
+                        } else if (line.substringBefore(":") == "type") {
+                            categoryType =
+                                if (line.substringAfter(":") == "0") CategoryType.OUTCOME
+                                else CategoryType.INCOME
+                        } else if (line.substringBefore(":") == "_id") { category_external_id = line.substringAfter(":").toInt() }
+                    } else if (isPayeeLoading) {
+                        if (line.substringBefore(":") == "title") {
+                            payeeTitle = line.substringAfter(":")
+                        } else if (line.substringBefore(":") == "is_active") {
+                            payeeIsActive = line.substringAfter(":") == "1"
+                        } else if (line.substringBefore(":") == "_id") { payee_external_id = line.substringAfter(":").toInt() }
+                    } else if (isProjectLoading) {
+                        if (line.substringBefore(":") == "title") {
+                            projectTitle = line.substringAfter(":")
+                        } else if (line.substringBefore(":") == "is_active") {
+                            projectIsActive = line.substringAfter(":") == "1"
+                        } else if (line.substringBefore(":") == "_id") { project_external_id = line.substringAfter(":").toInt() }
                     }
-                } else if (isCategoryLoading) {
-                    if (line.substringBefore(":") == "title") {
-                        categoryTitle = line.substringAfter(":")
-                    } else if (line.substringBefore(":") == "type") {
-                        categoryType =
-                            if (line.substringAfter(":") == "0") CategoryType.OUTCOME
-                            else CategoryType.INCOME
+
+                    when (line) {
+                        "\$ENTITY:account" -> isAccountLoading = true
+                        "\$ENTITY:category" -> isCategoryLoading = true
+                        "\$ENTITY:payee" -> isPayeeLoading = true
+                        "\$ENTITY:project" -> isProjectLoading = true
                     }
-                } else if (isPayeeLoading) {
-                    if (line.substringBefore(":") == "title") {
-                        payeeTitle = line.substringAfter(":")
-                    } else if (line.substringBefore(":") == "is_active") {
-                        payeeIsActive = line.substringAfter(":") == "1"
+
+                    if (line == "\$\$" && isAccountLoading) {
+
+                        isAccountLoading = false
+
+                        //$ENTITY:currency
+                        //_id:1
+                        //name:RUB
+                        //$ENTITY:currency
+                        //_id:2
+                        //name:USD
+
+                        val account: Account =
+                            Account(
+                                currency_id = when (accountCurrencyId) {
+                                    "1" -> UUID.fromString(UUID_CURRENCY_RUB)
+                                    "2" -> UUID.fromString(UUID_CURRENCY_USD)
+                                    else -> UUID.fromString(UUID_CURRENCY_RUB)
+                                },
+                                title = accountTitle,
+                                note = accountNote,
+                                is_active = isActive,
+                                is_include_into_totals = isIncludeIntoTotals,
+                                sort_order = sortOrder,
+                                account_external_id = account_external_id
+                            )
+
+                        accountList.add(account)
+
+                        accountTitle = ""
+                        accountNote = ""
+                        isActive = true
+                        isIncludeIntoTotals = false
+                        sortOrder = 0
                     }
-                } else if (isProjectLoading) {
-                    if (line.substringBefore(":") == "title") {
-                        projectTitle = line.substringAfter(":")
-                    } else if (line.substringBefore(":") == "is_active") {
-                        projectIsActive = line.substringAfter(":") == "1"
+
+                    if (line == "\$\$" && isCategoryLoading) {
+
+                        isCategoryLoading = false
+
+                        val category =
+                            Category(
+                                category_type = categoryType,
+                                category_title = categoryTitle,
+                                category_external_id = category_external_id
+                            )
+
+                        categoryList.add(category)
+
+                        categoryTitle = ""
+                        categoryType = 0
                     }
-                }
 
-                when (line) {
-                    "\$ENTITY:account" -> isAccountLoading = true
-                    "\$ENTITY:category" -> isCategoryLoading = true
-                    "\$ENTITY:payee" -> isPayeeLoading = true
-                    "\$ENTITY:project" -> isProjectLoading = true
-                }
+                    if (line == "\$\$" && isPayeeLoading) {
 
-                if (line == "\$\$" && isAccountLoading) {
+                        isPayeeLoading = false
 
-                    isAccountLoading = false
+                        val payee =
+                            Payee(
+                                payee_title = payeeTitle,
+                                is_active = payeeIsActive,
+                                payee_external_id = payee_external_id
+                            )
 
-                    val account: com.niku.moneymate.account.Account =
-                        com.niku.moneymate.account.Account(
-                            currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(context)),
-                            title = accountTitle,
-                            note = accountNote,
-                            is_active = isActive,
-                            is_include_into_totals = isIncludeIntoTotals,
-                            sort_order = sortOrder)
+                        payeeList.add(payee)
 
-                    accountList.add(account)
-
-                    accountTitle = ""
-                    accountNote = ""
-                    isActive = true
-                    isIncludeIntoTotals = false
-                    sortOrder = 0
-                }
-
-                if (line == "\$\$" && isCategoryLoading) {
-
-                    isCategoryLoading = false
-
-                    val category =
-                        Category(
-                            category_type = categoryType,
-                            category_title = categoryTitle)
-
-                    categoryList.add(category)
-
-                    categoryTitle = ""
-                    categoryType = 0
-                }
-
-                if (line == "\$\$" && isPayeeLoading) {
-
-                    isPayeeLoading = false
-
-                    val payee =
-                        Payee(
-                            payee_title = payeeTitle,
-                            is_active = payeeIsActive)
-
-                    payeeList.add(payee)
-
-                }
-
-                if (line == "\$\$" && isProjectLoading) {
-
-                    isProjectLoading = false
-
-                    val project =
-                        Project(
-                            project_title = projectTitle,
-                            is_active = projectIsActive)
-
-                    projectList.add(project)
-
-                }
-            }
-
-            //Executors.newSingleThreadExecutor().apply {
-            //    this.execute {
-                    val moneyMateRepository = MoneyMateRepository.get()
-                    for (account in accountList) {
-                        moneyMateRepository.addAccount(account)
                     }
-            //    }
-           // }
 
-            //Executors.newSingleThreadExecutor().apply {
-            //    this.execute {
-             //       val moneyMateRepository = MoneyMateRepository.get()
-                    for (category in categoryList) {
-                        moneyMateRepository.addCategory(category)
-                    }
-             //   }
-           // }
-            //Executors.newSingleThreadExecutor().apply {
-             //   this.execute {
-             //       val moneyMateRepository = MoneyMateRepository.get()
-                    for (payee in payeeList) {
-                        moneyMateRepository.addPayee(payee)
-                    }
-            //    }
-            //}
-            //Executors.newSingleThreadExecutor().apply {
-             //   this.execute {
-             //       val moneyMateRepository = MoneyMateRepository.get()
-                    for (project in projectList) {
-                        moneyMateRepository.addProject(project)
-                    }
-              //  }
-           // }
+                    if (line == "\$\$" && isProjectLoading) {
 
-            // $ENTITY:transactions
-            val transactionList: ArrayList<MoneyTransaction> = ArrayList()
-            var isTransactionLoading = false
+                        isProjectLoading = false
 
-            var from_account_id = 0
-            var to_account_id = 0
-            var category_id = 0
-            var project_id = 0
-            var from_amount = 0
+                        val project =
+                            Project(
+                                project_title = projectTitle,
+                                is_active = projectIsActive,
+                                project_external_id = project_external_id
+                            )
 
-            for (line in text.lines()) {
+                        projectList.add(project)
 
-                if (isTransactionLoading) {
-                    when (line.substringBefore(":")) {
-                        "from_account_id" -> from_account_id = line.substringAfter(":").toInt()
-                        "to_account_id" -> to_account_id = line.substringAfter(":").toInt()
-                        "category_id" -> category_id = line.substringAfter(":").toInt()
-                        "project_id" -> project_id = line.substringAfter(":").toInt()
-                        "from_amount"  -> from_amount = line.substringAfter(":").toInt()
                     }
                 }
 
-                when (line) {
-                    "\$ENTITY:transactions" -> isTransactionLoading = true
+                val moneyMateRepository = MoneyMateRepository.get()
+                for (account in accountList) {
+                    moneyMateRepository.addAccount(account)
                 }
 
-                if (line == "\$\$" && isTransactionLoading) {
-
-                    isTransactionLoading = false
-
-                    /*val transaction =
-                        MoneyTransaction(
-                            currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(context)),
-                            account_id_from = accountTitle,
-                            account_id_to = accountNote,
-                            category_id = isActive,
-                            project_id = isIncludeIntoTotals,
-                            transactionDate = sortOrder,
-                            amount_from,
-                            amount_to,
-                            note,
-                            transaction_type)
-
-                    transactionList.add(transaction)*/
-
+                for (category in categoryList) {
+                    moneyMateRepository.addCategory(category)
                 }
-            }
-            for (transaction in transactionList) {
-                moneyMateRepository.addTransaction(transaction)
+
+                for (payee in payeeList) {
+                    moneyMateRepository.addPayee(payee)
+                }
+
+                for (project in projectList) {
+                    moneyMateRepository.addProject(project)
+                }
+
+                // $ENTITY:transactions
+                val transactionList: ArrayList<MoneyTransaction> = ArrayList()
+                var isTransactionLoading = false
+
+                var from_account_id = 0
+                var to_account_id = 0
+                var category_id = 0
+                var project_id = 0
+                var from_amount = 0
+                var to_amount = 0
+                var datetime = 0L
+                var payee_id = 0
+                var transaction_note = ""
+
+                var accountUUIDFrom: UUID?
+                var accountUUIDTo: UUID?
+                var accountFrom: Account?
+                var accountTo: Account
+                var categoryUUID: UUID?
+                var projectUUID: UUID?
+                var category: Category?
+                var transaction_type: Int
+
+                for (line in text.lines()) {
+
+                    if (isTransactionLoading) {
+                        when (line.substringBefore(":")) {
+                            "from_account_id" -> from_account_id = line.substringAfter(":").toInt()
+                            "to_account_id" -> to_account_id = line.substringAfter(":").toInt()
+                            "category_id" -> category_id = line.substringAfter(":").toInt()
+                            "project_id" -> project_id = line.substringAfter(":").toInt()
+                            "from_amount" -> from_amount = line.substringAfter(":").toInt()
+                            "to_amount" -> to_amount = line.substringAfter(":").toInt()
+                            "datetime" -> datetime = line.substringAfter(":").toLong()
+                            "payee_id" -> payee_id = line.substringAfter(":").toInt()
+                            "note" -> transaction_note = line.substringAfter(":")
+                        }
+                    }
+
+                    when (line) {
+                        "\$ENTITY:transactions" -> isTransactionLoading = true
+                    }
+
+                    if (line == "\$\$" && isTransactionLoading) {
+
+                        isTransactionLoading = false
+
+                        accountUUIDFrom =
+                            moneyMateRepository.getAccountByExternalId(from_account_id)
+                        accountUUIDTo = moneyMateRepository.getAccountByExternalId(to_account_id)
+                        categoryUUID = moneyMateRepository.getCategoryByExternalId(category_id)
+                        projectUUID = moneyMateRepository.getProjectByExternalId(project_id)
+
+                        if (accountUUIDFrom != null
+                            //&& accountUUIDTo != null
+                            && categoryUUID != null
+                            && projectUUID != null
+                        ) {
+
+                            accountFrom = moneyMateRepository.getAccountDirect(accountUUIDFrom)
+                            category = moneyMateRepository.getCategoryDirect(categoryUUID)
+
+                            if (accountFrom != null
+                                && category != null
+                            ) {
+
+                                /*if (from_amount > 0 && category.category_type == CategoryType.OUTCOME) {
+                                transaction_type = TransactionType.INCOME
+                            } else  if (from_amount < 0 && category.category_type == CategoryType.INCOME) {
+                                transaction_type = TransactionType.OUTCOME
+                            } else {
+                                transaction_type = category.category_type
+                            }*/
+
+                                val transaction =
+                                    MoneyTransaction(
+                                        currency_id = accountFrom.currency_id,
+                                        account_id_from = accountUUIDFrom,
+                                        account_id_to = accountUUIDTo ?: UUID.fromString(UUID_ACCOUNT_EMPTY),
+                                        category_id = categoryUUID,
+                                        project_id = projectUUID,
+                                        transactionDate = Date(datetime / 1000),
+                                        amount_from = from_amount.toDouble() / 100,
+                                        amount_to = to_amount.toDouble() / 100,
+                                        note = transaction_note,
+                                        transaction_type =
+                                        if (from_amount > 0 && category.category_type == CategoryType.OUTCOME)
+                                            TransactionType.INCOME
+                                        else if (from_amount < 0 && category.category_type == CategoryType.INCOME)
+                                            TransactionType.OUTCOME
+                                        else category.category_type
+                                    )
+
+                                transactionList.add(transaction)
+                            }
+
+                        }
+
+                    }
+                }
+                for (transaction in transactionList) {
+                    moneyMateRepository.addTransaction(transaction)
+                }
             }
         }
     }

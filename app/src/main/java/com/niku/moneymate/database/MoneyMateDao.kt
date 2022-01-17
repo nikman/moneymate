@@ -26,6 +26,9 @@ interface MoneyMateDao {
     @Query("SELECT * FROM account WHERE account_id=(:account_id)")
     fun getAccount(account_id: UUID): LiveData<AccountWithCurrency?>
 
+    @Query("SELECT * FROM account WHERE account_id=(:account_id)")
+    fun getAccountDirect(account_id: UUID): Account?
+
     @Transaction
     @Query("SELECT * FROM project WHERE project_id=(:project_id)")
     fun getProject(project_id: UUID): LiveData<Project?>
@@ -156,4 +159,7 @@ interface MoneyMateDao {
 
     @Query("SELECT project_id FROM project WHERE project_external_id=(:externalId)")
     fun getProjectByExternalId(externalId: Int): UUID?
+
+    @Query("SELECT * FROM category WHERE category_id=(:categoryUUID)")
+    fun getCategoryDirect(categoryUUID: UUID): Category?
 }

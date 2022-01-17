@@ -22,6 +22,7 @@ import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.util.*
 
 private const val TAG = "TransactionListFragment"
@@ -120,7 +121,8 @@ class TransactionListFragment: Fragment() {
 
                 val transaction = MoneyTransaction(
                     account.account_id,
-                    account.account_id,
+                    //account.account_id,
+                    UUID.fromString(UUID_ACCOUNT_EMPTY),
                     currency.currency_id,
                     category.category_id,
                     UUID.fromString(

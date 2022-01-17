@@ -81,6 +81,13 @@ class MoneyMateRepository private constructor(context: Context) {
                         account_id = UUID.fromString(UUID_ACCOUNT_CASH)
                     )
                 moneyMateDao.addAccount(accountCash)*/
+                val accountCash =
+                    Account(
+                        currency_id = UUID.fromString(UUID_CURRENCY_RUB),
+                        title = context.resources.getString(R.string.predef_account_title_cash),
+                        account_id = UUID.fromString(UUID_ACCOUNT_EMPTY)
+                    )
+                moneyMateDao.addAccount(accountCash)
             }
         }
 
@@ -218,6 +225,14 @@ class MoneyMateRepository private constructor(context: Context) {
     }
     fun getProjectByExternalId(externalId: Int): UUID? {
         return moneyMateDao.getProjectByExternalId(externalId)
+    }
+
+    fun getAccountDirect(accountUUIDFrom: UUID): Account? {
+        return moneyMateDao.getAccountDirect(accountUUIDFrom)
+    }
+
+    fun getCategoryDirect(categoryUUID: UUID): Category? {
+        return moneyMateDao.getCategoryDirect(categoryUUID)
     }
 
     companion object {
