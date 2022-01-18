@@ -40,7 +40,7 @@ class FileUtils {
     fun readFileFromAssetsLineByLine(context: Context) = runBlocking {
         //this.context = context
         withContext(Dispatchers.IO) {
-            val text = AssetsLoader.loadTextFromAsset(context, "db_backup")
+            val text = AssetsLoader.loadTextFromAsset(context, "db")
             AssetsLoader.getAccountsDataFromFile(text)
         }
     }

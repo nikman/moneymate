@@ -170,10 +170,19 @@ class AccountListFragment: Fragment() {
         }
 
         fun bind(account: AccountWithCurrency) {
+
             this.account = account
             titleTextView.text = this.account.account.title
-            balanceTextView.text = "%.2f".format(this.account.account.balance)
+            //balanceTextView.text = "%.2f".format(this.account.account.balance)
             currencyTextView.text = this.account.currency.currency_title
+
+            accountListViewModel.accountBalanceLiveData(account.account.account_id).observe(
+                viewLifecycleOwner,
+                {
+                        balance -> balanceTextView.text = "%.2f".format(balance)
+                }
+            )
+
         }
 
     }
