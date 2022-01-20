@@ -2,33 +2,28 @@ package com.niku.moneymate.files
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
-import androidx.lifecycle.ViewModelProvider
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.niku.moneymate.account.Account
-import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.category.Category
-import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.database.MoneyMateRepository
+import com.niku.moneymate.database.SeedDatabaseWorker
+import com.niku.moneymate.database.SeedDatabaseWorker.Companion.KEY_FILENAME
 import com.niku.moneymate.payee.Payee
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.io.File
-import java.lang.Math.abs
 import java.util.*
-import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
 private const val TAG = "FileUtils"
 
 class FileUtils {
 
-    //var context: Context? = null
+    infix fun <A, B> A.into(that: B): Pair<A, B> = Pair(this, that)
 
     fun Context.launchFileIntent(filePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
@@ -37,12 +32,13 @@ class FileUtils {
         startActivity(Intent.createChooser(intent, "Select Application"))
     }
 
-    fun readFileFromAssetsLineByLine(context: Context) = runBlocking {
-        //this.context = context
-        withContext(Dispatchers.IO) {
-            val text = AssetsLoader.loadTextFromAsset(context, "db")
-            AssetsLoader.getAccountsDataFromFile(text)
-        }
+    fun readFileFromAssetsLineByLine(context: Context): Unit {
+
+        val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
+            .setInputData(workDataOf(KEY_FILENAME into "database/20220120_223208_566"))
+            .build()
+        WorkManager.getInstance(context).enqueue(request)
+
     }
 
     object AssetsLoader {
@@ -55,7 +51,7 @@ class FileUtils {
 
         fun getAccountsDataFromFile(text: String) {
 
-            val accountList: ArrayList<com.niku.moneymate.account.Account> = ArrayList()
+            val accountList: ArrayList<Account> = ArrayList()
             var isAccountLoading = false
 
             var accountTitle = ""

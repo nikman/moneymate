@@ -60,59 +60,23 @@ interface MoneyMateDao {
     @Transaction
     @RewriteQueriesToDropUnusedColumns
     @Query("""
-        SELECT acc.initial_balance + ifnull(SUM(mt.amount_from), 0.0) + ifnull(SUM(mt_to.amount_to), 0.0) AS balance,
-            acc.initial_balance AS initial_balance,
-            acc.title AS title,
-            acc.note AS note,
-            acc.account_id AS account_id,
-            acc.currency_id AS currency_id,
-            cur.currency_code AS currency_code,
-            cur.currency_title AS currency_title,
-            acc.is_active AS is_active,
-            acc.is_include_into_totals AS is_include_into_totals,
-            acc.sort_order AS sort_order,
-            acc.account_external_id AS account_external_id
-        FROM account as acc
-        LEFT JOIN moneyTransaction AS mt 
-            ON acc.account_id = mt.account_id_from
-        LEFT JOIN moneyTransaction AS mt_to 
-            ON acc.account_id = mt_to.account_id_to
-        LEFT JOIN category as cat
-            ON mt.category_id = cat.category_id
-        LEFT JOIN mainCurrency AS cur
-            ON acc.currency_id = cur.currency_id
-        GROUP BY acc.account_id,acc.title,acc.note,
-            acc.currency_id,cur.currency_code,
-            cur.currency_title
-        ORDER BY sort_order DESC
-            """)
-    fun getAccountsWithBalance_to_refactor(): LiveData<List<AccountWithCurrency>>
-
-    @Transaction
-    @RewriteQueriesToDropUnusedColumns
-    @Query("""
         SELECT 0.0 AS balance,
             acc.initial_balance AS initial_balance,
             acc.title AS title,
             acc.note AS note,
             acc.account_id AS account_id,
             acc.currency_id AS currency_id,
-            --cur.currency_code AS currency_code,
-           -- cur.currency_title AS currency_title,
             acc.is_active AS is_active,
             acc.is_include_into_totals AS is_include_into_totals,
             acc.sort_order AS sort_order,
             acc.account_external_id AS account_external_id
         FROM account as acc
-        --LEFT JOIN moneyTransaction AS mt 
-        --    ON acc.account_id = mt.account_id_from
-        --LEFT JOIN category as cat
-        --    ON mt.category_id = cat.category_id
         LEFT JOIN mainCurrency AS cur
             ON acc.currency_id = cur.currency_id
+        WHERE acc.is_active = (:showInactive)
         ORDER BY sort_order DESC
             """)
-    fun getAccountsWithBalance(): LiveData<List<AccountWithCurrency>>
+    fun getAccountsWithBalance(showInactive: Boolean = false): LiveData<List<AccountWithCurrency>>
 
     @Update
     fun updateAccount(account: Account)
