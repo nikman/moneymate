@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -48,8 +49,13 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        this.navController = navHostFragment.navController
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
+        bottomNavigationView.setupWithNavController(this.navController)
+/*
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         appBarConfiguration =
             AppBarConfiguration.Builder(R.id.transactionListFragment, R.id.transactionListFragment)
@@ -64,7 +70,7 @@ class MainActivity :
             R.id.projectListFragment,
             R.id.currencyListFragment)).build()
         //setupActionBarWithNavController(navController, appBarConfiguration)
-        bottomNavigationView.setupWithNavController(navController)
+        bottomNavigationView.setupWithNavController(navController)*/
 
         bottomNavigationView.setOnItemSelectedListener  {
 
@@ -72,13 +78,9 @@ class MainActivity :
 
                 R.id.budget -> {
                     navController.navigate(R.id.transactionListFragment)
-                    //navController.clearBackStack(R.id.transactionListFragment)
-                    //navController.popBackStack()
                 }
                 R.id.accounts -> {
                     navController.navigate(R.id.accountListFragment)
-                    //navController.clearBackStack(R.id.accountListFragment)
-                    //navController.popBackStack()
                 }
                 R.id.categories->navController.navigate(R.id.categoryListFragment)
                 R.id.projects->navController.navigate(R.id.projectListFragment)
@@ -95,26 +97,6 @@ class MainActivity :
                 super.onSupportNavigateUp()
     }
 
-/*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 111 && resultCode == RESULT_OK) {
-            val selectedFile = data?.data
-            selectedFile?.let {
-                Log.d(TAG, it.toString())
-                val filePath: String? = selectedFile.path
-                val segment = selectedFile.lastPathSegment
-                segment?.let { Log.d(TAG, segment) }
-                filePath?.let {
-                    Log.d(TAG, filePath)
-                    val executor = Executors.newSingleThreadExecutor()
-                    executor.execute {
-                        com.niku.moneymate.files.FileUtils().readFileLineByLine(filePath)
-                    }
-                }
-            }
-        }
-    }*/
-
     override fun onAccountSelected(accountId: UUID) {
         navController.navigate(
                 R.id.action_accountListFragment_to_accountFragment,
@@ -128,7 +110,6 @@ class MainActivity :
     }
 
     override fun onCurrencySelected(currencyId: UUID) {
-        //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_currencyListFragment_to_currencyFragment,
                 CurrencyFragment.newBundle(currencyId),
@@ -141,7 +122,6 @@ class MainActivity :
     }
 
     override fun onCategorySelected(categoryId: UUID) {
-        //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_categoryListFragment_to_categoryFragment,
                 CategoryFragment.newBundle(categoryId),
@@ -154,7 +134,6 @@ class MainActivity :
     }
 
     override fun onTransactionSelected(transactionId: UUID) {
-        //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_transactionListFragment_to_transactionFragment,
                 TransactionFragment.newBundle(transactionId),
@@ -167,7 +146,6 @@ class MainActivity :
     }
 
     override fun onProjectSelected(projectId: UUID) {
-        //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_projectListFragment_to_projectFragment,
                 ProjectFragment.newBundle(projectId),
@@ -180,7 +158,6 @@ class MainActivity :
     }
 
     override fun onSettingsSelected() {
-        //findNavController(this, R.id.nav_host_fragment).
         navController.navigate(
                 R.id.action_transactionListFragment_to_mainSettingsFragment,
                 MainSettingsFragment.newBundle(),

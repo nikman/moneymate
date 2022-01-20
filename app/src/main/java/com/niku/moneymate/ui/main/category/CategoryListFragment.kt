@@ -6,12 +6,10 @@ import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryListViewModel
@@ -30,11 +28,7 @@ class CategoryListFragment: Fragment() {
     private lateinit var categoryRecyclerView: RecyclerView
     private var adapter: CategoryAdapter = CategoryAdapter(emptyList())
 
-    private val viewModelFactory = CommonViewModelFactory()
-
-    private val categoryListViewModel: CategoryListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[CategoryListViewModel::class.java]
-    }
+    private val categoryListViewModel by activityViewModels<CategoryListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

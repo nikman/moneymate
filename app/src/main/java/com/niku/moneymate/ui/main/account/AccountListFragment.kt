@@ -6,12 +6,10 @@ import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
 import com.niku.moneymate.R
@@ -33,11 +31,7 @@ class AccountListFragment: Fragment() {
     private lateinit var accountRecyclerView: RecyclerView
     private var adapter: AccountAdapter = AccountAdapter(emptyList())
 
-    private val viewModelFactory = CommonViewModelFactory()
-
-    private val accountListViewModel: AccountListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
-    }
+    private val accountListViewModel by activityViewModels<AccountListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

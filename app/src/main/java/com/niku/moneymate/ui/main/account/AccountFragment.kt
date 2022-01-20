@@ -1,6 +1,5 @@
 package com.niku.moneymate.ui.main.account
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.Editable
@@ -10,18 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
-import com.niku.moneymate.ui.main.common.MainViewModel
 import java.util.*
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.utils.SharedPrefs
 import com.github.mikephil.charting.data.LineDataSet
 
@@ -30,7 +28,7 @@ private const val TAG = "AccountFragment"
 
 class AccountFragment: Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    //private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
     private lateinit var accountWithCurrency: AccountWithCurrency
     private lateinit var currency: MainCurrency
@@ -46,9 +44,11 @@ class AccountFragment: Fragment() {
     private var initialAccountBalance: Double = 0.0
     private var accountBalance: Double = 0.0
 
-    private val accountDetailViewModel: AccountDetailViewModel by lazy {
+    /*private val accountDetailViewModel: AccountDetailViewModel by lazy {
         ViewModelProvider(this)[AccountDetailViewModel::class.java]
-    }
+    }*/
+
+    private val accountDetailViewModel by activityViewModels<AccountDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -76,10 +76,13 @@ class AccountFragment: Fragment() {
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
         accountChartField = view.findViewById(R.id.account_chart) as LineChart
 
-        val viewModelFactory = CommonViewModelFactory()
+        /*val viewModelFactory = CommonViewModelFactory()
         val currencyListViewModel: CurrencyListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
-        }
+        }*/
+
+        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
+
         currencyListViewModel.currencyListLiveData.observe(
             viewLifecycleOwner,
             { currencies -> currencies?.let { updateCurrencyList(currencies) } }
@@ -92,9 +95,9 @@ class AccountFragment: Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel =
+        /*viewModel =
             ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
 
         val accountId = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
         accountDetailViewModel.loadAccount(accountId)

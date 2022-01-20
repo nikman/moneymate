@@ -10,11 +10,10 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryDetailViewModel
-import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.CategoryType
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
@@ -24,7 +23,7 @@ private const val TAG = "CategoryFragment"
 
 class CategoryFragment: Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    //private lateinit var viewModel: MainViewModel
     private lateinit var category: Category
     private lateinit var titleField: EditText
     private lateinit var typeField: EditText
@@ -32,9 +31,11 @@ class CategoryFragment: Fragment() {
     private lateinit var categoryTypeImageButton: ImageButton
     //private lateinit var noteField: EditText
 
-    private val categoryDetailViewModel: CategoryDetailViewModel by lazy {
+    /*private val categoryDetailViewModel: CategoryDetailViewModel by lazy {
         ViewModelProvider(this)[CategoryDetailViewModel::class.java]
-    }
+    }*/
+
+    private val categoryDetailViewModel by activityViewModels<CategoryDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,9 +82,9 @@ class CategoryFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel =
+        /*viewModel =
             ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
     }
 
     override fun onStart() {

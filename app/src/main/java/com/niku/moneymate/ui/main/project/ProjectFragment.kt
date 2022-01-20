@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.niku.moneymate.R
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectDetailViewModel
-import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -21,15 +20,17 @@ private const val ARG_PROJECT_ID = "project_id"
 
 class ProjectFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    //private lateinit var viewModel: MainViewModel
     private lateinit var project: Project
 
     private lateinit var titleField: EditText
     private lateinit var isDefaultProjectCheckBox: CheckBox
 
-    private val projectDetailViewModel: ProjectDetailViewModel by lazy {
+    /*private val projectDetailViewModel: ProjectDetailViewModel by lazy {
         ViewModelProvider(this)[ProjectDetailViewModel::class.java]
-    }
+    }*/
+
+    private val projectDetailViewModel by activityViewModels<ProjectDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,9 +74,9 @@ class ProjectFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel =
+        /*viewModel =
             ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
     }
 
     override fun onStart() {

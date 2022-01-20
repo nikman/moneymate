@@ -8,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyDetailViewModel
-import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -22,23 +20,25 @@ private const val ARG_CURRENCY_ID = "currency_id"
 
 class CurrencyFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    //private lateinit var viewModel: MainViewModel
     private lateinit var currency: MainCurrency
 
     private lateinit var codeField: EditText
     private lateinit var titleField: EditText
     private lateinit var isDefaultCurrencyCheckBox: CheckBox
 
-    private val currencyDetailViewModel: CurrencyDetailViewModel by lazy {
+    /*private val currencyDetailViewModel: CurrencyDetailViewModel by lazy {
         ViewModelProvider(this)[CurrencyDetailViewModel::class.java]
-    }
+    }*/
+    private val currencyDetailViewModel by activityViewModels<CurrencyDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //currency = MainCurrency(643, "RUB", UUID.fromString("0f967f94-dca8-4e2a-8019-850b0dd9ea38"))
+
         currency = MainCurrency()
         val currencyId: UUID = arguments?.getSerializable(ARG_CURRENCY_ID) as UUID
         currencyDetailViewModel.loadCurrency(currencyId)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -75,9 +75,9 @@ class CurrencyFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel =
+        /*viewModel =
             ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
     }
 
     override fun onStart() {

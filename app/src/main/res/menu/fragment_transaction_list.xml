@@ -13,4 +13,10 @@
         android:title="@string/settings_menu_title"
         app:showAsAction="ifRoom|withText"/>
 
+    <item
+        android:id="@+id/payees"
+        android:icon="@android:drawable/ic_media_ff"
+        android:title="@string/payee_menu_title"
+        app:showAsAction="ifRoom|withText"/>
+
 </menu>

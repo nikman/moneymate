@@ -138,5 +138,9 @@
             app:popUpTo="@+id/projectListFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/payeeListFragment"
+        android:name="com.niku.moneymate.ui.main.payee.PayeeListFragment"
+        android:label="PayeeListFragment" />
 
 </navigation>

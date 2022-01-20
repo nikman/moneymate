@@ -7,11 +7,11 @@ import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
@@ -38,11 +38,7 @@ class TransactionListFragment: Fragment() {
     private lateinit var transactionRecyclerView: RecyclerView
     private var adapter: TransactionAdapter = TransactionAdapter(emptyList())
 
-    private val viewModelFactory = CommonViewModelFactory()
-
-    private val transactionListViewModel: TransactionListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[TransactionListViewModel::class.java]
-    }
+    private val transactionListViewModel by activityViewModels<TransactionListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +49,6 @@ class TransactionListFragment: Fragment() {
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
-
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total accounts: ${accountListViewModel.accounts.size}")
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -134,6 +125,11 @@ class TransactionListFragment: Fragment() {
             }
             R.id.settings -> {
                 callbacks?.onSettingsSelected()
+                true
+            }
+            R.id.payees -> {
+                //callbacks?.onPayeeSelected()
+                requireActivity().findNavController(R.id.bottomNavigationView).navigate(R.id.payeeListFragment)
                 true
             }
             else -> return super.onOptionsItemSelected(item)

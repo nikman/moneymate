@@ -9,9 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
@@ -24,7 +23,6 @@ import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
-import com.niku.moneymate.ui.main.common.MainViewModel
 import com.niku.moneymate.utils.CategoryType
 import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
@@ -37,7 +35,7 @@ private const val TAG = "TransactionFragment"
 
 class TransactionFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    //private lateinit var viewModel: MainViewModel
     private lateinit var transactionWithProperties: TransactionWithProperties
 
     //private var multiplier: Byte = 0
@@ -63,9 +61,11 @@ class TransactionFragment : Fragment() {
     private lateinit var projectField: Spinner
     private lateinit var transactionTypeImageButton: ImageButton
 
-    private val moneyTransactionDetailViewModel: TransactionDetailViewModel by lazy {
+    /*private val moneyTransactionDetailViewModel: TransactionDetailViewModel by lazy {
         ViewModelProvider(this)[TransactionDetailViewModel::class.java]
-    }
+    }*/
+
+    private val moneyTransactionDetailViewModel by activityViewModels<TransactionDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -90,7 +90,6 @@ class TransactionFragment : Fragment() {
 
         moneyTransaction = MoneyTransaction(
             accountFrom.account_id,
-            //accountTo.account_id,
             UUID.fromString(UUID_ACCOUNT_EMPTY),
             currency.currency_id,
             category.category_id,
@@ -124,35 +123,44 @@ class TransactionFragment : Fragment() {
         projectField = view.findViewById(R.id.project_spinner) as Spinner
         transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
 
-        val viewModelFactory = CommonViewModelFactory()
+        /*val viewModelFactory = CommonViewModelFactory()
 
         val accountListViewModel: AccountListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
-        }
+        }*/
+
+        val accountListViewModel by activityViewModels<AccountListViewModel>()
+
         accountListViewModel.accountListLiveData.observe(
             viewLifecycleOwner,
             Observer { accounts -> accounts?.let { updateAccountsList(accounts) } }
         )
 
-        val currencyListViewModel: CurrencyListViewModel by lazy {
+        /*val currencyListViewModel: CurrencyListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
-        }
+        }*/
+        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
+
         currencyListViewModel.currencyListLiveData.observe(
             viewLifecycleOwner,
             Observer { currencies -> currencies?.let { updateCurrenciesList(currencies) } }
         )
 
-        val categoryListViewModel: CategoryListViewModel by lazy {
+        /*val categoryListViewModel: CategoryListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[CategoryListViewModel::class.java]
-        }
+        }*/
+        val categoryListViewModel by activityViewModels<CategoryListViewModel>()
+
         categoryListViewModel.categoryListLiveData.observe(
             viewLifecycleOwner,
             Observer { categories -> categories?.let { updateCategoriesList(categories) } }
         )
 
-        val projectListViewModel: ProjectListViewModel by lazy {
+        /*val projectListViewModel: ProjectListViewModel by lazy {
             ViewModelProvider(viewModelStore, viewModelFactory)[ProjectListViewModel::class.java]
-        }
+        }*/
+        val projectListViewModel by activityViewModels<ProjectListViewModel>()
+
         projectListViewModel.projectListLiveData.observe(
             viewLifecycleOwner,
             Observer { projects -> projects?.let { updateProjectsList(projects) } }
@@ -187,9 +195,9 @@ class TransactionFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel =
+        /*viewModel =
             ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]
+                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
     }
 
     override fun onStart() {

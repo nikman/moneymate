@@ -10,21 +10,17 @@ import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.niku.moneymate.CommonViewModelFactory
 import com.niku.moneymate.R
-import com.niku.moneymate.currency.CurrencyListViewModel
-import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
-import kotlin.math.roundToInt
 
 
 private const val TAG = "ProjectListFragment"
@@ -39,11 +35,13 @@ class ProjectListFragment: Fragment() {
     private lateinit var projectRecyclerView: RecyclerView
     private var adapter: ProjectAdapter = ProjectAdapter(emptyList())
 
-    private val viewModelFactory = CommonViewModelFactory()
+    /*private val viewModelFactory = CommonViewModelFactory()
 
     private val projectListViewModel: ProjectListViewModel by lazy {
         ViewModelProvider(viewModelStore, viewModelFactory)[ProjectListViewModel::class.java]
-    }
+    }*/
+
+    private val projectListViewModel by activityViewModels<ProjectListViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
