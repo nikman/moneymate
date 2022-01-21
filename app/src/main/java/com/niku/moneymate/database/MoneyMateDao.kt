@@ -15,11 +15,11 @@ import java.util.*
 interface MoneyMateDao {
 
     @Transaction
-    @Query("SELECT * FROM account WHERE is_active")
+    @Query("SELECT * FROM account WHERE is_active ORDER BY sort_order DESC")
     fun getAllAccounts(): LiveData<List<Account>>
 
     @Transaction
-    @Query("SELECT * FROM account")
+    @Query("SELECT * FROM account WHERE is_active ORDER BY sort_order DESC")
     fun getAccounts(): LiveData<List<AccountWithCurrency>>
 
     @Transaction
@@ -73,10 +73,10 @@ interface MoneyMateDao {
         FROM account as acc
         LEFT JOIN mainCurrency AS cur
             ON acc.currency_id = cur.currency_id
-        WHERE acc.is_active = (:showInactive)
+        WHERE acc.is_active = (:showOnlyActive)
         ORDER BY sort_order DESC
             """)
-    fun getAccountsWithBalance(showInactive: Boolean = false): LiveData<List<AccountWithCurrency>>
+    fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>>
 
     @Update
     fun updateAccount(account: Account)

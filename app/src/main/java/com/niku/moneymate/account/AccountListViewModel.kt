@@ -10,7 +10,7 @@ class AccountListViewModel: ViewModel() {
     private val moneyMateRepository = MoneyMateRepository.get()
 
     val accountListLiveData = moneyMateRepository.getAllAccounts()
-    val accountWithCurrencyListLiveData = moneyMateRepository.getAccountsWithBalance()
+    val accountWithCurrencyListLiveData = moneyMateRepository.getAccountsWithBalance(true)
 
     fun accountBalanceLiveData(accountId: UUID) = moneyMateRepository.getAccountBalance(accountId)
 

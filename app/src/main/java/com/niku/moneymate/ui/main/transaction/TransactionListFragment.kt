@@ -92,7 +92,7 @@ class TransactionListFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_transaction -> {
-                Log.d(TAG,"new transaction pressed")
+                //Log.d(TAG,"new transaction pressed")
 
                 val currency =
                     MainCurrency(
@@ -149,12 +149,6 @@ class TransactionListFragment: Fragment() {
         transactionListViewModel.transactionListLiveData.observe(
             viewLifecycleOwner,
             Observer { transactions -> transactions?.let {
-                    Log.i(TAG, "Got transactionLiveData ${transactions.size}")
-                    for (element in transactions) {
-                        Log.i(
-                            TAG,
-                            "Got elem ${element.accountFrom.title} # ${element.accountFrom.account_id} ${element.transaction.amount_from} currency: ${element.currency.currency_title}")
-                    }
                     updateUI(transactions)
                 }
             }
@@ -193,9 +187,10 @@ class TransactionListFragment: Fragment() {
 
             dateTextView.text = this.transaction.transaction.transactionDate.toString()
             accountTextView.text = this.transaction.accountFrom.title
-            //amountTextView.text = "%.2f".format(this.transaction.transaction.amount_from * this.transaction.transaction.transaction_type)
             amountTextView.text = "%.2f".format(this.transaction.transaction.amount_from)
-            projectTextView.text = this.transaction.project.project_title
+            this.transaction.project.let {
+                projectTextView.text = it.project_title
+            }
             categoryTextView.text = this.transaction.category.category_title
 
         }
@@ -223,7 +218,7 @@ class TransactionListFragment: Fragment() {
         override fun onBindViewHolder(holder: TransactionHolder, position: Int) {
             val transactionWithProperties = transactionsWithProperties[position]
             //holder.apply { titleTextView.text = account.title }
-            Log.d(TAG, "Position: $position")
+            //Log.d(TAG, "Position: $position")
             holder.bind(transactionWithProperties)
         }
 

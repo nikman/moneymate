@@ -23,7 +23,7 @@ private const val TAG = "FileUtils"
 
 class FileUtils {
 
-    infix fun <A, B> A.into(that: B): Pair<A, B> = Pair(this, that)
+    private infix fun <A, B> A.into(that: B): Pair<A, B> = Pair(this, that)
 
     fun Context.launchFileIntent(filePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
@@ -252,12 +252,7 @@ class FileUtils {
                 var category: Category? = null
                 var transaction_type: Int
 
-                //var trCount = 0
-
                 for (line in text.lines()) {
-
-                    /*if (trCount > 300) { break }
-                    else {  }*/
 
                     if (isTransactionLoading) {
                         when (line.substringBefore(":")) {

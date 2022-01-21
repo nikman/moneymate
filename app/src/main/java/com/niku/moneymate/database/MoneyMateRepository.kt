@@ -121,7 +121,7 @@ class MoneyMateRepository private constructor(context: Context) {
     private val payeeDao = database.payeeDao()
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
-    fun getAccountsWithBalance(showInactive: Boolean = false): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccountsWithBalance()
+    fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccountsWithBalance()
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
     fun getTransactions(): LiveData<List<TransactionWithProperties>> = moneyMateDao.getTransactions()

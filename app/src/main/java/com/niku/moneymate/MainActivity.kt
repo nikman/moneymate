@@ -39,10 +39,11 @@ class MainActivity :
     CurrencyListFragment.Callbacks,
     CategoryListFragment.Callbacks,
     TransactionListFragment.Callbacks,
-    ProjectListFragment.Callbacks {
+    ProjectListFragment.Callbacks,
+    MainSettingsFragment.Callbacks
+{
 
     private lateinit var navController: NavController
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,22 +56,6 @@ class MainActivity :
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         bottomNavigationView.setupWithNavController(this.navController)
-/*
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        appBarConfiguration =
-            AppBarConfiguration.Builder(R.id.transactionListFragment, R.id.transactionListFragment)
-                //.setDrawerLayout(drawerLayout)
-                .build()
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration.Builder(setOf(
-            R.id.transactionListFragment,
-            R.id.accountListFragment,
-            R.id.categoryListFragment,
-            R.id.projectListFragment,
-            R.id.currencyListFragment)).build()
-        //setupActionBarWithNavController(navController, appBarConfiguration)
-        bottomNavigationView.setupWithNavController(navController)*/
 
         bottomNavigationView.setOnItemSelectedListener  {
 
@@ -82,9 +67,15 @@ class MainActivity :
                 R.id.accounts -> {
                     navController.navigate(R.id.accountListFragment)
                 }
-                R.id.categories->navController.navigate(R.id.categoryListFragment)
-                R.id.projects->navController.navigate(R.id.projectListFragment)
-                R.id.currencies->navController.navigate(R.id.currencyListFragment)
+                R.id.categories-> {
+                    navController.navigate(R.id.categoryListFragment)
+                }
+                R.id.projects-> {
+                    navController.navigate(R.id.projectListFragment)
+                }
+                R.id.currencies-> {
+                    navController.navigate(R.id.currencyListFragment)
+                }
 
             }
             true
@@ -98,74 +89,62 @@ class MainActivity :
     }
 
     override fun onAccountSelected(accountId: UUID) {
-        navController.navigate(
-                R.id.action_accountListFragment_to_accountFragment,
-                AccountFragment.newBundle(accountId),
-                navOptions { // Use the Kotlin DSL for building NavOptions
-                    anim {
-                        enter = android.R.animator.fade_in
-                        exit = android.R.animator.fade_out
-                    }
-                })
+        navigateByAction(
+            actionId = R.id.action_accountListFragment_to_accountFragment,
+            bundle = AccountFragment.newBundle(accountId))
     }
 
     override fun onCurrencySelected(currencyId: UUID) {
-        navController.navigate(
-                R.id.action_currencyListFragment_to_currencyFragment,
-                CurrencyFragment.newBundle(currencyId),
-                navOptions { // Use the Kotlin DSL for building NavOptions
-                    anim {
-                        enter = android.R.animator.fade_in
-                        exit = android.R.animator.fade_out
-                    }
-                })
+        navigateByAction(
+            actionId = R.id.action_currencyListFragment_to_currencyFragment,
+            bundle = CurrencyFragment.newBundle(currencyId))
     }
 
     override fun onCategorySelected(categoryId: UUID) {
-        navController.navigate(
-                R.id.action_categoryListFragment_to_categoryFragment,
-                CategoryFragment.newBundle(categoryId),
-                navOptions { // Use the Kotlin DSL for building NavOptions
-                    anim {
-                        enter = android.R.animator.fade_in
-                        exit = android.R.animator.fade_out
-                    }
-                })
+        navigateByAction(
+            actionId = R.id.action_categoryListFragment_to_categoryFragment,
+            bundle = CategoryFragment.newBundle(categoryId))
     }
 
     override fun onTransactionSelected(transactionId: UUID) {
-        navController.navigate(
-                R.id.action_transactionListFragment_to_transactionFragment,
-                TransactionFragment.newBundle(transactionId),
-                navOptions { // Use the Kotlin DSL for building NavOptions
-                    anim {
-                        enter = android.R.animator.fade_in
-                        exit = android.R.animator.fade_out
-                    }
-                })
+        navigateByAction(
+            actionId = R.id.action_transactionListFragment_to_transactionFragment,
+            bundle = TransactionFragment.newBundle(transactionId))
     }
 
     override fun onProjectSelected(projectId: UUID) {
-        navController.navigate(
-                R.id.action_projectListFragment_to_projectFragment,
-                ProjectFragment.newBundle(projectId),
-                navOptions { // Use the Kotlin DSL for building NavOptions
-                    anim {
-                        enter = android.R.animator.fade_in
-                        exit = android.R.animator.fade_out
-                    }
-                })
+        navigateByAction(
+            actionId = R.id.action_projectListFragment_to_projectFragment,
+            bundle = ProjectFragment.newBundle(projectId))
     }
 
     override fun onSettingsSelected() {
+        navigateByAction(
+            actionId = R.id.action_transactionListFragment_to_mainSettingsFragment,
+            bundle = MainSettingsFragment.newBundle())
+    }
+
+    override fun onCurrencyListFromPreferencesOpenSelected() {
+        navigateByAction(
+            actionId = R.id.action_mainSettingsFragment_to_currencyListFragment,
+            bundle = null)
+    }
+
+    override fun onProjectListFromPreferencesOpenSelected() {
+        navigateByAction(
+            actionId = R.id.action_mainSettingsFragment_to_projectListFragment,
+            bundle = null)
+    }
+
+    private fun navigateByAction(actionId: Int, bundle: Bundle?) {
         navController.navigate(
-                R.id.action_transactionListFragment_to_mainSettingsFragment,
-                MainSettingsFragment.newBundle(),
-                navOptions { // Use the Kotlin DSL for building NavOptions
-                        anim {
-                            enter = android.R.animator.fade_in
-                            exit = android.R.animator.fade_out
-                        }
-                    })
+            actionId,
+            bundle,
+            navOptions { // Use the Kotlin DSL for building NavOptions
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
     }
 }

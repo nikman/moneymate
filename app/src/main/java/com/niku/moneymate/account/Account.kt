@@ -1,6 +1,7 @@
 package com.niku.moneymate.account
 
 import androidx.room.*
+import androidx.room.util.TableInfo
 import com.niku.moneymate.currency.MainCurrency
 import java.util.*
 
@@ -10,7 +11,8 @@ import java.util.*
         ForeignKey(
             entity = MainCurrency::class,
             parentColumns = ["currency_id"],
-            childColumns = ["currency_id"])
+            childColumns = ["currency_id"],
+            onDelete = ForeignKey.SET_NULL)
     ], indices = [Index("currency_id")]
 )
 data class Account(

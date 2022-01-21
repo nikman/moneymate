@@ -92,6 +92,15 @@
             app:destination="@id/transactionListFragment"
             app:popUpTo="@+id/transactionListFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_mainSettingsFragment_to_currencyListFragment"
+            app:destination="@id/currencyListFragment" />
+        <action
+            android:id="@+id/action_mainSettingsFragment_to_projectListFragment"
+            app:destination="@id/projectListFragment" />
+        <action
+            android:id="@+id/action_mainSettingsFragment_to_payeeListFragment"
+            app:destination="@id/payeeListFragment" />
     </fragment>
 
     <fragment

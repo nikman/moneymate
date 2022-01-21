@@ -7,7 +7,7 @@ import java.util.*
 class MoneyMateTypeConverters {
 
     @TypeConverter
-    fun toUUID(uuid: String?): UUID? = UUID.fromString(uuid)
+    fun toUUID(uuid: String?): UUID? = uuid?.let { UUID.fromString(uuid) }
 
     @TypeConverter
     fun fromUUID(uuid: UUID?): String? = uuid?.toString()

@@ -5,31 +5,27 @@
     <PreferenceCategory
         app:key="advanced"
         app:title="Learning Preferences"
-        app:initialExpandedChildrenCount="2">
+        app:initialExpandedChildrenCount="3">
 
         <Preference
-            app:key="load_from_csv"
-            app:title="Load from CSV"
-            app:summary="Load from CSV" />
+            app:key="open_currency_list"
+            app:title="Currencies"
+            app:summary="Open currency list"/>
+
+        <Preference
+            app:key="open_project_list"
+            app:title="Projects"
+            app:summary="Open project list"/>
 
         <Preference
             app:key="load_from_assets"
-            app:title="Load from assets"
-            app:summary="Load from assets" />
+            app:title="Load backup from assets"
+            app:summary="Load backup from assets" />
 
         <Preference
             app:key="expandable_example"
             app:title="Hello I am Simple text"
             app:summary="I am the preference that will be showed when the preference is not expanded"/>
-
-        <Preference
-            app:title="About"
-            app:summary="Go to developer web-site">
-
-            <intent android:action="android.intent.action.VIEW"
-                android:data="https://github.com/nikman"/>
-
-        </Preference>
 
         <SwitchPreferenceCompat
             app:key="parent"

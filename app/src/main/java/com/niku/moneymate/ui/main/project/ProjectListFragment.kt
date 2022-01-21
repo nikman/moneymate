@@ -1,5 +1,6 @@
 package com.niku.moneymate.ui.main.project
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -21,6 +23,10 @@ import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
+import com.google.android.material.snackbar.Snackbar
+
+
+
 
 
 private const val TAG = "ProjectListFragment"
@@ -34,12 +40,6 @@ class ProjectListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var projectRecyclerView: RecyclerView
     private var adapter: ProjectAdapter = ProjectAdapter(emptyList())
-
-    /*private val viewModelFactory = CommonViewModelFactory()
-
-    private val projectListViewModel: ProjectListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[ProjectListViewModel::class.java]
-    }*/
 
     private val projectListViewModel by activityViewModels<ProjectListViewModel>()
 
@@ -70,11 +70,8 @@ class ProjectListFragment: Fragment() {
 
         // swipe actions
         val trashBinIcon =
-            resources.getDrawable(
-                //R.drawable.ic_background_swipe_for_delete_item_foreground, null)
+            ResourcesCompat.getDrawable(resources,
                 R.drawable.ic_baseline_delete_forever_24, null)
-
-        //val textMargin = resources.getDimension(R.dimen.)
 
         val swipeRightCallback = object: ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT) {
@@ -85,12 +82,50 @@ class ProjectListFragment: Fragment() {
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val projectsAdapter: ProjectAdapter = viewHolder.bindingAdapter as ProjectAdapter
-                val project = projectsAdapter.adapterProjects[viewHolder.bindingAdapterPosition]
-                //val projectHolder = viewHolder as ProjectHolder
-                //projectHolder.
-                //viewHolder.bindingAdapterPosition
-                projectListViewModel.deleteProject(project)
+
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Delete project")
+
+                // Display a message on alert dialog
+                builder.setMessage("Are you want to delete project?")
+
+                // Set a positive button and its click listener on alert dialog
+                builder.setPositiveButton("YES"){ _, _ ->
+                    val projectsAdapter: ProjectAdapter = viewHolder.bindingAdapter as ProjectAdapter
+                    val project = projectsAdapter.adapterProjects[viewHolder.bindingAdapterPosition]
+                    projectListViewModel.deleteProject(project)
+                    /////////////
+                    // showing snack bar with Undo option
+                    // showing snack bar with Undo option
+                    val snackbar: Snackbar = Snackbar
+                        .make(
+                            view,
+                            "${project.project_title} removed!",
+                            Snackbar.LENGTH_LONG
+                        )
+                    snackbar.setAction("UNDO", View.OnClickListener
+                    { _, ->
+                        projectListViewModel.addProject(project = project)
+                    })
+
+                    snackbar.setActionTextColor(Color.YELLOW)
+                    snackbar.show()
+                    /////////////
+                }
+
+                // Display a negative button on alert dialog
+                builder.setNegativeButton("No"){ _, _ ->
+
+                }
+
+                // Display a neutral button on alert dialog
+                builder.setNeutralButton("Cancel"){_,_ ->
+                    //Toast.makeText(applicationContext,"You cancelled the dialog.",Toast.LENGTH_SHORT).show()
+                }
+
+                val dialog: AlertDialog = builder.create()
+
+                dialog.show()
 
             }
 
@@ -119,13 +154,16 @@ class ProjectListFragment: Fragment() {
                     viewHolder.itemView.bottom.toFloat())
                 c.drawColor(Color.RED)
 
-                trashBinIcon.bounds =
-                    Rect(
-                        viewHolder.itemView.right - trashBinIcon.intrinsicWidth - 16,
-                        viewHolder.itemView.top + 16,
-                        viewHolder.itemView.right - 16,
-                        viewHolder.itemView.top + trashBinIcon.intrinsicHeight + 16)
-                trashBinIcon.draw(c)
+                trashBinIcon?.let {
+                    it.bounds =
+                        Rect(
+                            viewHolder.itemView.right - trashBinIcon.intrinsicWidth - 16,
+                            viewHolder.itemView.top + 32,
+                            viewHolder.itemView.right - 16,
+                            viewHolder.itemView.top + trashBinIcon.intrinsicHeight + 32
+                        )
+                    it.draw(c)
+                }
             }
         }
 
