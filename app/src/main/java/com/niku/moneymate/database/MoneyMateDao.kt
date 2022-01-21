@@ -3,6 +3,7 @@ package com.niku.moneymate.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.niku.moneymate.account.Account
+import com.niku.moneymate.account.AccountExpenses
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
@@ -149,8 +150,23 @@ interface MoneyMateDao {
     @Query("SELECT COUNT(transaction_id) FROM moneyTransaction WHERE project_id=(:project_id)")
     fun getTransactionsCountByProject(project_id: UUID): LiveData<Int?>
 
-    @Query("SELECT amount_from FROM moneyTransaction WHERE account_id_from=(:account_id)")
-    fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>>
+    @Query("""
+        SELECT
+           case  
+           WHEN amount_from < 0 THEN -1
+           WHEN amount_from > 0 THEN 1
+           end as type,
+           --datetime(transaction_date / 1000, 'unixepoch', 'start of month') as date,
+           --strftime("%m", datetime(transaction_date / 1000, 'unixepoch', 'start of month')) - strftime("%m", ) as date,
+           0 - strftime("%m", datetime(transaction_date / 1000, 'unixepoch', 'start of month')) as date,
+           --datetime(transaction_date / 1000, 'unixepoch', 'start of month') - DATE('now', '-12 month') as date,
+           sum(amount_from) as amount
+        FROM moneyTransaction
+        WHERE account_id_from = (:account_id) and account_id_to = "00000004-0001-0001-0001-000000000002" and amount_from <> 0 AND datetime(transaction_date / 1000, 'unixepoch', 'start of month') >= DATE('now', '-12 month')
+        GROUP BY type, datetime(transaction_date / 1000, 'unixepoch', 'start of month')
+        ORDER BY transaction_date
+        """)
+    fun getAccountExpensesData(account_id: UUID): LiveData<List<AccountExpenses>>
 
     @Query("SELECT account_id FROM account WHERE account_external_id=(:externalId)")
     fun getAccountByExternalId(externalId: Int): UUID?

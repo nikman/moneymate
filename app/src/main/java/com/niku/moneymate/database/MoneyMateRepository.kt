@@ -15,6 +15,7 @@ import com.niku.moneymate.transaction.TransactionWithProperties
 import java.util.*
 import java.util.concurrent.Executors
 import com.niku.moneymate.R
+import com.niku.moneymate.account.AccountExpenses
 import com.niku.moneymate.payee.Payee
 import com.niku.moneymate.utils.*
 
@@ -213,7 +214,7 @@ class MoneyMateRepository private constructor(context: Context) {
         executor.execute { moneyMateDao.getTransactionsCountByProject(project_id) }
     }
 
-    fun getAccountExpensesData(account_id: UUID): LiveData<List<Double?>> =
+    fun getAccountExpensesData(account_id: UUID): LiveData<List<AccountExpenses>> =
         moneyMateDao.getAccountExpensesData(account_id)
 
     fun getPayees(): LiveData<List<Payee>> = payeeDao.getPayees()

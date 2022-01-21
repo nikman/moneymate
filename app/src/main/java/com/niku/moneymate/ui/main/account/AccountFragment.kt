@@ -9,10 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.activityViewModels
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.*
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
 import com.niku.moneymate.R
@@ -21,7 +22,8 @@ import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.utils.SharedPrefs
-import com.github.mikephil.charting.data.LineDataSet
+import com.niku.moneymate.account.AccountExpenses
+import com.niku.moneymate.utils.TransactionType
 
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"
@@ -39,7 +41,7 @@ class AccountFragment: Fragment() {
     private lateinit var balanceField: EditText
     private lateinit var initialBalanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
-    private lateinit var accountChartField: LineChart
+    private lateinit var accountChartField: BarChart
 
     private var initialAccountBalance: Double = 0.0
     private var accountBalance: Double = 0.0
@@ -74,7 +76,7 @@ class AccountFragment: Fragment() {
         initialBalanceField = view.findViewById(R.id.account_initial_balance) as EditText
         currencyField = view.findViewById(R.id.spinner) as Spinner
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
-        accountChartField = view.findViewById(R.id.account_chart) as LineChart
+        accountChartField = view.findViewById(R.id.account_chart) as BarChart
 
         /*val viewModelFactory = CommonViewModelFactory()
         val currencyListViewModel: CurrencyListViewModel by lazy {
@@ -114,6 +116,14 @@ class AccountFragment: Fragment() {
             { account -> account?.let {
                 this.accountBalance = it
                 updateBalanceField()
+            }
+            }
+        )
+
+        accountDetailViewModel.getAccountExpensesData(accountId).observe(
+            viewLifecycleOwner,
+            { listOfExpenses -> listOfExpenses?.let {
+                updateChartField(listOfExpenses)
             }
             }
         )
@@ -212,24 +222,53 @@ class AccountFragment: Fragment() {
                         account.account_id == UUID.fromString(uuidAsString)
         }
 
-        val entries: ArrayList<Entry> = ArrayList()
-
-        entries.add(Entry(1.0F, 10000F, "1"))
-        entries.add(Entry(2.0F, 12000F, "2"))
-        entries.add(Entry(3.0F, 7000F, "3"))
-        entries.add(Entry(4.0F, 9000F, "4"))
-
-        val lineDataSet = LineDataSet(entries, "Label")
-
-        val data = LineData(lineDataSet)
-        accountChartField.data = data
-
-        accountChartField.invalidate()
-
     }
 
     private fun updateBalanceField() {
         balanceField.setText(accountBalance.toString())
+    }
+
+    private fun updateChartField(listOfExpenses: List<AccountExpenses>) {
+
+        val entriesOutcome: ArrayList<BarEntry> = ArrayList()
+        val entriesIncome: ArrayList<BarEntry> = ArrayList()
+
+        var i = 0.0f
+        var j = 0.0f
+
+        for (expenseItem in listOfExpenses) {
+            if (expenseItem.type == TransactionType.OUTCOME) {
+                entriesOutcome.add(
+                    BarEntry(
+                        //expenseItem.date?.toFloat() ?: 0.0f,
+                        i++,
+                        expenseItem.amount?.toFloat() ?: 0.0f
+                    )
+                )
+            } else if (expenseItem.type == TransactionType.INCOME) {
+                entriesIncome.add(
+                    BarEntry(
+                        //expenseItem.date?.toFloat() ?: 0.0f,
+                        j++,
+                        expenseItem.amount?.toFloat() ?: 0.0f
+                    )
+                )
+            }
+        }
+
+        //val lineDataSet = LineDataSet(entries, "Label")
+        val barData1 = BarDataSet(entriesOutcome, "Expenses")
+        barData1.color = R.color.design_default_color_error
+        val barData2 = BarDataSet(entriesIncome, "Incomes")
+        barData2.color = R.color.design_default_color_primary
+
+        //val data = LineData(lineDataSet)
+        val data = BarData(barData1, barData2)
+        //data.groupBars(0f, 1f, 3f)
+        accountChartField.data = data
+
+        accountChartField.invalidate()
+
     }
 
     private fun updateCurrencyList(currencies: List<MainCurrency>) {
