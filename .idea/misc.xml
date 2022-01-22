@@ -37,6 +37,7 @@
         <entry key="..\:/programming/android/moneymate/app/src/main/res/menu/fragment_category_list.xml" value="0.536" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/menu/fragment_transaction_list.xml" value="0.16041666666666668" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/xml/preference_screen.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/account_fragment.xml" value="0.25" />
       </map>
     </option>
   </component>
