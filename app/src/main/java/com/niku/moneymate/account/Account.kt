@@ -12,7 +12,7 @@ import java.util.*
             entity = MainCurrency::class,
             parentColumns = ["currency_id"],
             childColumns = ["currency_id"],
-            onDelete = ForeignKey.SET_NULL)
+            onDelete = ForeignKey.SET_DEFAULT)
     ], indices = [Index("currency_id")]
 )
 data class Account(
