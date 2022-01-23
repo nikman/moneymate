@@ -48,4 +48,6 @@
     <string name="btn_load_from_cvs_title">Load from CVS</string>
     <string name="settings_menu_title">Settings</string>
     <string name="payee_menu_title">Payees</string>
+    <string name="button_ok_text">Save</string>
+    <string name="button_cancel_text">Cancel</string>
 </resources>
