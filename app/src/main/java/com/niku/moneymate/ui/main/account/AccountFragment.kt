@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.*
@@ -25,20 +26,13 @@ import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.account.AccountExpenses
 import com.niku.moneymate.utils.TransactionType
-import com.github.mikephil.charting.components.AxisBase
-
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.charts.BarLineChartBase
-
-
-
-
+import com.niku.moneymate.ui.main.BaseFragmentEntity
 
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"
 
-class AccountFragment: Fragment() {
+class AccountFragment: Fragment(), BaseFragmentEntity {
 
     private lateinit var account: Account
     private lateinit var accountWithCurrency: AccountWithCurrency
@@ -51,6 +45,8 @@ class AccountFragment: Fragment() {
     private lateinit var initialBalanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
     private lateinit var accountChartField: BarChart
+    private lateinit var saveButton: Button
+    private lateinit var cancelButton: Button
 
     //private var initialAccountBalance: Double = 0.0
     private var accountBalance: Double = 0.0
@@ -82,6 +78,8 @@ class AccountFragment: Fragment() {
         currencyField = view.findViewById(R.id.spinner) as Spinner
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
         accountChartField = view.findViewById(R.id.account_chart) as BarChart
+        saveButton = view.findViewById(R.id.ok_button)
+        cancelButton = view.findViewById(R.id.cancel_button)
 
         return view
     }
@@ -166,7 +164,7 @@ class AccountFragment: Fragment() {
         currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
             ) {
@@ -201,21 +199,33 @@ class AccountFragment: Fragment() {
             }
         }
 
+        saveButton.apply {
+            setOnClickListener {
+                SaveEntiy(account)
+            }
+        }
+
+        cancelButton.apply {
+            setOnClickListener {
+                CloseWithoutSaving()
+            }
+        }
+
     }
 
     override fun onStop() {
         super.onStop()
-        accountDetailViewModel.saveAccount(account)
+        //accountDetailViewModel.saveAccount(account)
     }
 
     private fun updateUI() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
-        initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
+        //initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
 
-        val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredAccountId(it) }
+        val uuidAsString =
+            SharedPrefs().getStoredAccountId(requireContext())
 
         if (uuidAsString != null) {
             isDefaultAccountCheckBox.isChecked =
@@ -227,12 +237,6 @@ class AccountFragment: Fragment() {
 
     private fun updateBalanceField() {
         balanceField.setText(accountBalance.toString())
-    }
-
-    private inner class vf: ValueFormatter() {
-        override fun getFormattedValue(value: Float, axis: AxisBase?): String {
-            return super.getFormattedValue(value, axis)
-        }
     }
 
     private inner class DayAxisValueFormatter(private val labelsIncome: MutableMap<*, *>) : ValueFormatter() {
@@ -332,6 +336,16 @@ class AccountFragment: Fragment() {
 
         currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
 
+    }
+
+    override fun CloseWithoutSaving() {
+        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        findNavController().popBackStack()
+    }
+
+    override fun SaveEntiy(entity: Any) {
+        accountDetailViewModel.saveAccount(account = this.account)
+        findNavController().popBackStack()
     }
 
     companion object {

@@ -50,4 +50,7 @@
     <string name="payee_menu_title">Payees</string>
     <string name="button_ok_text">Save</string>
     <string name="button_cancel_text">Cancel</string>
+    <string name="notification_channel_name">Init DB with backup data</string>
+    <string name="notification_caption">DB filling</string>
+    <string name="notification_text">DB filled successfully</string>
 </resources>

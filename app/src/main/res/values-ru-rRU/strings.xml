@@ -50,4 +50,7 @@
     <string name="payee_menu_title">Получатели платежей</string>
     <string name="button_ok_text">Сохранить</string>
     <string name="button_cancel_text">Отмена</string>
+    <string name="notification_channel_name">Инициализация БД предопределенными данными</string>
+    <string name="notification_caption">Заполнение БД</string>
+    <string name="notification_text">БД заполнена успешно</string>
 </resources>
