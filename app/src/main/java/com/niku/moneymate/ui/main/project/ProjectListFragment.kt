@@ -17,16 +17,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.niku.moneymate.R
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
-import com.google.android.material.snackbar.Snackbar
-
-
-
 
 
 private const val TAG = "ProjectListFragment"

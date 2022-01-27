@@ -4,23 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.FileUtils
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.core.app.ActivityCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceScreen
 import com.niku.moneymate.R
-import com.niku.moneymate.ui.main.project.ProjectListFragment
-import java.util.*
-import java.util.concurrent.Executors
 
 private const val TAG = "MainSettingsFragment"
 

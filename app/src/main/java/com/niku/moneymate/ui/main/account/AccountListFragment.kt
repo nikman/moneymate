@@ -10,9 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
-import com.niku.moneymate.R
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.ui.main.MateItemDecorator

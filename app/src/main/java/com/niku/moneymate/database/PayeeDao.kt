@@ -2,8 +2,6 @@ package com.niku.moneymate.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.niku.moneymate.account.Account
-import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.payee.Payee
 import java.util.*
 

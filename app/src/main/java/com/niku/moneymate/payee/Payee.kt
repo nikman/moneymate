@@ -3,7 +3,6 @@ package com.niku.moneymate.payee
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.jetbrains.annotations.NotNull
-import java.util.*
 
 @Entity(tableName = "payee")
 data class Payee (

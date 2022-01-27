@@ -1,7 +1,6 @@
 package com.niku.moneymate.ui.main.account
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -9,25 +8,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.ui.graphics.Color
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountDetailViewModel
-import com.niku.moneymate.R
-import java.util.*
+import com.niku.moneymate.account.AccountExpenses
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.utils.SharedPrefs
-import com.niku.moneymate.account.AccountExpenses
-import com.niku.moneymate.utils.TransactionType
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.niku.moneymate.ui.main.BaseFragmentEntity
+import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.TransactionType
+import java.util.*
 
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"

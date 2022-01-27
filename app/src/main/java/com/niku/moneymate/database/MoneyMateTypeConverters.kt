@@ -1,7 +1,6 @@
 package com.niku.moneymate.database
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
 import java.util.*
 
 class MoneyMateTypeConverters {

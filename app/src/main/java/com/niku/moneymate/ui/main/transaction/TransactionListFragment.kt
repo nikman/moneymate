@@ -12,8 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.niku.moneymate.account.Account
 import com.niku.moneymate.R
+import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.projects.Project

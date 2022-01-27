@@ -157,5 +157,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ok_button" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

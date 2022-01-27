@@ -1,6 +1,5 @@
 package com.niku.moneymate.database
 
-import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.util.Log
@@ -8,18 +7,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
 import com.niku.moneymate.MainActivity
 import com.niku.moneymate.NOTIFICATION_CHANNEL_ID
 import com.niku.moneymate.R
-import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.files.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.File
 
 //const val TAG = "SeedDatabaseWorker"
 

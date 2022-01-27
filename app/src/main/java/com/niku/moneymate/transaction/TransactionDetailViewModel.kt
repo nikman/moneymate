@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.niku.moneymate.account.Account
-import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.database.MoneyMateRepository
 import java.util.*
 

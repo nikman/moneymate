@@ -1,7 +1,9 @@
 package com.niku.moneymate.account
 
-import androidx.room.*
-import androidx.room.util.TableInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.niku.moneymate.currency.MainCurrency
 import java.util.*
 

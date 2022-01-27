@@ -1,7 +1,6 @@
 package com.niku.moneymate.account
 
 import androidx.lifecycle.ViewModel
-import com.niku.moneymate.account.Account
 import com.niku.moneymate.database.MoneyMateRepository
 import java.util.*
 

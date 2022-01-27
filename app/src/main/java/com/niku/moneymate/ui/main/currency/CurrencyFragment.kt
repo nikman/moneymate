@@ -10,9 +10,9 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyDetailViewModel
+import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 

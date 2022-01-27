@@ -3,7 +3,6 @@ package com.niku.moneymate.files
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
-import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -18,7 +17,6 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.utils.*
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 private const val TAG = "FileUtils"
 

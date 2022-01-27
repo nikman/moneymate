@@ -3,15 +3,12 @@ package com.niku.moneymate.transaction
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import com.niku.moneymate.utils.UUID_PROJECT_EMPTY
-import java.time.Clock
-import java.time.LocalDate
 import java.util.*
 
 @Entity(

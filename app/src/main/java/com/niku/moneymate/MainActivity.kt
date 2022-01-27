@@ -2,22 +2,16 @@ package com.niku.moneymate
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.niku.moneymate.projects.Project
 import com.niku.moneymate.ui.main.account.AccountFragment
 import com.niku.moneymate.ui.main.account.AccountListFragment
 import com.niku.moneymate.ui.main.category.CategoryFragment
@@ -30,7 +24,6 @@ import com.niku.moneymate.ui.main.settings.MainSettingsFragment
 import com.niku.moneymate.ui.main.transaction.TransactionFragment
 import com.niku.moneymate.ui.main.transaction.TransactionListFragment
 import java.util.*
-import java.util.concurrent.Executors
 
 private const val TAG = "MainActivity"
 
