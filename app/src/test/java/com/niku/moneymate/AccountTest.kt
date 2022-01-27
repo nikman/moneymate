@@ -1,6 +1,7 @@
 package com.niku.moneymate
 
 import com.niku.moneymate.account.Account
+import com.niku.moneymate.utils.UUID_CURRENCY_RUB
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -8,7 +9,7 @@ import org.junit.Test
 import java.util.*
 
 private const val ACCOUNT_TITLE = "testTitle"
-private const val ACCOUNT_BALANCE = 3
+private const val ACCOUNT_BALANCE = 3.0
 
 class AccountTest {
 
@@ -16,7 +17,12 @@ class AccountTest {
 
     @Before
     fun setUp() {
-        subject = Account(UUID.randomUUID(), ACCOUNT_TITLE, ACCOUNT_BALANCE, "testNote")
+        subject = Account(
+            account_id = UUID.randomUUID(),
+            title = ACCOUNT_TITLE,
+            balance = ACCOUNT_BALANCE,
+            note = "testNote",
+            currency_id = UUID.fromString(UUID_CURRENCY_RUB))
     }
 
     @Test
