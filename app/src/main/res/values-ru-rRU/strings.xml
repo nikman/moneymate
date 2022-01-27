@@ -47,5 +47,10 @@
     <string name="transaction_project_label">Проект</string>
     <string name="btn_load_from_cvs_title">Загрузить из CSV</string>
     <string name="settings_menu_title">Настройки</string>
-    <string name="payee_menu_title">Payees</string>
+    <string name="payee_menu_title">Получатели платежей</string>
+    <string name="button_ok_text">Сохранить</string>
+    <string name="button_cancel_text">Отмена</string>
+    <string name="notification_channel_name">Инициализация БД предопределенными данными</string>
+    <string name="notification_caption">Заполнение БД</string>
+    <string name="notification_text">БД заполнена успешно</string>
 </resources>

@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.*
@@ -24,13 +26,14 @@ import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.account.AccountExpenses
 import com.niku.moneymate.utils.TransactionType
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.niku.moneymate.ui.main.BaseFragmentEntity
 
 private const val ARG_ACCOUNT_ID = "account_id"
 private const val TAG = "AccountFragment"
 
-class AccountFragment: Fragment() {
+class AccountFragment: Fragment(), BaseFragmentEntity {
 
-    //private lateinit var viewModel: MainViewModel
     private lateinit var account: Account
     private lateinit var accountWithCurrency: AccountWithCurrency
     private lateinit var currency: MainCurrency
@@ -42,13 +45,11 @@ class AccountFragment: Fragment() {
     private lateinit var initialBalanceField: EditText
     private lateinit var isDefaultAccountCheckBox: CheckBox
     private lateinit var accountChartField: BarChart
+    private lateinit var saveButton: Button
+    private lateinit var cancelButton: Button
 
-    private var initialAccountBalance: Double = 0.0
+    //private var initialAccountBalance: Double = 0.0
     private var accountBalance: Double = 0.0
-
-    /*private val accountDetailViewModel: AccountDetailViewModel by lazy {
-        ViewModelProvider(this)[AccountDetailViewModel::class.java]
-    }*/
 
     private val accountDetailViewModel by activityViewModels<AccountDetailViewModel>()
 
@@ -77,18 +78,8 @@ class AccountFragment: Fragment() {
         currencyField = view.findViewById(R.id.spinner) as Spinner
         isDefaultAccountCheckBox = view.findViewById(R.id.account_isDefault) as CheckBox
         accountChartField = view.findViewById(R.id.account_chart) as BarChart
-
-        /*val viewModelFactory = CommonViewModelFactory()
-        val currencyListViewModel: CurrencyListViewModel by lazy {
-            ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
-        }*/
-
-        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
-
-        currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            { currencies -> currencies?.let { updateCurrencyList(currencies) } }
-        )
+        saveButton = view.findViewById(R.id.ok_button)
+        cancelButton = view.findViewById(R.id.cancel_button)
 
         return view
     }
@@ -99,6 +90,13 @@ class AccountFragment: Fragment() {
 
         val accountId = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
         accountDetailViewModel.loadAccount(accountId)
+
+        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
+
+        currencyListViewModel.currencyListLiveData.observe(
+            viewLifecycleOwner,
+            { currencies -> currencies?.let { updateCurrencyList(currencies) } }
+        )
 
         accountDetailViewModel.accountLiveData.observe(
             viewLifecycleOwner,
@@ -122,12 +120,10 @@ class AccountFragment: Fragment() {
 
         accountDetailViewModel.getAccountExpensesData(accountId).observe(
             viewLifecycleOwner,
-            { listOfExpenses -> listOfExpenses?.let {
-                updateChartField(listOfExpenses)
-            }
+            {
+                    listOfExpenses -> listOfExpenses?.let { updateChartField(listOfExpenses) }
             }
         )
-
     }
 
     override fun onStart() {
@@ -168,11 +164,14 @@ class AccountFragment: Fragment() {
         currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
             ) {
-                account.currency_id = currencies[position].currency_id
+                currencies?.let {
+                    account.currency_id = currencies[position].currency_id
+                }
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -200,21 +199,33 @@ class AccountFragment: Fragment() {
             }
         }
 
+        saveButton.apply {
+            setOnClickListener {
+                SaveEntiy(account)
+            }
+        }
+
+        cancelButton.apply {
+            setOnClickListener {
+                CloseWithoutSaving()
+            }
+        }
+
     }
 
     override fun onStop() {
         super.onStop()
-        accountDetailViewModel.saveAccount(account)
+        //accountDetailViewModel.saveAccount(account)
     }
 
     private fun updateUI() {
 
         titleField.setText(accountWithCurrency.account.title)
         noteField.setText(accountWithCurrency.account.note)
-        initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
+        //initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
 
-        val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredAccountId(it) }
+        val uuidAsString =
+            SharedPrefs().getStoredAccountId(requireContext())
 
         if (uuidAsString != null) {
             isDefaultAccountCheckBox.isChecked =
@@ -228,28 +239,50 @@ class AccountFragment: Fragment() {
         balanceField.setText(accountBalance.toString())
     }
 
+    private inner class DayAxisValueFormatter(private val labelsIncome: MutableMap<*, *>) : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return labelsIncome[value].toString()
+        }
+    }
+
     private fun updateChartField(listOfExpenses: List<AccountExpenses>) {
 
         val entriesOutcome: ArrayList<BarEntry> = ArrayList()
         val entriesIncome: ArrayList<BarEntry> = ArrayList()
 
         var i = 0.0f
-        var j = 0.0f
+
+        val labelsIncome =
+            mutableMapOf(
+                -1f to "earlier",
+                0f to "1",
+                1f to "2",
+                2f to "3",
+                3f to "4",
+                4f to "5",
+                5f to "6",
+                6f to "older",
+            )
 
         for (expenseItem in listOfExpenses) {
             if (expenseItem.type == TransactionType.OUTCOME) {
+                labelsIncome[i] = expenseItem.date.toString()
                 entriesOutcome.add(
                     BarEntry(
-                        //expenseItem.date?.toFloat() ?: 0.0f,
                         i++,
-                        expenseItem.amount?.toFloat() ?: 0.0f
+                        0f - (expenseItem.amount?.toFloat() ?: 0.0f)
                     )
                 )
-            } else if (expenseItem.type == TransactionType.INCOME) {
+            }
+        }
+
+        i = 0f
+
+        for (expenseItem in listOfExpenses) {
+            if (expenseItem.type == TransactionType.INCOME) {
                 entriesIncome.add(
                     BarEntry(
-                        //expenseItem.date?.toFloat() ?: 0.0f,
-                        j++,
+                        i++,
                         expenseItem.amount?.toFloat() ?: 0.0f
                     )
                 )
@@ -258,16 +291,29 @@ class AccountFragment: Fragment() {
 
         //val lineDataSet = LineDataSet(entries, "Label")
         val barData1 = BarDataSet(entriesOutcome, "Expenses")
-        barData1.color = R.color.design_default_color_error
+        barData1.color = R.color.red_400
         val barData2 = BarDataSet(entriesIncome, "Incomes")
-        barData2.color = R.color.design_default_color_primary
+        barData2.color = R.color.green_400
 
-        //val data = LineData(lineDataSet)
+        val xAxisFormatter: ValueFormatter = DayAxisValueFormatter(labelsIncome)
+
+        val groupSpace = 0.08f
+        val barSpace = 0.03f // x4 DataSet
+
+        //val barWidth = 0.2f // x4 DataSet
+
         val data = BarData(barData1, barData2)
-        //data.groupBars(0f, 1f, 3f)
+        //data.barWidth = 0.9f
+        //data.groupBars(0f, groupSpace, barSpace)
         accountChartField.data = data
+        accountChartField.setFitBars(true)
+        val xAxis = accountChartField.xAxis
+        //xAxis.setCenterAxisLabels(true)
 
-        accountChartField.invalidate()
+        xAxis.valueFormatter = xAxisFormatter
+
+        //accountChartField.invalidate()
+        accountChartField.animateY(600)
 
     }
 
@@ -290,6 +336,16 @@ class AccountFragment: Fragment() {
 
         currencyField.setSelection(currencies.indexOf(accountWithCurrency.currency), true)
 
+    }
+
+    override fun CloseWithoutSaving() {
+        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        findNavController().popBackStack()
+    }
+
+    override fun SaveEntiy(entity: Any) {
+        accountDetailViewModel.saveAccount(account = this.account)
+        findNavController().popBackStack()
     }
 
     companion object {

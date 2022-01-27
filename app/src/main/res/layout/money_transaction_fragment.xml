@@ -31,6 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:contentDescription="Account from"
+        android:dropDownWidth="match_parent"
+        android:elevation="1dp"
         android:minHeight="48dp"
         android:spinnerMode="dialog"
         android:splitMotionEvents="false"
@@ -133,5 +136,26 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView_project"
         app:layout_constraintStart_toEndOf="@+id/textView_project"
         app:layout_constraintTop_toTopOf="@+id/textView_project" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/button_ok_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/button_cancel_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ok_button" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

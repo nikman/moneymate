@@ -151,20 +151,34 @@ interface MoneyMateDao {
     fun getTransactionsCountByProject(project_id: UUID): LiveData<Int?>
 
     @Query("""
-        SELECT
-           case  
-           WHEN amount_from < 0 THEN -1
-           WHEN amount_from > 0 THEN 1
-           end as type,
-           --datetime(transaction_date / 1000, 'unixepoch', 'start of month') as date,
-           --strftime("%m", datetime(transaction_date / 1000, 'unixepoch', 'start of month')) - strftime("%m", ) as date,
-           0 - strftime("%m", datetime(transaction_date / 1000, 'unixepoch', 'start of month')) as date,
-           --datetime(transaction_date / 1000, 'unixepoch', 'start of month') - DATE('now', '-12 month') as date,
-           sum(amount_from) as amount
+        SELECT type,date,SUM(amount) as amount
+        FROM (
+            SELECT
+            transaction_date as transaction_date,
+                case  
+                    WHEN amount_to < 0 THEN -1
+                    WHEN amount_to > 0 THEN 1
+                end as type,
+           strftime("%m.%Y", datetime(transaction_date / 1000, 'unixepoch', 'start of month')) as date,
+           (amount_to) as amount
         FROM moneyTransaction
-        WHERE account_id_from = (:account_id) and account_id_to = "00000004-0001-0001-0001-000000000002" and amount_from <> 0 AND datetime(transaction_date / 1000, 'unixepoch', 'start of month') >= DATE('now', '-12 month')
-        GROUP BY type, datetime(transaction_date / 1000, 'unixepoch', 'start of month')
-        ORDER BY transaction_date
+        WHERE account_id_to = (:account_id) and amount_to <> 0 AND datetime(transaction_date / 1000, 'unixepoch', 'start of month') >= DATE('now', '-6 month')
+        
+       UNION ALL
+       
+       SELECT
+       transaction_date as transaction_date,
+                  case  
+                  WHEN amount_from < 0 THEN -1
+                  WHEN amount_from > 0 THEN 1
+                  end as type,
+                  strftime("%m.%Y", datetime(transaction_date / 1000, 'unixepoch', 'start of month')) as date,
+                  (amount_from) as amount
+               FROM moneyTransaction
+               WHERE account_id_from = (:account_id) and account_id_to = "00000004-0001-0001-0001-000000000002" and amount_from <> 0 AND datetime(transaction_date / 1000, 'unixepoch', 'start of month') >= DATE('now', '-6 month')
+               ) AS Inn
+               GROUP BY Inn.type, Inn.date
+               ORDER BY Inn.transaction_date
         """)
     fun getAccountExpensesData(account_id: UUID): LiveData<List<AccountExpenses>>
 

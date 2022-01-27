@@ -3,6 +3,7 @@ package com.niku.moneymate.files
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
+import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -34,8 +35,11 @@ class FileUtils {
 
     fun readFileFromAssetsLineByLine(context: Context): Unit {
 
+        //val constraints: Constraints.Builder().setRequiredNetworkType().build()
+
         val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
             .setInputData(workDataOf(KEY_FILENAME into "database/20220120_223208_566"))
+            //.setConstraints(constraints)
             .build()
         WorkManager.getInstance(context).enqueue(request)
 
@@ -315,21 +319,24 @@ class FileUtils {
                                     )
 
                                 transactionList.add(transaction)
+
+                                accountUUIDTo = null
+                                accountUUIDFrom = null
+                                categoryUUID = null
+                                projectUUID = null
+                                from_account_id = 0
+                                to_account_id = 0
+                                category_id = 0
+                                project_id = 0
+                                from_amount = 0
+                                to_amount = 0
+                                datetime = 0
+                                payee_id = 0
+                                transaction_note = ""
+                                transaction_type = 0
                             }
 
                         }
-
-                        from_account_id = 0
-                        to_account_id = 0
-                        category_id = 0
-                        project_id = 0
-                        from_amount = 0
-                        to_amount = 0
-                        datetime = 0
-                        payee_id = 0
-                        transaction_note = ""
-                        transaction_type = 0
-
                     }
                 }
                 for (transaction in transactionList) {

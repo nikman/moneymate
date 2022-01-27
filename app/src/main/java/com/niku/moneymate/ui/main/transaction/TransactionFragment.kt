@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,9 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
@@ -23,6 +27,7 @@ import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
+import com.niku.moneymate.ui.main.BaseFragmentEntity
 import com.niku.moneymate.utils.CategoryType
 import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
@@ -33,12 +38,9 @@ import kotlin.math.abs
 private const val ARG_TRANSACTION_ID = "transaction_id"
 private const val TAG = "TransactionFragment"
 
-class TransactionFragment : Fragment() {
+class TransactionFragment : Fragment(), BaseFragmentEntity {
 
-    //private lateinit var viewModel: MainViewModel
     private lateinit var transactionWithProperties: TransactionWithProperties
-
-    //private var multiplier: Byte = 0
 
     private lateinit var moneyTransaction: MoneyTransaction
     private lateinit var currency: MainCurrency
@@ -60,14 +62,14 @@ class TransactionFragment : Fragment() {
     private lateinit var amountField: EditText
     private lateinit var projectField: Spinner
     private lateinit var transactionTypeImageButton: ImageButton
-
-    /*private val moneyTransactionDetailViewModel: TransactionDetailViewModel by lazy {
-        ViewModelProvider(this)[TransactionDetailViewModel::class.java]
-    }*/
+    private lateinit var saveButton: Button
+    private lateinit var cancelButton: Button
 
     private val moneyTransactionDetailViewModel by activityViewModels<TransactionDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Log.d(TAG, "onCreate")
 
         super.onCreate(savedInstanceState)
 
@@ -112,6 +114,8 @@ class TransactionFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
+        Log.d(TAG, "onCreateView")
+
         val view = inflater.inflate(R.layout.money_transaction_fragment, container, false)
 
         dateButton = view.findViewById(R.id.transaction_date) as Button
@@ -122,54 +126,15 @@ class TransactionFragment : Fragment() {
         categoryField = view.findViewById(R.id.category_spinner) as Spinner
         projectField = view.findViewById(R.id.project_spinner) as Spinner
         transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
-
-        /*val viewModelFactory = CommonViewModelFactory()
-
-        val accountListViewModel: AccountListViewModel by lazy {
-            ViewModelProvider(viewModelStore, viewModelFactory)[AccountListViewModel::class.java]
-        }*/
-
-        val accountListViewModel by activityViewModels<AccountListViewModel>()
-
-        accountListViewModel.accountListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { accounts -> accounts?.let { updateAccountsList(accounts) } }
-        )
-
-        /*val currencyListViewModel: CurrencyListViewModel by lazy {
-            ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
-        }*/
-        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
-
-        currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateCurrenciesList(currencies) } }
-        )
-
-        /*val categoryListViewModel: CategoryListViewModel by lazy {
-            ViewModelProvider(viewModelStore, viewModelFactory)[CategoryListViewModel::class.java]
-        }*/
-        val categoryListViewModel by activityViewModels<CategoryListViewModel>()
-
-        categoryListViewModel.categoryListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { categories -> categories?.let { updateCategoriesList(categories) } }
-        )
-
-        /*val projectListViewModel: ProjectListViewModel by lazy {
-            ViewModelProvider(viewModelStore, viewModelFactory)[ProjectListViewModel::class.java]
-        }*/
-        val projectListViewModel by activityViewModels<ProjectListViewModel>()
-
-        projectListViewModel.projectListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { projects -> projects?.let { updateProjectsList(projects) } }
-        )
+        saveButton = view.findViewById(R.id.ok_button)
+        cancelButton = view.findViewById(R.id.cancel_button)
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        Log.d(TAG, "onViewCreated")
 
         super.onViewCreated(view, savedInstanceState)
 
@@ -191,16 +156,40 @@ class TransactionFragment : Fragment() {
             }
         )
 
-    }
+        val accountListViewModel by activityViewModels<AccountListViewModel>()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        /*viewModel =
-            ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
+        accountListViewModel.accountListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { accounts -> accounts?.let { updateAccountsList(accounts) } }
+        )
+
+        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
+
+        currencyListViewModel.currencyListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { currencies -> currencies?.let { updateCurrenciesList(currencies) } }
+        )
+
+        val categoryListViewModel by activityViewModels<CategoryListViewModel>()
+
+        categoryListViewModel.categoryListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { categories -> categories?.let { updateCategoriesList(categories) } }
+        )
+
+        val projectListViewModel by activityViewModels<ProjectListViewModel>()
+
+        projectListViewModel.projectListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { projects -> projects?.let { updateProjectsList(projects) } }
+        )
+
     }
 
     override fun onStart() {
+
+        Log.d(TAG, "onStart")
+
         super.onStart()
 
         val c = Calendar.getInstance()
@@ -231,69 +220,21 @@ class TransactionFragment : Fragment() {
         }
         amountField.addTextChangedListener(amountWatcher)
 
-        accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                moneyTransaction.account_id_from = accounts[position].account_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
-        }
-
-        accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                //moneyTransaction.account_id_to = accounts[position].account_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
-        }
-
-        currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                moneyTransaction.currency_id = currencies[position].currency_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
-        }
-
-        categoryField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                moneyTransaction.category_id = categories[position].category_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
-        }
-
         transactionTypeImageButton.apply {
             setOnClickListener { _, ->
                 setImageButton(revert = true)
+            }
+        }
+
+        saveButton.apply {
+            setOnClickListener {
+                SaveEntiy(moneyTransaction)
+            }
+        }
+
+        cancelButton.apply {
+            setOnClickListener {
+                CloseWithoutSaving()
             }
         }
 
@@ -328,11 +269,13 @@ class TransactionFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        moneyTransactionDetailViewModel.saveTransaction(moneyTransaction)
+        //moneyTransactionDetailViewModel.saveTransaction(moneyTransaction)
 
     }
 
     private fun updateUI() {
+
+        Log.d(TAG, "updateUI")
 
         amountField.setText(abs(moneyTransaction.amount_from).toString())
         dateButton.text = moneyTransaction.transactionDate.toString()
@@ -345,7 +288,7 @@ class TransactionFragment : Fragment() {
             currencyField.setSelection(currencies.indexOf(currency), true)
         }
         if (this::categories.isInitialized) {
-            categoryField.setSelection(categories.indexOf(category), true)
+            categoryField.setSelection(categories.indexOf(category), false)
         }
 
         setImageButton(revert = false)
@@ -368,9 +311,60 @@ class TransactionFragment : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         accountFromField.adapter = adapter
         accountToField.adapter = adapter
+
+        Log.d(TAG, "updateAccountsList")
+
+        accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                Log.d(TAG, "updateAccountsList - onItemSelected")
+                moneyTransaction.account_id_from = accounts[position].account_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
+        accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long) {
+                moneyTransaction.account_id_to = accounts[position].account_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
+        projectField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                Log.d(TAG, "updateAccountsList - projectField - onItemSelected")
+                moneyTransaction.project_id = projects[position].project_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
     }
 
     private fun updateCurrenciesList(currencies: List<MainCurrency>) {
+
+        Log.d(TAG, "updateCurrenciesList")
 
         this.currencies = currencies
 
@@ -386,6 +380,25 @@ class TransactionFragment : Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencyField.adapter = adapter
+
+        currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                Log.d(TAG, "updateCurrenciesList - onItemSelected")
+                moneyTransaction.currency_id = currencies[position].currency_id
+                //moneyTransaction.currency_id = UUID.fromString(parent.getItemAtPosition(position) as String)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
+
     }
 
     private fun updateCategoriesList(categories: List<Category>) {
@@ -404,6 +417,22 @@ class TransactionFragment : Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryField.adapter = adapter
+
+        categoryField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                moneyTransaction.category_id = categories[position].category_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
     }
 
     private fun updateProjectsList(projects: List<Project>) {
@@ -422,6 +451,16 @@ class TransactionFragment : Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         projectField.adapter = adapter
+    }
+
+    override fun CloseWithoutSaving() {
+        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        findNavController().popBackStack()
+    }
+
+    override fun SaveEntiy(entity: Any) {
+        moneyTransactionDetailViewModel.saveTransaction(transaction = this.moneyTransaction)
+        findNavController().popBackStack()
     }
 
     companion object {
