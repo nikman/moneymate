@@ -32,6 +32,7 @@ import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
 import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
@@ -66,27 +67,35 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
     private val moneyTransactionDetailViewModel by activityViewModels<TransactionDetailViewModel>()
 
-    /*fun <T, A, B> LiveData<A>.combineAndCompute(other: LiveData<B>, onChange: (A, B) -> T): MediatorLiveData<T> {
+    //fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, B) -> T): MediatorLiveData<T> {
+    fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, ArrayList<B?>) -> T): MediatorLiveData<T> {
 
         var source1emitted = false
-        var source2emitted = false
+        /*var source2emitted = false*/
+        val listOfSourcesEmitted = ArrayList<Boolean>()
 
         val result = MediatorLiveData<T>()
 
         val mergeF = {
             val source1Value = this.value
-            val source2Value = other.value
+            //val source2Value = other.value
+            val listOfOtherSourcesValues = ArrayList<B?>()
 
-            if (source1emitted && source2emitted) {
-                result.value = onChange.invoke(source1Value!!, source2Value!! )
+            other.forEach { listOfOtherSourcesValues.add(it.value) }
+
+            //if (source1emitted && source2emitted) {
+            if (source1emitted && listOfSourcesEmitted.all { it }) {
+                result.value = onChange.invoke(source1Value!!, listOfOtherSourcesValues )
             }
         }
 
         result.addSource(this) { source1emitted = true; mergeF.invoke() }
-        result.addSource(other) { source2emitted = true; mergeF.invoke() }
+        other.forEachIndexed { index, liveData ->
+            result.addSource(liveData) { listOfSourcesEmitted[index] = true; mergeF.invoke() }
+        }
 
         return result
-    }*/
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -210,13 +219,13 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             Observer { projects -> projects?.let { updateProjectsList(projects) } }
         )*/
 
-        val result = MediatorLiveData<Int>()
+        //val result = MediatorLiveData<Int>()
 
-        result.observe(viewLifecycleOwner) {
+        /*result.observe(viewLifecycleOwner) {
             updateUI()
-        }
+        }*/
 
-        result.addSource(transactionLiveData) { transaction ->
+        /*result.addSource(transactionLiveData) { transaction ->
             transaction?.let {
                 this.transactionWithProperties = transaction
                 this.moneyTransaction = transactionWithProperties.transaction
@@ -257,7 +266,30 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
                 Log.d(TAG, "projects got")
                 //updateUI()
             }
-        }
+        }*/
+
+        /*val dataForCompute = listOf(
+            accountListLiveData,
+            currencyListLiveData,
+            categoryListLiveData,
+            projectListLiveData)
+
+        val lambdas = listOf(
+            { accounts: List<Account> -> accounts?.let {
+                this.accounts = accounts
+                Log.d(TAG, "accounts got")
+                //updateUI()
+            }
+            },
+            { currencies: List<MainCurrency> ->
+                currencies?.let {
+                    this.currencies = currencies
+                    Log.d(TAG, "currencies got")
+                    //updateUI()
+                }
+        )
+
+        transactionLiveData.combineAndCompute(dataForCompute, lambdas)*/
 
     }
 

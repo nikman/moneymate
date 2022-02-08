@@ -92,7 +92,6 @@ class TransactionListFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_transaction -> {
-                //Log.d(TAG,"new transaction pressed")
 
                 val currency =
                     MainCurrency(
@@ -106,17 +105,16 @@ class TransactionListFragment: Fragment() {
                     currency_id = currency.currency_id,
                     account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
 
-                val project = Project(
+                /*val project = Project(
                     project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext()))
-                )
+                )*/
 
                 val transaction = MoneyTransaction(
-                    account.account_id,
-                    //account.account_id,
-                    UUID.fromString(UUID_ACCOUNT_EMPTY),
-                    currency.currency_id,
-                    category.category_id,
-                    UUID.fromString(
+                    account_id_from = account.account_id,
+                    account_id_to = UUID.fromString(UUID_ACCOUNT_EMPTY),
+                    currency_id = currency.currency_id,
+                    category_id = category.category_id,
+                    project_id = UUID.fromString(
                         SharedPrefs().getStoredProjectId(requireContext())))
 
                 transactionListViewModel.addTransaction(transaction)

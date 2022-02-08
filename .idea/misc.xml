@@ -38,8 +38,11 @@
         <entry key="..\:/programming/android/moneymate/app/src/main/res/menu/fragment_transaction_list.xml" value="0.16041666666666668" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/xml/preference_screen.xml" value="0.4" />
         <entry key="app/src/main/res/layout/account_fragment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/currency_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/money_transaction_fragment.xml" value="0.11145833333333334" />
         <entry key="app/src/main/res/layout/project_fragment.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2564814814814815" />
+        <entry key="app/src/main/res/menu/fragment_currency_list.xml" value="0.1" />
       </map>
     </option>
   </component>

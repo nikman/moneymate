@@ -29,7 +29,7 @@ class MainSettingsFragment: PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preference_screen, rootKey)
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (preference != null) {
             return when (preference.key) {
                 "load_from_csv" -> {
