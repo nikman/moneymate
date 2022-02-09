@@ -3,9 +3,10 @@ package com.niku.moneymate.category
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
+import javax.inject.Inject
 
 @Entity
-data class Category (
+data class Category ( //@Inject constructor(
     @PrimaryKey val category_id: UUID = UUID.randomUUID(),
     var category_type: Int = 0,
     //var parent_category_id: UUID = UUID.randomUUID(),

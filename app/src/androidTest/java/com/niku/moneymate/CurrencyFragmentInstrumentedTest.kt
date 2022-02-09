@@ -92,4 +92,52 @@ class CurrencyFragmentInstrumentedTest {
 
     }
 
+    @Test
+    fun whenStartingActivity_thenOpeningCurrencyList_thenCreatingNewDefaultCurrency() {
+
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+
+        Espresso.onView(ViewMatchers.withId(R.id.currencies))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.new_currency))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.currency_code))
+            .perform(ViewActions.click())
+            .perform(ViewActions.typeText("678"))
+            .perform(ViewActions.closeSoftKeyboard())
+
+        Espresso.onView(ViewMatchers.withId(R.id.currency_title))
+            .perform(ViewActions.click())
+            .perform(ViewActions.typeText("TEST default"))
+            .perform(ViewActions.closeSoftKeyboard())
+
+        Espresso.onView(ViewMatchers.withId(R.id.currency_isDefault))
+            .perform(ViewActions.click())
+
+        Espresso.pressBack()
+
+    }
+
+    @Test
+    fun whenStartingActivity_thenOpeningProjectsList_thenCreatingNewProject() {
+
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+
+        Espresso.onView(ViewMatchers.withId(R.id.projects))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.new_project))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.project_title))
+            .perform(ViewActions.click())
+            .perform(ViewActions.typeText("TEST project"))
+            .perform(ViewActions.closeSoftKeyboard())
+
+        Espresso.pressBack()
+
+    }
+
 }
