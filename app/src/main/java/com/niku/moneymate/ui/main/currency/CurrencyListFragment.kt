@@ -8,7 +8,6 @@ import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,12 +31,6 @@ class CurrencyListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var currencyRecyclerView: RecyclerView
     private var adapter: CurrencyAdapter = CurrencyAdapter(emptyList())
-
-    /*private val viewModelFactory = CommonViewModelFactory()
-
-    private val currencyListViewModel: CurrencyListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
-    }*/
 
     private val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
 
@@ -79,7 +72,7 @@ class CurrencyListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         currencyListViewModel.currencyListLiveData.observe(
             viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateUI(currencies) } }
+            { currencies -> currencies?.let { updateUI(currencies) } }
         )
     }
 
@@ -126,19 +119,19 @@ class CurrencyListFragment: Fragment() {
         super.onStart()
 
         currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { currencies ->
-                currencies?.let {
-                    Log.i(TAG, "Got currencyLiveData ${currencies.size}")
-                    for (element in currencies) {
-                        Log.i(
-                            TAG,
-                            "Got elem ${element.currency_title} # ${element.currency_id}")
-                    }
-                    updateUI(currencies)
+            viewLifecycleOwner
+        ) { currencies ->
+            currencies?.let {
+                Log.i(TAG, "Got currencyLiveData ${currencies.size}")
+                for (element in currencies) {
+                    Log.i(
+                        TAG,
+                        "Got elem ${element.currency_title} # ${element.currency_id}"
+                    )
                 }
+                updateUI(currencies)
             }
-        )
+        }
     }
 
     private inner class CurrencyHolder(view: View):
