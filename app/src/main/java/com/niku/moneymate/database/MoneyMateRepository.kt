@@ -179,6 +179,12 @@ class MoneyMateRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteCurrency(currency: MainCurrency) {
+        executor.execute {
+            moneyMateDao.deleteCurrency(currency)
+        }
+    }
+
     fun insertAllCurrencies(currencies: List<MainCurrency>) {
         executor.execute {
             moneyMateDao.insertAllCurrencies(currencies)

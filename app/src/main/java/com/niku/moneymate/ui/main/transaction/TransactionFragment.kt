@@ -605,7 +605,6 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     }
 
     override fun CloseWithoutSaving() {
-        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         findNavController().popBackStack()
     }
 

@@ -100,6 +100,9 @@ interface MoneyMateDao {
     @Insert
     fun addCurrency(currency: MainCurrency)
 
+    @Delete
+    fun deleteCurrency(currency: MainCurrency)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     //suspend fun insertAllCurrencies(currencies: List<MainCurrency>)
     fun insertAllCurrencies(currencies: List<MainCurrency>)

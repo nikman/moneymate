@@ -9,12 +9,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.ui.main.MateItemDecorator
+import com.niku.moneymate.uiutils.BaseSwipeHelper
 import com.niku.moneymate.utils.SharedPrefs
 import java.util.*
 
@@ -108,6 +110,15 @@ class CurrencyListFragment: Fragment() {
 
         adapter = CurrencyAdapter(currencies)
         currencyRecyclerView.adapter = adapter
+
+        val sw: BaseSwipeHelper<MainCurrency> = BaseSwipeHelper()
+        sw.onSwipeItem(
+            currencies,
+            requireContext(),
+            currencyRecyclerView,
+            ItemTouchHelper.LEFT,
+            { currency -> currencyListViewModel.deleteCurrency(currency = currency) },
+            { currency -> currencyListViewModel.addCurrency(currency = currency) })
 
     }
 
