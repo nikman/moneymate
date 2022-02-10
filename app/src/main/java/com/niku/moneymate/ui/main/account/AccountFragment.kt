@@ -93,36 +93,33 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
         val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
 
         currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            { currencies -> currencies?.let { updateCurrencyList(currencies) } }
-        )
+            viewLifecycleOwner
+        ) { currencies -> currencies?.let { updateCurrencyList(currencies) } }
 
         accountDetailViewModel.accountLiveData.observe(
-            viewLifecycleOwner,
-            {
-                account -> account?.let {
-                    this.accountWithCurrency = it
-                    this.account = it.account
-                    updateUI()
-                }
+            viewLifecycleOwner
+        ) { account ->
+            account?.let {
+                this.accountWithCurrency = it
+                this.account = it.account
+                updateUI()
             }
-        )
+        }
 
         accountDetailViewModel.getAccountBalance(accountId).observe(
-            viewLifecycleOwner,
-            { account -> account?.let {
+            viewLifecycleOwner
+        ) { account ->
+            account?.let {
                 this.accountBalance = it
                 updateBalanceField()
             }
-            }
-        )
+        }
 
         accountDetailViewModel.getAccountExpensesData(accountId).observe(
-            viewLifecycleOwner,
-            {
-                    listOfExpenses -> listOfExpenses?.let { updateChartField(listOfExpenses) }
-            }
-        )
+            viewLifecycleOwner
+        ) { listOfExpenses ->
+            listOfExpenses?.let { updateChartField(listOfExpenses) }
+        }
     }
 
     override fun onStart() {
@@ -167,7 +164,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
                 position: Int,
                 id: Long
             ) {
-                currencies?.let {
+                currencies.let {
                     account.currency_id = currencies[position].currency_id
                 }
 
@@ -210,11 +207,6 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
             }
         }
 
-    }
-
-    override fun onStop() {
-        super.onStop()
-        //accountDetailViewModel.saveAccount(account)
     }
 
     private fun updateUI() {
