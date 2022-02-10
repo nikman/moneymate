@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.fragment.findNavController
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
@@ -32,13 +30,18 @@ import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
 import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
 private const val TAG = "TransactionFragment"
 
 class TransactionFragment : Fragment(), BaseFragmentEntity {
+
+    private var transactionGot = false
+    private var accountsGot = false
+    private var projectsGot = false
+    private var categoriesGot = false
+    private var currenciesGot = false
 
     private lateinit var transactionWithProperties: TransactionWithProperties
 
@@ -68,7 +71,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     private val moneyTransactionDetailViewModel by activityViewModels<TransactionDetailViewModel>()
 
     //fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, B) -> T): MediatorLiveData<T> {
-    fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, ArrayList<B?>) -> T): MediatorLiveData<T> {
+    /*fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, ArrayList<B?>) -> T): MediatorLiveData<T> {
 
         var source1emitted = false
         /*var source2emitted = false*/
@@ -95,7 +98,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         }
 
         return result
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -173,7 +176,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         moneyTransactionDetailViewModel.loadTransaction(transactionId)
 
         val transactionLiveData = moneyTransactionDetailViewModel.transactionLiveData
-        /*.observe(
+        transactionLiveData.observe(
             viewLifecycleOwner
         ) { transaction ->
             transaction?.let {
@@ -183,41 +186,52 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
                 this.accountTo = transactionWithProperties.accountTo
                 this.currency = transactionWithProperties.currency
                 this.category = transactionWithProperties.category
+                this.project = transactionWithProperties.project
+                transactionGot = true
                 updateUI()
+                Log.d(TAG, "transaction got")
             }
-        }*/
+        }
 
         val accountListViewModel by activityViewModels<AccountListViewModel>()
-        val accountListLiveData = accountListViewModel.accountListLiveData
+        //val accountListLiveData = accountListViewModel.accountListLiveData
 
         //transactionLiveData.combineAndCompute(accountListLiveData) { _, _ -> {  } }.observe(viewLifecycleOwner) { updateUI() }
-        /*accountListViewModel.accountListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { accounts -> accounts?.let { updateAccountsList(accounts) } }
-        )*/
+        accountListViewModel.accountListLiveData.observe(
+            viewLifecycleOwner
+        ) { accounts -> accounts?.let {
+            updateAccountsList(accounts)
+            updateUI()
+        } }
 
         val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
         val currencyListLiveData = currencyListViewModel.currencyListLiveData
-        /*currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateCurrenciesList(currencies) } }
-        )*/
+        currencyListViewModel.currencyListLiveData.observe(
+            viewLifecycleOwner
+        ) { currencies -> currencies?.let {
+            updateCurrenciesList(currencies)
+            updateUI()
+        } }
 
         val categoryListViewModel by activityViewModels<CategoryListViewModel>()
         val categoryListLiveData = categoryListViewModel.categoryListLiveData
 
-        /*categoryListViewModel.categoryListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { categories -> categories?.let { updateCategoriesList(categories) } }
-        )*/
+        categoryListViewModel.categoryListLiveData.observe(
+            viewLifecycleOwner
+        ) { categories -> categories?.let {
+            updateCategoriesList(categories)
+            updateUI()
+        } }
 
         val projectListViewModel by activityViewModels<ProjectListViewModel>()
         val projectListLiveData = projectListViewModel.projectListLiveData
 
-        /*projectListViewModel.projectListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { projects -> projects?.let { updateProjectsList(projects) } }
-        )*/
+        projectListViewModel.projectListLiveData.observe(
+            viewLifecycleOwner
+        ) { projects -> projects?.let {
+            updateProjectsList(projects)
+            updateUI()
+        } }
 
         //val result = MediatorLiveData<Int>()
 
@@ -378,11 +392,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         Log.d(TAG, "updateUI_11")
 
-        if (moneyTransaction != null
-            && accounts != null
-            && currencies != null
-            && categories != null
-            && projects != null) {
+        if (transactionGot
+            && accountsGot
+            && currenciesGot
+            && categoriesGot
+            && projectsGot) {
 
             Log.d(TAG, "updateUI_2")
 
@@ -408,7 +422,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
     private fun updateAccountsList(accounts: List<Account>) {
 
-       //this.accounts = accounts
+        accountsGot = true
+
+        this.accounts = accounts
 
         val accountsStrings = List<String>(accounts.size)
         { i -> accounts[i].title }
@@ -478,7 +494,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         Log.d(TAG, "updateCurrenciesList")
 
-        //this.currencies = currencies
+        currenciesGot = true
+
+        this.currencies = currencies
 
         val currenciesStrings = List<String>(currencies.size)
         { i -> currencies[i].currency_title }
@@ -490,7 +508,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             android.R.layout.simple_spinner_dropdown_item,
             currenciesStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         currencyField.adapter = adapter
 
         currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -515,7 +533,10 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
     private fun updateCategoriesList(categories: List<Category>) {
 
-        //this.categories = categories
+        categoriesGot = true
+
+        this.categories = categories
+
         Log.d(TAG, "updateCategoriesList")
 
         val categoriesStrings = List<String>(categories.size)
@@ -528,7 +549,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             android.R.layout.simple_dropdown_item_1line,
             categoriesStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         categoryField.adapter = adapter
 
         categoryField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -549,8 +570,8 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     }
 
     private fun updateProjectsList(projects: List<Project>) {
-
-        //this.projects = projects
+        projectsGot = true
+        this.projects = projects
         Log.d(TAG, "updateProjectsList")
 
         val projectsStrings = List<String>(projects.size)
@@ -563,8 +584,24 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             android.R.layout.simple_spinner_dropdown_item,
             projectsStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         projectField.adapter = adapter
+
+        projectField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                moneyTransaction.project_id = projects[position].project_id
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+        }
+
     }
 
     override fun CloseWithoutSaving() {

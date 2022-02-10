@@ -2,7 +2,6 @@ package com.niku.moneymate
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.junit.After
@@ -80,6 +79,7 @@ class CurrencyFragmentInstrumentedTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.currency_code))
             .perform(ViewActions.click())
+            .perform(ViewActions.clearText())
             .perform(ViewActions.typeText("678"))
             .perform(ViewActions.closeSoftKeyboard())
 
@@ -105,6 +105,7 @@ class CurrencyFragmentInstrumentedTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.currency_code))
             .perform(ViewActions.click())
+            .perform(ViewActions.clearText())
             .perform(ViewActions.typeText("678"))
             .perform(ViewActions.closeSoftKeyboard())
 

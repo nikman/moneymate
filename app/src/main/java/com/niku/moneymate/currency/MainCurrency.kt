@@ -3,10 +3,9 @@ package com.niku.moneymate.currency
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
-import javax.inject.Inject
 
 @Entity
-data class MainCurrency ( // @Inject constructor(
+data class MainCurrency(// @Inject constructor(
     @PrimaryKey val currency_id: UUID = UUID.randomUUID(),
     var currency_code: Int = 0,
     var currency_title: String = ""//,

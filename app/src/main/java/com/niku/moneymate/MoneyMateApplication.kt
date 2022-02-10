@@ -31,6 +31,6 @@ class MoneyMateApplication: Application() {
             notificationManager.createNotificationChannel(channel)
         }
         // init appComponent
-        //_appComponent = DaggerAppComponent.create()
+        //_appComponent = DaggerAppC.create()
     }
 }
