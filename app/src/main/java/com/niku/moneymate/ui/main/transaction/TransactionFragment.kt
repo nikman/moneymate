@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
@@ -59,6 +60,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
     private lateinit var dateButton: Button
     private lateinit var accountFromField: Spinner
+    private lateinit var arrowDownImage: ImageView
     private lateinit var accountToField: Spinner
     private lateinit var currencyField: Spinner
     private lateinit var categoryField: Spinner
@@ -69,36 +71,6 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     private lateinit var cancelButton: Button
 
     private val moneyTransactionDetailViewModel by activityViewModels<TransactionDetailViewModel>()
-
-    //fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, B) -> T): MediatorLiveData<T> {
-    /*fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, ArrayList<B?>) -> T): MediatorLiveData<T> {
-
-        var source1emitted = false
-        /*var source2emitted = false*/
-        val listOfSourcesEmitted = ArrayList<Boolean>()
-
-        val result = MediatorLiveData<T>()
-
-        val mergeF = {
-            val source1Value = this.value
-            //val source2Value = other.value
-            val listOfOtherSourcesValues = ArrayList<B?>()
-
-            other.forEach { listOfOtherSourcesValues.add(it.value) }
-
-            //if (source1emitted && source2emitted) {
-            if (source1emitted && listOfSourcesEmitted.all { it }) {
-                result.value = onChange.invoke(source1Value!!, listOfOtherSourcesValues )
-            }
-        }
-
-        result.addSource(this) { source1emitted = true; mergeF.invoke() }
-        other.forEachIndexed { index, liveData ->
-            result.addSource(liveData) { listOfSourcesEmitted[index] = true; mergeF.invoke() }
-        }
-
-        return result
-    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -113,9 +85,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             currency_id = currency.currency_id,
             account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
 
-        accountTo = Account(
+        accountTo = accountFrom.copy() /*Account(
             currency_id = currency.currency_id,
-            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))*/
 
         category = Category(
             category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
@@ -154,6 +126,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         dateButton = view.findViewById(R.id.transaction_date) as Button
         dateButton.visibility = View.GONE
         accountFromField = view.findViewById(R.id.account_from_spinner) as Spinner
+        arrowDownImage = view.findViewById<ImageView>(R.id.arrow_down_image_view)
         accountToField = view.findViewById(R.id.account_to_spinner) as Spinner
         currencyField = view.findViewById(R.id.currency_spinner) as Spinner
         amountField = view.findViewById(R.id.transaction_amount) as EditText
@@ -162,6 +135,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
         saveButton = view.findViewById(R.id.ok_button)
         cancelButton = view.findViewById(R.id.cancel_button)
+
+        val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        val textField = view.findViewById(R.id.menu_test) as TextInputLayout
+        (textField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
         return view
     }
@@ -392,6 +370,16 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         Log.d(TAG, "updateUI_11")
 
+        if (transactionGot) {
+            if (moneyTransaction.account_id_to == UUID.fromString(UUID_ACCOUNT_EMPTY)) {
+                accountToField.visibility = View.GONE
+                arrowDownImage.visibility = View.GONE
+            } else {
+                accountToField.visibility = View.VISIBLE
+                arrowDownImage.visibility = View.VISIBLE
+            }
+        }
+
         if (transactionGot
             && accountsGot
             && currenciesGot
@@ -498,7 +486,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         this.currencies = currencies
 
-        val currenciesStrings = List<String>(currencies.size)
+        val currenciesStrings = List(currencies.size)
         { i -> currencies[i].currency_title }
 
         val adapter: ArrayAdapter<*>
@@ -539,7 +527,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         Log.d(TAG, "updateCategoriesList")
 
-        val categoriesStrings = List<String>(categories.size)
+        val categoriesStrings = List(categories.size)
         { i -> categories[i].category_title }
 
         val adapter: ArrayAdapter<*>
@@ -574,7 +562,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         this.projects = projects
         Log.d(TAG, "updateProjectsList")
 
-        val projectsStrings = List<String>(projects.size)
+        val projectsStrings = List(projects.size)
         { i -> projects[i].project_title }
 
         val adapter: ArrayAdapter<*>

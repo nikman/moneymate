@@ -40,7 +40,8 @@
         <entry key="app/src/main/res/layout/account_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/currency_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_common_list.xml" value="0.1175925925925926" />
-        <entry key="app/src/main/res/layout/money_transaction_fragment.xml" value="0.11145833333333334" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.24139492753623187" />
+        <entry key="app/src/main/res/layout/money_transaction_fragment.xml" value="0.30105263157894735" />
         <entry key="app/src/main/res/layout/project_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2564814814814815" />
         <entry key="app/src/main/res/menu/fragment_currency_list.xml" value="0.1" />
