@@ -119,6 +119,9 @@ interface MoneyMateDao {
     @Insert
     fun addCategory(category: Category)
 
+    @Delete
+    fun deleteCategory(category: Category)
+
     @Transaction
     @Query("SELECT * FROM moneyTransaction ORDER BY transaction_date DESC")
     fun getTransactions(): LiveData<List<TransactionWithProperties>>
@@ -132,6 +135,9 @@ interface MoneyMateDao {
 
     @Insert
     fun addTransaction(transaction: MoneyTransaction)
+
+    @Delete
+    fun deleteTransaction(transaction: MoneyTransaction)
 
     @Update
     fun updateProject(project: Project)

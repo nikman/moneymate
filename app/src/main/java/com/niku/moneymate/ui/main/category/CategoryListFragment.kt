@@ -8,12 +8,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryListViewModel
 import com.niku.moneymate.ui.main.MateItemDecorator
+import com.niku.moneymate.uiutils.BaseSwipeHelper
 import java.util.*
 
 private const val TAG = "CategoryListFragment"
@@ -56,10 +58,6 @@ class CategoryListFragment: Fragment() {
         categoryRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         categoryRecyclerView.layoutManager = LinearLayoutManager(context)
         categoryRecyclerView.adapter = adapter
-        /*categoryRecyclerView.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL)
-                .apply { setOrientation(1) }
-        )*/
         categoryRecyclerView.addItemDecoration(
             MateItemDecorator(requireContext(), R.drawable.divider)
         )
@@ -103,6 +101,22 @@ class CategoryListFragment: Fragment() {
 
         adapter = CategoryAdapter(categories)
         categoryRecyclerView.adapter = adapter
+
+        val sw: BaseSwipeHelper<Category> = BaseSwipeHelper<Category>(requireContext())
+            .setRecyclerView(categoryRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setItems(categories)
+            .setOnSwipeAction { category -> categoryListViewModel.deleteCategory(category = category) }
+            .setOnCancelAction { category -> categoryListViewModel.addCategory(category = category) }
+            .build()
+
+        /*sw.onSwipeItem(
+            categories,
+            requireContext(),
+            categoryRecyclerView,
+            ItemTouchHelper.LEFT,
+            { category -> categoryListViewModel.deleteCategory(category = category) },
+            { category -> categoryListViewModel.addCategory(category = category) })*/
 
     }
 

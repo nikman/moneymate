@@ -197,9 +197,21 @@ class MoneyMateRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteCategory(category: Category) {
+        executor.execute {
+            moneyMateDao.deleteCategory(category)
+        }
+    }
+
     fun addTransaction(transaction: MoneyTransaction) {
         executor.execute {
             moneyMateDao.addTransaction(transaction)
+        }
+    }
+
+    fun deleteTransaction(transaction: MoneyTransaction) {
+        executor.execute {
+            moneyMateDao.deleteTransaction(transaction)
         }
     }
 

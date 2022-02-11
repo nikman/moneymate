@@ -13,23 +13,80 @@ import com.google.android.material.snackbar.Snackbar
 import com.niku.moneymate.BaseListItem
 import com.niku.moneymate.R
 
-class BaseSwipeHelper<T> {
+/**
+ * Defines actions in OnSwipe actions in RecyclerView.
+ * <p>
+ * Direction must be ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+ * <p>
+ * Usage:
+ * <pre>
+ *     val sw: BaseSwipeHelper<T> = BaseSwipeHelper<T>(requireContext())
+ *      .setRecyclerView(rv)
+ *      .setDirection(ItemTouchHelper.LEFT)
+ *      .setItems(List<T>)
+ *      .setOnSwipeAction { ... }
+ *      .setOnCancelAction { ... }
+ *      .build()
+ * </pre>
+ */
+class BaseSwipeHelper<T: BaseListItem> constructor (context: Context) {
 
-    fun onSwipeItem(
-        items: List<T>,
-        context: Context,
-        recyclerView: RecyclerView,
-        direction: Int,
-        actionDelete: (item: T) -> Unit,
-        actionRestore: (item: T) -> Unit) {
+    private var mItems: List<T>? = null
+    private var mContext: Context? = null
+    private lateinit var mRecyclerView: RecyclerView
+    private var mDirection: Int? = null
+    private lateinit var mOnSwipeAction: (item: T) -> Unit
+    private lateinit var mOnCancelAction: (item: T) -> Unit
+
+    init {
+        mContext = context
+    }
+
+    fun setRecyclerView(rv: RecyclerView): BaseSwipeHelper<T> {
+        mRecyclerView = rv
+        return this
+    }
+
+    fun setDirection(direction: Int): BaseSwipeHelper<T> {
+        mDirection = direction
+        return this
+    }
+
+    fun setItems(items: List<T>): BaseSwipeHelper<T> {
+        mItems = items.map { it }
+        return this
+    }
+
+    fun setOnSwipeAction(action: (item: T) -> Unit): BaseSwipeHelper<T> {
+        mOnSwipeAction = action
+        return this
+    }
+
+    fun setOnCancelAction(action: (item: T) -> Unit): BaseSwipeHelper<T> {
+        mOnCancelAction = action
+        return this
+    }
+
+    fun build(): BaseSwipeHelper<T> {
+
+        if (mContext == null) {
+            throw IllegalArgumentException("context not initialized")
+        }
+
+        if (mItems == null) {
+            throw IllegalArgumentException("Items not initialized")
+        }
 
         // swipe actions
         val trashBinIcon =
-            ResourcesCompat.getDrawable(context.resources,
-                R.drawable.ic_baseline_delete_forever_24, null)
+            mContext?.resources?.let {
+                ResourcesCompat.getDrawable(
+                    it,
+                    R.drawable.ic_baseline_delete_forever_24, null)
+            }
 
         val swipeRightCallback = object: ItemTouchHelper.SimpleCallback(
-            0, direction) {
+            0, mDirection ?: ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -38,49 +95,44 @@ class BaseSwipeHelper<T> {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                val item = items[viewHolder.bindingAdapterPosition]
+                val item = mItems!![viewHolder.bindingAdapterPosition]
 
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Delete?")
+                val builder = AlertDialog.Builder(mContext)
+                builder.setTitle("Delete")
 
                 // Display a message on alert dialog
                 builder.setMessage(
-                    "Are you want to delete '${(item as BaseListItem).getItemTitle()}'?")
+                    "You want to delete '${item.getItemTitle()}'?")
 
                 // Set a positive button and its click listener on alert dialog
                 builder.setPositiveButton("YES"){ _, _ ->
 
-                    actionDelete(item)
+                    mOnSwipeAction(item)
 
                     // showing snack bar with Undo option
-                    val snackbar: Snackbar = Snackbar
+                    val snackbar = Snackbar
                         .make(
-                            recyclerView,
-                            "'${(item as BaseListItem).getItemTitle()}' removed!",
-                            Snackbar.LENGTH_LONG
-                        )
-                    snackbar.setAction("UNDO", View.OnClickListener
-                    { _, ->
-                        actionRestore(item)
-                    })
-
-                    snackbar.setActionTextColor(Color.YELLOW)
-                    snackbar.show()
+                            mRecyclerView,
+                            "'${item.getItemTitle()}' removed!",
+                            Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", View.OnClickListener
+                            { _, ->
+                                mOnCancelAction(item)
+                            })
+                        .setActionTextColor(Color.YELLOW)
+                        .show()
 
                 }
-
                 // Display a negative button on alert dialog
                 builder.setNegativeButton("No"){ _, _ ->
-
+                    mRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
                 }
-
                 // Display a neutral button on alert dialog
                 builder.setNeutralButton("Cancel"){_,_ ->
+                    mRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
                     //Toast.makeText(applicationContext,"You cancelled the dialog.",Toast.LENGTH_SHORT).show()
                 }
-
                 val dialog: AlertDialog = builder.create()
-
                 dialog.show()
 
             }
@@ -123,6 +175,7 @@ class BaseSwipeHelper<T> {
             }
         }
         val swipeRightHelper = ItemTouchHelper(swipeRightCallback)
-        swipeRightHelper.attachToRecyclerView(recyclerView)
+        swipeRightHelper.attachToRecyclerView(mRecyclerView)
+        return this
     }
 }

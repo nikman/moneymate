@@ -10,17 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.MateItemDecorator
+import com.niku.moneymate.uiutils.BaseSwipeHelper
 import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
 import java.util.*
@@ -139,6 +140,13 @@ class TransactionListFragment: Fragment() {
         adapter = TransactionAdapter(transactionWithProperties)
         transactionRecyclerView.adapter = adapter
 
+        val sw: BaseSwipeHelper<TransactionWithProperties> = BaseSwipeHelper<TransactionWithProperties>(requireContext())
+            .setRecyclerView(transactionRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setItems(transactionWithProperties)
+            .setOnSwipeAction { transaction -> transactionListViewModel.deleteTransaction(moneyTransaction = transaction.transaction) }
+            .setOnCancelAction { transaction -> transactionListViewModel.addTransaction(moneyTransaction = transaction.transaction) }
+            .build()
     }
 
     override fun onStart() {

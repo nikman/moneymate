@@ -12,5 +12,8 @@ data class MainCurrency(// @Inject constructor(
     var currency_title: String = ""
     //var currency_is_default: Boolean = false
 ): BaseListItem {
+
+    override fun toString() = currency_title
+
     override fun getItemTitle(): String = currency_title
 }

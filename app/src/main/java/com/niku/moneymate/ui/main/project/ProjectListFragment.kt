@@ -109,14 +109,22 @@ class ProjectListFragment: Fragment() {
         adapter = ProjectAdapter(projects)
         projectRecyclerView.adapter = adapter
 
-        val sw: BaseSwipeHelper<Project> = BaseSwipeHelper()
+        /*val sw: BaseSwipeHelper<Project> = BaseSwipeHelper()
         sw.onSwipeItem(
             projects,
             requireContext(),
             projectRecyclerView,
             ItemTouchHelper.LEFT,
             { project -> projectListViewModel.deleteProject(project = project) },
-            { project -> projectListViewModel.addProject(project = project) })
+            { project -> projectListViewModel.addProject(project = project) })*/
+
+        val sw: BaseSwipeHelper<Project> = BaseSwipeHelper<Project>(requireContext())
+            .setRecyclerView(projectRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setItems(projects)
+            .setOnSwipeAction { project -> projectListViewModel.deleteProject(project = project) }
+            .setOnCancelAction { project -> projectListViewModel.addProject(project = project) }
+            .build()
 
     }
 

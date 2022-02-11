@@ -288,8 +288,8 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
 
         val xAxisFormatter: ValueFormatter = DayAxisValueFormatter(labelsIncome)
 
-        val groupSpace = 0.08f
-        val barSpace = 0.03f // x4 DataSet
+        //val groupSpace = 0.08f
+        //val barSpace = 0.03f // x4 DataSet
 
         //val barWidth = 0.2f // x4 DataSet
 

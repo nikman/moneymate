@@ -205,7 +205,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         } }
 
         val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
-        val currencyListLiveData = currencyListViewModel.currencyListLiveData
+        //val currencyListLiveData = currencyListViewModel.currencyListLiveData
         currencyListViewModel.currencyListLiveData.observe(
             viewLifecycleOwner
         ) { currencies -> currencies?.let {
@@ -214,7 +214,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         } }
 
         val categoryListViewModel by activityViewModels<CategoryListViewModel>()
-        val categoryListLiveData = categoryListViewModel.categoryListLiveData
+        //val categoryListLiveData = categoryListViewModel.categoryListLiveData
 
         categoryListViewModel.categoryListLiveData.observe(
             viewLifecycleOwner
@@ -224,7 +224,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         } }
 
         val projectListViewModel by activityViewModels<ProjectListViewModel>()
-        val projectListLiveData = projectListViewModel.projectListLiveData
+        //val projectListLiveData = projectListViewModel.projectListLiveData
 
         projectListViewModel.projectListLiveData.observe(
             viewLifecycleOwner

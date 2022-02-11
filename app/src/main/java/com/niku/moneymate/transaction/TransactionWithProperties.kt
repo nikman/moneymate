@@ -2,6 +2,7 @@ package com.niku.moneymate.transaction
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.niku.moneymate.BaseListItem
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
@@ -27,4 +28,6 @@ data class TransactionWithProperties(
     @Relation(parentColumn = "project_id", entityColumn = "project_id")
     val project: Project
 
-)
+): BaseListItem {
+    override fun getItemTitle(): String = "${accountFrom.title}, amount: ${transaction.amount_from} ${transaction.note}"
+}

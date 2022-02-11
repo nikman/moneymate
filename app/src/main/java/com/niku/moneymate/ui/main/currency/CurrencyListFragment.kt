@@ -71,9 +71,8 @@ class CurrencyListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            { currencies -> currencies?.let { updateUI(currencies) } }
-        )
+            viewLifecycleOwner
+        ) { currencies -> currencies?.let { updateUI(currencies) } }
     }
 
     override fun onDetach() {
@@ -104,14 +103,22 @@ class CurrencyListFragment: Fragment() {
         adapter = CurrencyAdapter(currencies)
         currencyRecyclerView.adapter = adapter
 
-        val sw: BaseSwipeHelper<MainCurrency> = BaseSwipeHelper()
+        /*val sw: BaseSwipeHelper<MainCurrency> = BaseSwipeHelper()
         sw.onSwipeItem(
             currencies,
             requireContext(),
             currencyRecyclerView,
             ItemTouchHelper.LEFT,
             { currency -> currencyListViewModel.deleteCurrency(currency = currency) },
-            { currency -> currencyListViewModel.addCurrency(currency = currency) })
+            { currency -> currencyListViewModel.addCurrency(currency = currency) })*/
+
+        val sw: BaseSwipeHelper<MainCurrency> = BaseSwipeHelper<MainCurrency>(requireContext())
+            .setRecyclerView(currencyRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setItems(currencies)
+            .setOnSwipeAction { currency -> currencyListViewModel.deleteCurrency(currency = currency) }
+            .setOnCancelAction { currency -> currencyListViewModel.addCurrency(currency = currency) }
+            .build()
 
     }
 
