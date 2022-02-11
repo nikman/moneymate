@@ -2,7 +2,7 @@ package com.niku.moneymate.category
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.niku.moneymate.BaseListItem
+import com.niku.moneymate.uiutils.BaseListItem
 import java.util.*
 
 @Entity

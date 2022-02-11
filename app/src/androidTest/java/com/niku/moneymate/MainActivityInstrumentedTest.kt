@@ -7,7 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import org.junit.After
 import org.junit.Test
 
-class CurrencyFragmentInstrumentedTest {
+class MainActivityInstrumentedTest {
 
     lateinit var scenario: ActivityScenario<MainActivity>
 

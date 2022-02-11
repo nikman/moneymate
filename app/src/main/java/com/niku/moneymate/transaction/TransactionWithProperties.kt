@@ -2,11 +2,11 @@ package com.niku.moneymate.transaction
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.niku.moneymate.BaseListItem
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.projects.Project
+import com.niku.moneymate.uiutils.BaseListItem
 
 data class TransactionWithProperties(
 
