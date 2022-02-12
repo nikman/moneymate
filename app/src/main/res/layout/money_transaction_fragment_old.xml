@@ -16,26 +16,33 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/default_transaction_date" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/account_from_spinner"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/label_account_from"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/layout_margin"
         android:layout_marginTop="@dimen/layout_margin"
         android:layout_marginEnd="@dimen/layout_margin"
+        android:text="@string/transaction_account_label"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_date"
-        android:hint="@string/transaction_account_label">
+        app:layout_constraintTop_toBottomOf="@+id/transaction_date" />
 
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Choose account"
-            android:inputType="none"
-            android:textColorHint="#616161" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/account_from_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:contentDescription="Account from"
+        android:dropDownWidth="wrap_content"
+        android:elevation="8dp"
+        android:minHeight="@dimen/spinner_min_height"
+        android:spinnerMode="dropdown"
+        android:splitMotionEvents="false"
+        android:stateListAnimator="@anim/nav_default_enter_anim"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_account_from" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/arrow_down_image_view"
@@ -137,6 +144,24 @@
         android:spinnerMode="dropdown"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_transaction_project" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/menu_test"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/project_spinner"
+        android:hint="label">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:hint="hint"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"

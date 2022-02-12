@@ -28,4 +28,8 @@ data class Account(
     var is_include_into_totals: Boolean = true,
     var sort_order: Int = 0,
     val account_external_id: Int = 0
-)
+) {
+    override fun toString(): String {
+        return "$title $note"
+    }
+}

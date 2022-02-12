@@ -59,7 +59,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     private lateinit var projects: List<Project>
 
     private lateinit var dateButton: Button
-    private lateinit var accountFromField: Spinner
+    private lateinit var accountFromField: TextInputLayout
     private lateinit var arrowDownImage: ImageView
     private lateinit var accountToField: Spinner
     private lateinit var currencyField: Spinner
@@ -125,7 +125,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         dateButton = view.findViewById(R.id.transaction_date) as Button
         dateButton.visibility = View.GONE
-        accountFromField = view.findViewById(R.id.account_from_spinner) as Spinner
+        accountFromField = view.findViewById(R.id.account_from_spinner) as TextInputLayout
         arrowDownImage = view.findViewById<ImageView>(R.id.arrow_down_image_view)
         accountToField = view.findViewById(R.id.account_to_spinner) as Spinner
         currencyField = view.findViewById(R.id.currency_spinner) as Spinner
@@ -136,11 +136,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         saveButton = view.findViewById(R.id.ok_button)
         cancelButton = view.findViewById(R.id.cancel_button)
 
-        val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+        /*val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
         val textField = view.findViewById(R.id.menu_test) as TextInputLayout
         (textField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
-
+*/
         return view
     }
 
@@ -397,7 +397,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             updateProjectsList(projects)
 
             accountToField.setSelection(accounts.indexOf(accountTo), false)
-            accountFromField.setSelection(accounts.indexOf(accountFrom), false)
+            //accountFromField.setSelection(accounts.indexOf(accountFrom), false)
+            accountFromField.editText?.hint = accountFrom.toString()
+            accountFromField.hint = "Account from"
             currencyField.setSelection(currencies.indexOf(currency), false)
             categoryField.setSelection(categories.indexOf(category), false)
             projectField.setSelection(projects.indexOf(project), false)
@@ -417,20 +419,27 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val accountsStrings = List<String>(accounts.size)
         { i -> accounts[i].title }
 
-        val adapter: ArrayAdapter<*>
+        //val adapter: ArrayAdapter<*>
 
-        adapter = ArrayAdapter(
+        /*adapter = ArrayAdapter(
             this.requireContext(),
             android.R.layout.simple_dropdown_item_1line,
             accountsStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        accountFromField.adapter = adapter
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)*/
+
+        //accountFromField.adapter = adapter
+
+        //val items = listOf("Option 1", "Option 2", "Option 3", "Option 4")
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, accountsStrings)
+        //val textField = view.findViewById(R.id.menu_test) as TextInputLayout
+        (accountFromField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
+
         accountToField.adapter = adapter
 
         Log.d(TAG, "updateAccountsList")
 
-        accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        /*accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View?,
@@ -444,7 +453,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
-        }
+        }*/
+
+        //accountFromField.liste
 
         accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
