@@ -15,4 +15,5 @@ data class Category ( //@Inject constructor(
     val category_external_id: Int = 0
 ): BaseListItem {
     override fun getItemTitle(): String = category_title
+    override fun toString(): String = category_title
 }

@@ -31,9 +31,16 @@
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Choose account"
+            android:dropDownHeight="wrap_content"
+            android:elevation="2dp"
+            android:ellipsize="middle"
+            android:text="Choose account"
             android:inputType="none"
-            android:textColorHint="#616161" />
+            android:layerType="none"
+            android:textAlignment="viewStart"
+            android:textColorHint="#616161"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,27 +55,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/account_from_spinner" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/account_to_spinner"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_margin"
-        android:minHeight="@dimen/spinner_min_height"
-        android:spinnerMode="dialog"
-        android:splitMotionEvents="false"
-        android:stateListAnimator="@anim/nav_default_enter_anim"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/layout_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/arrow_down_image_view" />
+        app:layout_constraintTop_toBottomOf="@+id/account_from_spinner"
+        android:hint="@string/transaction_account_label">
 
-    <androidx.appcompat.widget.AppCompatSpinner
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose account to"
+            android:inputType="none"
+            android:textColorHint="#616161" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/currency_spinner"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_margin"
-        android:minHeight="@dimen/spinner_min_height"
-        android:spinnerMode="dialog"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/layout_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_to_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/account_to_spinner"
+        android:hint="@string/currency_title_label">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose currency"
+            android:inputType="none"
+            android:textColorHint="#616161" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/image_button_transaction_type"
@@ -94,49 +121,47 @@
         app:layout_constraintStart_toEndOf="@+id/image_button_transaction_type"
         app:layout_constraintTop_toTopOf="@+id/image_button_transaction_type" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/label_transaction_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
-        android:text="@string/transaction_category_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_amount" />
-
-    <androidx.appcompat.widget.AppCompatSpinner
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/category_spinner"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/layout_margin"
         android:layout_marginTop="@dimen/layout_margin"
         android:layout_marginEnd="@dimen/layout_margin"
-        android:minHeight="@dimen/spinner_min_height"
-        android:spinnerMode="dialog"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_transaction_category" />
+        app:layout_constraintTop_toBottomOf="@+id/transaction_amount"
+        android:hint="@string/category_title_label">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/label_transaction_project"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
-        android:text="@string/transaction_project_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose category"
+            android:inputType="none"
+            android:textColorHint="#616161" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/project_spinner"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/layout_margin"
         android:layout_marginTop="@dimen/layout_margin"
         android:layout_marginEnd="@dimen/layout_margin"
-        android:minHeight="@dimen/spinner_min_height"
-        android:spinnerMode="dropdown"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_transaction_project" />
+        app:layout_constraintTop_toBottomOf="@+id/category_spinner"
+        android:hint="@string/category_title_label">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose project"
+            android:inputType="none"
+            android:textColorHint="#616161" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"

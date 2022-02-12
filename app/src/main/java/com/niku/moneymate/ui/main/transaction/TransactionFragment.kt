@@ -61,11 +61,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     private lateinit var dateButton: Button
     private lateinit var accountFromField: TextInputLayout
     private lateinit var arrowDownImage: ImageView
-    private lateinit var accountToField: Spinner
-    private lateinit var currencyField: Spinner
-    private lateinit var categoryField: Spinner
+    private lateinit var accountToField: TextInputLayout
+    private lateinit var currencyField: TextInputLayout
+    private lateinit var categoryField: TextInputLayout
     private lateinit var amountField: EditText
-    private lateinit var projectField: Spinner
+    private lateinit var projectField: TextInputLayout
     private lateinit var transactionTypeImageButton: ImageButton
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
@@ -127,11 +127,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         dateButton.visibility = View.GONE
         accountFromField = view.findViewById(R.id.account_from_spinner) as TextInputLayout
         arrowDownImage = view.findViewById<ImageView>(R.id.arrow_down_image_view)
-        accountToField = view.findViewById(R.id.account_to_spinner) as Spinner
-        currencyField = view.findViewById(R.id.currency_spinner) as Spinner
+        accountToField = view.findViewById(R.id.account_to_spinner) as TextInputLayout
+        currencyField = view.findViewById(R.id.currency_spinner) as TextInputLayout
         amountField = view.findViewById(R.id.transaction_amount) as EditText
-        categoryField = view.findViewById(R.id.category_spinner) as Spinner
-        projectField = view.findViewById(R.id.project_spinner) as Spinner
+        categoryField = view.findViewById(R.id.category_spinner) as TextInputLayout
+        projectField = view.findViewById(R.id.project_spinner) as TextInputLayout
         transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
         saveButton = view.findViewById(R.id.ok_button)
         cancelButton = view.findViewById(R.id.cancel_button)
@@ -396,18 +396,15 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             updateCategoriesList(categories)
             updateProjectsList(projects)
 
-            accountToField.setSelection(accounts.indexOf(accountTo), false)
-            //accountFromField.setSelection(accounts.indexOf(accountFrom), false)
-            accountFromField.editText?.hint = accountFrom.toString()
-            accountFromField.hint = "Account from"
-            currencyField.setSelection(currencies.indexOf(currency), false)
-            categoryField.setSelection(categories.indexOf(category), false)
-            projectField.setSelection(projects.indexOf(project), false)
+            accountFromField.editText?.setText(accountFrom.toString())
+            accountToField.editText?.setText(accountTo.toString())
+            currencyField.editText?.setText(currency.toString())
+            categoryField.editText?.setText(category.toString())
+            projectField.editText?.setText(project.toString())
 
             setImageButton(revert = false)
 
         }
-
     }
 
     private fun updateAccountsList(accounts: List<Account>) {
@@ -435,9 +432,12 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         //val textField = view.findViewById(R.id.menu_test) as TextInputLayout
         (accountFromField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        accountToField.adapter = adapter
+        //val textField = view.findViewById(R.id.menu_test) as TextInputLayout
+        (accountToField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        Log.d(TAG, "updateAccountsList")
+        //accountToField.adapter = adapter
+
+        //Log.d(TAG, "updateAccountsList")
 
         /*accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -457,7 +457,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         //accountFromField.liste
 
-        accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        /*accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View?,
@@ -469,9 +469,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
-        }
+        }*/
 
-        projectField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        /*projectField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View?,
@@ -485,7 +485,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
-        }
+        }*/
 
     }
 
@@ -500,7 +500,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val currenciesStrings = List(currencies.size)
         { i -> currencies[i].currency_title }
 
-        val adapter: ArrayAdapter<*>
+        /*val adapter: ArrayAdapter<*>
 
         adapter = ArrayAdapter(
             this.requireContext(),
@@ -525,8 +525,10 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
-        }
+        }*/
 
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, currenciesStrings)
+        (currencyField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
     }
 
@@ -541,7 +543,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val categoriesStrings = List(categories.size)
         { i -> categories[i].category_title }
 
-        val adapter: ArrayAdapter<*>
+        /*val adapter: ArrayAdapter<*>
 
         adapter = ArrayAdapter(
             this.requireContext(),
@@ -564,7 +566,10 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
-        }
+        }*/
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, categoriesStrings)
+        (categoryField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
     }
 
@@ -576,7 +581,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val projectsStrings = List(projects.size)
         { i -> projects[i].project_title }
 
-        val adapter: ArrayAdapter<*>
+        /*val adapter: ArrayAdapter<*>
 
         adapter = ArrayAdapter(
             this.requireContext(),
@@ -599,7 +604,10 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
-        }
+        }*/
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, projectsStrings)
+        (projectField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
     }
 
