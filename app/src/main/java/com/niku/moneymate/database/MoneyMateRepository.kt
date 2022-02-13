@@ -22,9 +22,8 @@ import java.util.concurrent.Executors
 
 const val TAG = "MoneyMateRepository"
 
-class MoneyMateRepository private constructor(context: Context) {
+class MoneyMateRepository private constructor(private val context: Context) {
 
-    private val context = context
     private val executor = Executors.newSingleThreadExecutor()
 
     private var rdc: RoomDatabase.Callback = object : RoomDatabase.Callback() {
@@ -61,29 +60,6 @@ class MoneyMateRepository private constructor(context: Context) {
                     )
                 moneyMateDao.addProject(projectEmpty)
 
-                /*val categoryFood =
-                    Category(
-                        category_type = CategoryType.OUTCOME,
-                        category_title = context.resources.getString(R.string.predef_category_title_food),
-                        category_id = UUID.fromString(UUID_CATEGORY_FOOD)
-                    )
-                moneyMateDao.addCategory(categoryFood)
-
-                val categorySalary =
-                    Category(
-                        CategoryType.INCOME,
-                        context.resources.getString(R.string.predef_category_title_salary),
-                        UUID.fromString(UUID_CATEGORY_SALARY)
-                    )
-                moneyMateDao.addCategory(categorySalary)*/
-
-                /*val accountCash =
-                    Account(
-                        currency_id = UUID.fromString(UUID_CURRENCY_RUB),
-                        title = context.resources.getString(R.string.predef_account_title_cash),
-                        account_id = UUID.fromString(UUID_ACCOUNT_CASH)
-                    )
-                moneyMateDao.addAccount(accountCash)*/
                 val accountEmpty =
                     Account(
                         currency_id = UUID.fromString(UUID_CURRENCY_RUB),
@@ -115,9 +91,8 @@ class MoneyMateRepository private constructor(context: Context) {
             DATABASE_NAME)
         .fallbackToDestructiveMigration()
         //.addMigrations(migrationFrom11To12)
-        //.createFromAsset("database/$DATABASE_NAME.db")
         .addCallback(rdc)
-        .build() // !
+        .build()
 
     private val moneyMateDao = database.moneyMateDao()
     private val payeeDao = database.payeeDao()
