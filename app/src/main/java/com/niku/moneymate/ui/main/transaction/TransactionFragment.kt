@@ -135,35 +135,37 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         saveButton = view.findViewById(R.id.ok_button)
         cancelButton = view.findViewById(R.id.cancel_button)
 
+        val maxWidth = requireContext().resources.displayMetrics.widthPixels - 20
+
         listPopupAccountFromButton = view.findViewById(R.id.button_account_from_v2)
         listPopupWindowAccountFrom =
             ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
         listPopupWindowAccountFrom.anchorView = listPopupAccountFromButton
-        listPopupWindowAccountFrom.width = 1000
+        listPopupWindowAccountFrom.width = maxWidth
 
         listPopupAccountToButton = view.findViewById(R.id.button_account_to_v2)
         listPopupWindowAccountTo =
             ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
         listPopupWindowAccountTo.anchorView = listPopupAccountToButton
-        listPopupWindowAccountTo.width = 1000
+        listPopupWindowAccountTo.width = maxWidth
 
         listPopupCategoryButton = view.findViewById(R.id.button_category_v2)
         listPopupWindowCategory =
             ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
         listPopupWindowCategory.anchorView = listPopupCategoryButton
-        listPopupWindowCategory.width = 1000
+        listPopupWindowCategory.width = maxWidth
 
         listPopupProjectButton = view.findViewById(R.id.button_project_v2)
         listPopupWindowProject =
             ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
         listPopupWindowProject.anchorView = listPopupProjectButton
-        listPopupWindowProject.width = 1000
+        listPopupWindowProject.width = maxWidth
 
         listPopupCurrencyButton = view.findViewById(R.id.button_currency_v2)
         listPopupWindowCurrency =
             ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
         listPopupWindowCurrency.anchorView = listPopupCurrencyButton
-        listPopupWindowCurrency.width = 1000
+        listPopupWindowCurrency.width = maxWidth
 
         arrowForwardImage = view.findViewById<ImageView>(R.id.arrow_forward)
 

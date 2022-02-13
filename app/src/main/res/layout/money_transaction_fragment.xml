@@ -30,7 +30,6 @@
             android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
             tools:text="Cache" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -45,7 +44,6 @@
             android:drawableStart="@drawable/ic_baseline_account_balance_wallet_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
             tools:text="Cache" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -64,7 +62,7 @@
             android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
+            android:drawablePadding="@dimen/layout_margin"
             tools:text="Food" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -73,7 +71,7 @@
             android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
+            android:drawablePadding="@dimen/layout_margin"
             tools:text="No project" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -82,7 +80,7 @@
             android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/design_default_color_background"
+            android:drawablePadding="@dimen/layout_margin"
             tools:text="Food" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
