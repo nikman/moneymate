@@ -26,10 +26,10 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_account_from_v2"
-            android:drawableStart="@drawable/ic_baseline_account_balance_wallet_24"
-            android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/layout_margin"
+            android:drawableStart="@drawable/ic_baseline_account_balance_wallet_24"
             tools:text="Cache" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -37,13 +37,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/image_margin"
-            android:src="@drawable/ic_baseline_arrow_forward_24"/>
+            android:src="@drawable/ic_baseline_arrow_forward_24" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_account_to_v2"
-            android:drawableStart="@drawable/ic_baseline_account_balance_wallet_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_account_balance_wallet_24"
             tools:text="Cache" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -53,35 +53,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:scrollbars="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linear_buttons">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_category_v2"
-            android:drawableStart="@drawable/ic_action_navbar_item_categories"
-            android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin"
+            android:drawableStart="@drawable/ic_action_navbar_item_categories"
             android:drawablePadding="@dimen/layout_margin"
             tools:text="Food" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_project_v2"
-            android:drawableStart="@drawable/ic_action_navbar_item_projects"
-            android:layout_marginStart="@dimen/layout_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_margin"
+            android:drawableStart="@drawable/ic_action_navbar_item_projects"
             android:drawablePadding="@dimen/layout_margin"
             tools:text="No project" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_currency_v2"
-            android:drawableStart="@drawable/ic_action_navbar_item_currency"
-            android:layout_marginStart="@dimen/layout_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/layout_margin"
-            tools:text="Food" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -105,9 +97,21 @@
         android:inputType="number|numberDecimal"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/image_button_transaction_type"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_currency_v2"
         app:layout_constraintStart_toEndOf="@+id/image_button_transaction_type"
         app:layout_constraintTop_toTopOf="@+id/image_button_transaction_type" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_currency_v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layout_margin"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+         app:layout_constraintBottom_toBottomOf="@+id/transaction_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/transaction_amount"
+        tools:text="RUB" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ok_button"

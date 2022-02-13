@@ -57,14 +57,14 @@ class SharedPrefs {
     fun getStoredCategoryId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(CATEGORY_PREFS_KEY, UUID_CATEGORY_FOOD)
+        return preferences.getString(CATEGORY_PREFS_KEY, UUID_CATEGORY_EMPTY)
 
     }
 
     fun getStoredAccountId(context: Context): String? {
 
         val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(ACCOUNT_PREFS_KEY, UUID_ACCOUNT_CASH)
+        return preferences.getString(ACCOUNT_PREFS_KEY, UUID_ACCOUNT_EMPTY)
 
     }
 

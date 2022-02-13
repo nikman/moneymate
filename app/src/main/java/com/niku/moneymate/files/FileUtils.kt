@@ -31,7 +31,7 @@ class FileUtils {
         startActivity(Intent.createChooser(intent, "Select Application"))
     }
 
-    fun readFileFromAssetsLineByLine(context: Context): Unit {
+    fun readFileFromAssetsLineByLine(context: Context) {
 
         //val constraints: Constraints.Builder().setRequiredNetworkType().build()
 

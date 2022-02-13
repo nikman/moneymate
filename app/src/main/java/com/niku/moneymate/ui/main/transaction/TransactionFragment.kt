@@ -26,10 +26,7 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.BaseFragmentEntity
-import com.niku.moneymate.utils.CategoryType
-import com.niku.moneymate.utils.SharedPrefs
-import com.niku.moneymate.utils.TransactionType
-import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
+import com.niku.moneymate.utils.*
 import java.util.*
 import kotlin.math.abs
 
@@ -88,6 +85,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         currency = MainCurrency(
             UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
 
+
         accountFrom = Account(
             currency_id = currency.currency_id,
             account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
@@ -101,11 +99,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
 
         moneyTransaction = MoneyTransaction(
-            accountFrom.account_id,
-            UUID.fromString(UUID_ACCOUNT_EMPTY),
-            currency.currency_id,
-            category.category_id,
-            project.project_id)
+            account_id_from = accountFrom.account_id,//UUID.fromString(UUID_ACCOUNT_EMPTY),
+            account_id_to = UUID.fromString(UUID_ACCOUNT_EMPTY),
+            currency_id = currency.currency_id,
+            category_id = UUID.fromString(UUID_CATEGORY_EMPTY),//category.category_id,
+            project_id = UUID.fromString(UUID_PROJECT_EMPTY))//project.project_id)
 
         transactionWithProperties =
             TransactionWithProperties(
@@ -167,7 +165,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         listPopupWindowCurrency.anchorView = listPopupCurrencyButton
         listPopupWindowCurrency.width = maxWidth
 
-        arrowForwardImage = view.findViewById<ImageView>(R.id.arrow_forward)
+        arrowForwardImage = view.findViewById(R.id.arrow_forward)
 
         return view
     }
@@ -399,17 +397,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         listPopupWindowCurrency.setAdapter(adapter)
         listPopupWindowCurrency.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-            // Respond to list popup window item click.
             moneyTransaction.currency_id = currencies[position].currency_id
             listPopupCurrencyButton.text = currencies[position].toString()
-            // Dismiss popup.
             listPopupWindowCurrency.dismiss()
         }
-
-        // Show list popup window on button click.
-        listPopupCurrencyButton.setOnClickListener { v: View? -> listPopupWindowCurrency.show() }
-        // <--
-
+       listPopupCurrencyButton.setOnClickListener { v: View? -> listPopupWindowCurrency.show() }
     }
 
     private fun updateCategoriesList(categories: List<Category>) {
@@ -424,22 +416,15 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         { i -> categories[i].toString() }
 
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, categoriesStrings)
-        //(categoryField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        // v3 -->
         listPopupWindowCategory.setAdapter(adapter)
         listPopupWindowCategory.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-            // Respond to list popup window item click.
-            //Log.d(TAG, "categ. selected, pos: $position, id: $id, item: ${categories[position]}")
-            // Dismiss popup.
             moneyTransaction.category_id = categories[position].category_id
             listPopupCategoryButton.text = categories[position].toString()
             listPopupWindowCategory.dismiss()
         }
 
-        // Show list popup window on button click.
         listPopupCategoryButton.setOnClickListener { v: View? -> listPopupWindowCategory.show() }
-        // <--
 
     }
 
@@ -451,48 +436,15 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val projectsStrings = List(projects.size)
         { i -> projects[i].toString() }
 
-        /*val adapter: ArrayAdapter<*>
-
-        adapter = ArrayAdapter(
-            this.requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            projectsStrings)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        projectField.adapter = adapter
-
-        projectField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                moneyTransaction.project_id = projects[position].project_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
-        }*/
-
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, projectsStrings)
-        //(projectField.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
-        // v3 -->
         listPopupWindowProject.setAdapter(adapter)
         listPopupWindowProject.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-            // Respond to list popup window item click.
             moneyTransaction.project_id = projects[position].project_id
             listPopupProjectButton.text = projects[position].toString()
-            // Dismiss popup.
             listPopupWindowProject.dismiss()
         }
-
-        // Show list popup window on button click.
-        listPopupProjectButton.setOnClickListener { v: View? -> listPopupWindowProject.show() }
-        // <--
-
+       listPopupProjectButton.setOnClickListener { v: View? -> listPopupWindowProject.show() }
     }
 
     override fun CloseWithoutSaving() {

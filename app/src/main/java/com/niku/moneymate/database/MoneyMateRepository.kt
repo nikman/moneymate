@@ -31,11 +31,13 @@ class MoneyMateRepository private constructor(private val context: Context) {
             Log.d(TAG, "on create db")
             Executors.newSingleThreadScheduledExecutor().execute {
 
+                val currencyRubUUID = UUID.fromString(UUID_CURRENCY_RUB)
                 val currencyRub =
                     MainCurrency(
-                        UUID.fromString(UUID_CURRENCY_RUB),
+                        currencyRubUUID,
                         CODE_CURRENCY_RUB,
                         TITLE_CURRENCY_RUB)
+                SharedPrefs().storeCurrencyId(context, currencyRubUUID)
 
                 moneyMateDao.addCurrency(currencyRub)
                 val currencyUsd =
@@ -52,31 +54,37 @@ class MoneyMateRepository private constructor(private val context: Context) {
                         TITLE_CURRENCY_EUR)
                 moneyMateDao.addCurrency(currencyEur)
 
+                val emptyProjectUUID = UUID.fromString(UUID_PROJECT_EMPTY)
                 val projectEmpty =
                     Project(
                         project_title = context.resources.getString(R.string.predef_empty_project_title),
-                        project_id = UUID.fromString(UUID_PROJECT_EMPTY),
+                        project_id = emptyProjectUUID,
                         is_active = false
                     )
                 moneyMateDao.addProject(projectEmpty)
+                SharedPrefs().storeProjectId(context, emptyProjectUUID)
 
+                val emptyAccountUUID = UUID.fromString(UUID_ACCOUNT_EMPTY)
                 val accountEmpty =
                     Account(
-                        currency_id = UUID.fromString(UUID_CURRENCY_RUB),
+                        currency_id = currencyRubUUID,
                         title = "no account",
-                        account_id = UUID.fromString(UUID_ACCOUNT_EMPTY),
+                        account_id = emptyAccountUUID,
                         is_active = false
                     )
                 moneyMateDao.addAccount(accountEmpty)
+                SharedPrefs().storeAccountId(context, emptyAccountUUID)
 
+                val emptyCategoryUUID = UUID.fromString(UUID_CATEGORY_EMPTY)
                 val categoryEmpty =
                     Category(
                         category_type = 0,
                         category_title = "no category",
-                        category_id = UUID.fromString(UUID_CATEGORY_EMPTY),
+                        category_id = emptyCategoryUUID,
                         is_active = false
                     )
                 moneyMateDao.addCategory(categoryEmpty)
+                SharedPrefs().storeCategoryId(context, emptyCategoryUUID)
             }
         }
 
@@ -98,7 +106,8 @@ class MoneyMateRepository private constructor(private val context: Context) {
     private val payeeDao = database.payeeDao()
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
-    fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccountsWithBalance()
+    fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>> =
+        moneyMateDao.getAccountsWithBalance()
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
     fun getTransactions(): LiveData<List<TransactionWithProperties>> = moneyMateDao.getTransactions()

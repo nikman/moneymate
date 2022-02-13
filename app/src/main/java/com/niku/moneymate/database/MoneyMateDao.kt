@@ -30,6 +30,12 @@ interface MoneyMateDao {
     @Query("SELECT * FROM account WHERE account_id=(:account_id)")
     fun getAccountDirect(account_id: UUID): Account?
 
+    @Query("SELECT * FROM account LIMIT 1")
+    fun getAccountDirect(): Account?
+
+    @Query("SELECT * FROM maincurrency LIMIT 1")
+    fun getCurrencyDirect(): MainCurrency?
+
     @Transaction
     @Query("SELECT * FROM project WHERE project_id=(:project_id)")
     fun getProject(project_id: UUID): LiveData<Project?>
