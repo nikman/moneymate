@@ -16,7 +16,7 @@ import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.uiutils.BaseSwipeHelper
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredCurrencyId
 import java.util.*
 
 
@@ -165,8 +165,7 @@ class CurrencyListFragment: Fragment() {
             titleTextView.text = this.currency.currency_title
             codeTextView.text = this.currency.currency_code.toString()
 
-            val uuidAsString = context?.applicationContext?.let {
-                SharedPrefs().getStoredCurrencyId(it) }
+            val uuidAsString = getStoredCurrencyId(requireContext())
 
             if (uuidAsString != null) {
                 if (uuidAsString.isNotEmpty() &&

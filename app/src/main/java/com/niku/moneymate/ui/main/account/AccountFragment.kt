@@ -24,8 +24,10 @@ import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.ui.main.BaseFragmentEntity
-import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
+import com.niku.moneymate.utils.getStoredAccountId
+import com.niku.moneymate.utils.getStoredCurrencyId
+import com.niku.moneymate.utils.storeAccountId
 import java.util.*
 
 private const val ARG_ACCOUNT_ID = "account_id"
@@ -57,7 +59,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
         super.onCreate(savedInstanceState)
 
         currency = MainCurrency(
-            UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+            UUID.fromString(getStoredCurrencyId(requireContext())))
         account = Account(currency_id = currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
@@ -190,7 +192,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
             setOnCheckedChangeListener { _, isChecked ->
                 //currency.currency_is_default = isChecked
                 if (isChecked) {
-                    SharedPrefs().storeAccountId(context, account.account_id)
+                    storeAccountId(context, account.account_id)
                 }
             }
         }
@@ -216,7 +218,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
         //initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
 
         val uuidAsString =
-            SharedPrefs().getStoredAccountId(requireContext())
+            getStoredAccountId(requireContext())
 
         if (uuidAsString != null) {
             isDefaultAccountCheckBox.isChecked =

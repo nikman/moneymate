@@ -13,7 +13,8 @@ import androidx.fragment.app.activityViewModels
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyDetailViewModel
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredCurrencyId
+import com.niku.moneymate.utils.storeCurrencyId
 import java.util.*
 
 private const val ARG_CURRENCY_ID = "currency_id"
@@ -121,7 +122,7 @@ class CurrencyFragment : Fragment() {
             setOnCheckedChangeListener { _, isChecked ->
                 //currency.currency_is_default = isChecked
                 if (isChecked) {
-                    SharedPrefs().storeCurrencyId(context, currency.currency_id)
+                    storeCurrencyId(context, currency.currency_id)
                 }
             }
         }
@@ -139,7 +140,7 @@ class CurrencyFragment : Fragment() {
         titleField.setText(currency.currency_title)
 
         val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredCurrencyId(it) }
+            getStoredCurrencyId(it) }
 
         if (uuidAsString != null) {
             isDefaultCurrencyCheckBox.isChecked =

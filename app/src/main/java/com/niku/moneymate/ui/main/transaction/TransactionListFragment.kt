@@ -22,8 +22,7 @@ import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.uiutils.BaseSwipeHelper
-import com.niku.moneymate.utils.SharedPrefs
-import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
+import com.niku.moneymate.utils.*
 import java.util.*
 
 private const val TAG = "TransactionListFragment"
@@ -96,15 +95,15 @@ class TransactionListFragment: Fragment() {
 
                 val currency =
                     MainCurrency(
-                        currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+                        currency_id = UUID.fromString(getStoredCurrencyId(requireContext())))
 
                 val category =
                     Category(
-                        category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
+                        category_id = UUID.fromString(getStoredCategoryId(requireContext())))
 
                 val account = Account(
                     currency_id = currency.currency_id,
-                    account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+                    account_id = UUID.fromString(getStoredAccountId(requireContext())))
 
                 val transaction = MoneyTransaction(
                     account_id_from = account.account_id,
@@ -112,7 +111,37 @@ class TransactionListFragment: Fragment() {
                     currency_id = currency.currency_id,
                     category_id = category.category_id,
                     project_id = UUID.fromString(
-                        SharedPrefs().getStoredProjectId(requireContext())))
+                        getStoredProjectId(requireContext())))
+
+                transactionListViewModel.addTransaction(transaction)
+                callbacks?.onTransactionSelected(transaction.transaction_id)
+                true
+            }
+            R.id.new_convertation -> {
+
+                val currency =
+                    MainCurrency(
+                        currency_id = UUID.fromString(getStoredCurrencyId(requireContext())))
+
+                val category =
+                    Category(
+                        category_id = UUID.fromString(getStoredCategoryId(requireContext())))
+
+                val account = Account(
+                    currency_id = currency.currency_id,
+                    account_id = UUID.fromString(getStoredAccountId(requireContext())))
+
+                val accountTo = Account(
+                    currency_id = currency.currency_id,
+                    account_id = UUID.fromString(getStoredAccountToId(requireContext())))
+
+                val transaction = MoneyTransaction(
+                    account_id_from = account.account_id,
+                    account_id_to = accountTo.account_id,
+                    currency_id = currency.currency_id,
+                    category_id = category.category_id,
+                    project_id = UUID.fromString(
+                        getStoredProjectId(requireContext())))
 
                 transactionListViewModel.addTransaction(transaction)
                 callbacks?.onTransactionSelected(transaction.transaction_id)

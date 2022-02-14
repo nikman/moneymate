@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/new_transaction"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/new_transaction"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/new_convertation"
+        android:icon="@drawable/ic_baseline_compare_arrows_24"
+        android:title="@string/new_convertation"
         app:showAsAction="ifRoom|withText"/>
 
     <item

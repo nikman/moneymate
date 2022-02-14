@@ -83,19 +83,19 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         super.onCreate(savedInstanceState)
 
         currency = MainCurrency(
-            UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+            UUID.fromString(getStoredCurrencyId(requireContext())))
 
         accountFrom = Account(
             currency_id = currency.currency_id,
-            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+            account_id = UUID.fromString(getStoredAccountId(requireContext())))
 
         accountTo = accountFrom.copy()
 
         category = Category(
-            category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
+            category_id = UUID.fromString(getStoredCategoryId(requireContext())))
 
         project = Project(
-            project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
+            project_id = UUID.fromString(getStoredProjectId(requireContext())))
 
         moneyTransaction = MoneyTransaction(
             account_id_from = accountFrom.account_id,//UUID.fromString(UUID_ACCOUNT_EMPTY),
@@ -265,7 +265,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         amountField.addTextChangedListener(amountWatcher)
 
         transactionTypeImageButton.apply {
-            setOnClickListener { _, ->
+            setOnClickListener {
                 setImageButton(revert = true)
             }
         }
@@ -373,9 +373,11 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         listPopupWindowAccountTo.setAdapter(adapter)
         listPopupWindowAccountTo.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-             moneyTransaction.account_id_to = accounts[position].account_id
+            // save to prefs
+            storeAccountToId(requireContext(), accounts[position].account_id)
+            moneyTransaction.account_id_to = accounts[position].account_id
             listPopupAccountToButton.text = accounts[position].toString()
-             listPopupWindowAccountTo.dismiss()
+            listPopupWindowAccountTo.dismiss()
         }
 
         listPopupAccountToButton.setOnClickListener { v: View? -> listPopupWindowAccountTo.show() }

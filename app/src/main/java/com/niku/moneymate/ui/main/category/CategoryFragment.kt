@@ -16,7 +16,8 @@ import com.niku.moneymate.R
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.category.CategoryDetailViewModel
 import com.niku.moneymate.utils.CategoryType
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredCategoryId
+import com.niku.moneymate.utils.storeCategoryId
 import java.util.*
 
 private const val ARG_CATEGORY_ID = "category_id"
@@ -100,7 +101,7 @@ class CategoryFragment: Fragment() {
         isDefaultCategoryCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    SharedPrefs().storeCategoryId(context, category.category_id)
+                    storeCategoryId(context, category.category_id)
                 }
             }
         }
@@ -143,8 +144,7 @@ class CategoryFragment: Fragment() {
         typeField.setText(category.category_type.toString())
         setImageButton(revert = false)
 
-        val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredCategoryId(it) }
+        val uuidAsString = getStoredCategoryId(requireContext())
 
         if (uuidAsString != null) {
             isDefaultCategoryCheckBox.isChecked =

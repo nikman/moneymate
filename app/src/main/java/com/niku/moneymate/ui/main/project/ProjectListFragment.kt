@@ -17,7 +17,7 @@ import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.uiutils.BaseSwipeHelper
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredProjectId
 import java.util.*
 
 
@@ -169,8 +169,7 @@ class ProjectListFragment: Fragment() {
             this.project = project
             titleTextView.text = this.project.project_title
 
-            val uuidAsString = context?.applicationContext?.let {
-                SharedPrefs().getStoredProjectId(it) }
+            val uuidAsString = getStoredProjectId(requireContext())
 
             if (uuidAsString != null) {
                 if (uuidAsString.isNotEmpty() &&

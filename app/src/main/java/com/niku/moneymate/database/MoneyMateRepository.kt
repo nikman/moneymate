@@ -37,7 +37,7 @@ class MoneyMateRepository private constructor(private val context: Context) {
                         currencyRubUUID,
                         CODE_CURRENCY_RUB,
                         TITLE_CURRENCY_RUB)
-                SharedPrefs().storeCurrencyId(context, currencyRubUUID)
+                storeCurrencyId(context, currencyRubUUID)
 
                 moneyMateDao.addCurrency(currencyRub)
                 val currencyUsd =
@@ -62,7 +62,7 @@ class MoneyMateRepository private constructor(private val context: Context) {
                         is_active = false
                     )
                 moneyMateDao.addProject(projectEmpty)
-                SharedPrefs().storeProjectId(context, emptyProjectUUID)
+                storeProjectId(context, emptyProjectUUID)
 
                 val emptyAccountUUID = UUID.fromString(UUID_ACCOUNT_EMPTY)
                 val accountEmpty =
@@ -73,7 +73,7 @@ class MoneyMateRepository private constructor(private val context: Context) {
                         is_active = false
                     )
                 moneyMateDao.addAccount(accountEmpty)
-                SharedPrefs().storeAccountId(context, emptyAccountUUID)
+                storeAccountId(context, emptyAccountUUID)
 
                 val emptyCategoryUUID = UUID.fromString(UUID_CATEGORY_EMPTY)
                 val categoryEmpty =
@@ -84,7 +84,7 @@ class MoneyMateRepository private constructor(private val context: Context) {
                         is_active = false
                     )
                 moneyMateDao.addCategory(categoryEmpty)
-                SharedPrefs().storeCategoryId(context, emptyCategoryUUID)
+                storeCategoryId(context, emptyCategoryUUID)
             }
         }
 
@@ -107,7 +107,7 @@ class MoneyMateRepository private constructor(private val context: Context) {
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
     fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>> =
-        moneyMateDao.getAccountsWithBalance()
+        moneyMateDao.getAccountsWithBalance(showOnlyActive)
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
     fun getTransactions(): LiveData<List<TransactionWithProperties>> = moneyMateDao.getTransactions()
@@ -115,7 +115,6 @@ class MoneyMateRepository private constructor(private val context: Context) {
 
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?> = moneyMateDao.getAccount(id)
     fun getCurrency(id: UUID): LiveData<MainCurrency?> = moneyMateDao.getCurrency(id)
-    //fun getDefaultCurrency(): LiveData<MainCurrency?> = moneyMateDao.getDefaultCurrency()
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
     fun getTransaction(id: UUID): LiveData<TransactionWithProperties?> = moneyMateDao.getTransaction(id)
     fun getAccountBalance(id: UUID): LiveData<Double?> = moneyMateDao.getAccountBalance(id)

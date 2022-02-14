@@ -15,7 +15,7 @@ import com.niku.moneymate.account.AccountListViewModel
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.ui.main.MateItemDecorator
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredCurrencyId
 import java.util.*
 
 private const val TAG = "AccountListFragment"
@@ -85,8 +85,7 @@ class AccountListFragment: Fragment() {
 
                 val currency = MainCurrency(
                         UUID.fromString(
-                            context?.applicationContext?.let {
-                                SharedPrefs().getStoredCurrencyId(it) }))
+                            getStoredCurrencyId(requireContext())))
 
                 //val currency = MoneyMateRepository().getDefaultCurrency()
                 val account = Account(currency_id = currency.currency_id)
