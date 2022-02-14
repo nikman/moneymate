@@ -1,6 +1,7 @@
 package com.niku.moneymate.ui.main.transaction
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -8,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -74,10 +74,10 @@ class TransactionListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         transactionListViewModel.transactionListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { transactionWithProperties ->
-                transactionWithProperties?.let { updateUI(transactionWithProperties) } }
-        )
+            viewLifecycleOwner
+        ) { transactionWithProperties ->
+            transactionWithProperties?.let { updateUI(transactionWithProperties) }
+        }
     }
 
     override fun onDetach() {
@@ -105,10 +105,6 @@ class TransactionListFragment: Fragment() {
                 val account = Account(
                     currency_id = currency.currency_id,
                     account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
-
-                /*val project = Project(
-                    project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext()))
-                )*/
 
                 val transaction = MoneyTransaction(
                     account_id_from = account.account_id,
@@ -153,12 +149,12 @@ class TransactionListFragment: Fragment() {
         super.onStart()
 
         transactionListViewModel.transactionListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { transactions -> transactions?.let {
-                    updateUI(transactions)
-                }
+            viewLifecycleOwner
+        ) { transactions ->
+            transactions?.let {
+                updateUI(transactions)
             }
-        )
+        }
 
     }
 
@@ -191,13 +187,41 @@ class TransactionListFragment: Fragment() {
 
             this.transaction = transactionWithProperties
 
-            dateTextView.text = this.transaction.transaction.transactionDate.toString()
-            accountTextView.text = this.transaction.accountFrom.title
-            amountTextView.text = "%.2f".format(this.transaction.transaction.amount_from)
+            //val firstApiFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+            //val date = LocalDate.parse(transaction.transaction.transactionDate.toString() , firstApiFormat)
+            /*val dateFormatRu = SimpleDateFormat(
+                "dd.MM.yyyy HH:mm", Locale.US
+            )
+            val date =
+                dateFormatRu.parse(
+                    transaction.transaction.transactionDate.toString())
+*/
+            dateTextView.text = transaction.transaction.transactionDate.toString()
+
+            val accountFromText = transaction.accountFrom.toString()
+            val itsTransfer = transaction.accountTo.account_id.toString() != UUID_ACCOUNT_EMPTY
+            val accountToText = if (itsTransfer) transaction.accountTo.toString() else transaction.currency.toString()
+
+            accountTextView.text =
+                if (itsTransfer) {
+                getString(R.string.transaction_list_convert_account_title,
+                    accountFromText,
+                    accountToText) } else { transaction.accountFrom.toString() }
+
+            val trColor: String = when {
+                itsTransfer -> "#F9A825"
+                transaction.transaction.amount_from < 0 -> "#B71C1C"
+                else -> "#1B5E20"
+            }
+            accountTextView.setTextColor(Color.parseColor(trColor))
+
+            amountTextView.text = "%.2f".format(transaction.transaction.amount_from)
             this.transaction.project.let {
                 projectTextView.text = it.project_title
             }
-            categoryTextView.text = this.transaction.category.category_title
+            categoryTextView.text = this.transaction.category.toString()
+
+            amountTextView.setTextColor(Color.parseColor(trColor))
 
         }
 

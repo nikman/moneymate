@@ -85,7 +85,6 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         currency = MainCurrency(
             UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
 
-
         accountFrom = Account(
             currency_id = currency.currency_id,
             account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
@@ -452,12 +451,12 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     }
 
     override fun SaveEntiy(entity: Any) {
-        moneyTransactionDetailViewModel.saveTransaction(transaction = this.moneyTransaction)
+        moneyTransactionDetailViewModel.saveTransaction(
+            transaction = this.moneyTransaction)
         findNavController().popBackStack()
     }
 
     companion object {
-
         fun  newBundle(transaction_id: UUID): Bundle {
             return Bundle().apply { putSerializable(ARG_TRANSACTION_ID, transaction_id) }
         }
