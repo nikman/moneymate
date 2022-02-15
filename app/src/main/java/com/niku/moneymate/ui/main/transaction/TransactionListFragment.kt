@@ -169,8 +169,14 @@ class TransactionListFragment: Fragment() {
             .setRecyclerView(transactionRecyclerView)
             .setDirection(ItemTouchHelper.LEFT)
             .setItems(transactionWithProperties)
-            .setOnSwipeAction { transaction -> transactionListViewModel.deleteTransaction(moneyTransaction = transaction.transaction) }
-            .setOnCancelAction { transaction -> transactionListViewModel.addTransaction(moneyTransaction = transaction.transaction) }
+            .setOnSwipeAction { transaction ->
+                transactionListViewModel.deleteTransaction(moneyTransaction = transaction.transaction)
+                adapter.notifyItemRemoved(transactionWithProperties.indexOf(transaction))
+            }
+            .setOnCancelAction { transaction ->
+                transactionListViewModel.addTransaction(moneyTransaction = transaction.transaction)
+                adapter.notifyItemChanged(transactionWithProperties.indexOf(transaction))
+            }
             .build()
     }
 
