@@ -31,6 +31,7 @@ class CurrencyListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var currencyRecyclerView: RecyclerView
     private var adapter: CurrencyAdapter = CurrencyAdapter(emptyList())
+    private lateinit var swipeActions: BaseSwipeHelper<MainCurrency>
 
     private val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
 
@@ -43,11 +44,6 @@ class CurrencyListFragment: Fragment() {
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
-
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total accounts: ${accountListViewModel.accounts.size}")
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,21 +99,12 @@ class CurrencyListFragment: Fragment() {
         adapter = CurrencyAdapter(currencies)
         currencyRecyclerView.adapter = adapter
 
-        /*val sw: BaseSwipeHelper<MainCurrency> = BaseSwipeHelper()
-        sw.onSwipeItem(
-            currencies,
-            requireContext(),
-            currencyRecyclerView,
-            ItemTouchHelper.LEFT,
-            { currency -> currencyListViewModel.deleteCurrency(currency = currency) },
-            { currency -> currencyListViewModel.addCurrency(currency = currency) })*/
-
-        val sw: BaseSwipeHelper<MainCurrency> = BaseSwipeHelper<MainCurrency>(requireContext())
+        swipeActions = BaseSwipeHelper<MainCurrency>(requireContext())
             .setRecyclerView(currencyRecyclerView)
             .setDirection(ItemTouchHelper.LEFT)
             .setItems(currencies)
             .setOnSwipeAction { currency -> currencyListViewModel.deleteCurrency(currency = currency) }
-            .setOnCancelAction { currency -> currencyListViewModel.addCurrency(currency = currency) }
+            .setOnUndoAction { currency -> currencyListViewModel.addCurrency(currency = currency) }
             .build()
 
     }

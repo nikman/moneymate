@@ -29,14 +29,10 @@ class ProjectListFragment: Fragment() {
         fun onProjectSelected(projectId: UUID)
     }
 
-    /*interface SwipeAction {
-        fun onSwipeItem(items: List<Project>, context: Context, recyclerView: RecyclerView, direction: Int)
-    }*/
-
     private var callbacks: Callbacks? = null
-    //private var swipeAction: SwipeAction? = null
     private lateinit var projectRecyclerView: RecyclerView
     private var adapter: ProjectAdapter = ProjectAdapter(emptyList())
+    private lateinit var swipeActions: BaseSwipeHelper<Project>
 
     private val projectListViewModel by activityViewModels<ProjectListViewModel>()
 
@@ -109,23 +105,13 @@ class ProjectListFragment: Fragment() {
         adapter = ProjectAdapter(projects)
         projectRecyclerView.adapter = adapter
 
-        /*val sw: BaseSwipeHelper<Project> = BaseSwipeHelper()
-        sw.onSwipeItem(
-            projects,
-            requireContext(),
-            projectRecyclerView,
-            ItemTouchHelper.LEFT,
-            { project -> projectListViewModel.deleteProject(project = project) },
-            { project -> projectListViewModel.addProject(project = project) })*/
-
-        val sw: BaseSwipeHelper<Project> = BaseSwipeHelper<Project>(requireContext())
+        swipeActions = BaseSwipeHelper<Project>(requireContext())
             .setRecyclerView(projectRecyclerView)
             .setDirection(ItemTouchHelper.LEFT)
             .setItems(projects)
             .setOnSwipeAction { project -> projectListViewModel.deleteProject(project = project) }
-            .setOnCancelAction { project -> projectListViewModel.addProject(project = project) }
+            .setOnUndoAction { project -> projectListViewModel.addProject(project = project) }
             .build()
-
     }
 
     override fun onStart() {

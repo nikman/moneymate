@@ -1,10 +1,9 @@
 package com.niku.moneymate.account
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.niku.moneymate.currency.MainCurrency
+import com.niku.moneymate.utils.UUID_CURRENCY_RUB
+import org.jetbrains.annotations.NotNull
 import java.util.*
 
 @Entity(
@@ -19,7 +18,11 @@ import java.util.*
 )
 data class Account(
     @PrimaryKey val account_id: UUID = UUID.randomUUID(),
+
+    @NotNull
+    @ColumnInfo(name = "currency_id", defaultValue = UUID_CURRENCY_RUB)
     var currency_id: UUID,
+
     var title: String = "",
     var initial_balance: Double = 0.0,
     var balance: Double = 0.0,

@@ -29,6 +29,7 @@ class CategoryListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var categoryRecyclerView: RecyclerView
     private var adapter: CategoryAdapter = CategoryAdapter(emptyList())
+    private lateinit var swipeActions: BaseSwipeHelper<Category>
 
     private val categoryListViewModel by activityViewModels<CategoryListViewModel>()
 
@@ -41,11 +42,6 @@ class CategoryListFragment: Fragment() {
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
-
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total accounts: ${accountListViewModel.accounts.size}")
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,21 +98,13 @@ class CategoryListFragment: Fragment() {
         adapter = CategoryAdapter(categories)
         categoryRecyclerView.adapter = adapter
 
-        val sw: BaseSwipeHelper<Category> = BaseSwipeHelper<Category>(requireContext())
+        swipeActions = BaseSwipeHelper<Category>(requireContext())
             .setRecyclerView(categoryRecyclerView)
             .setDirection(ItemTouchHelper.LEFT)
             .setItems(categories)
             .setOnSwipeAction { category -> categoryListViewModel.deleteCategory(category = category) }
-            .setOnCancelAction { category -> categoryListViewModel.addCategory(category = category) }
+            .setOnUndoAction { category -> categoryListViewModel.addCategory(category = category) }
             .build()
-
-        /*sw.onSwipeItem(
-            categories,
-            requireContext(),
-            categoryRecyclerView,
-            ItemTouchHelper.LEFT,
-            { category -> categoryListViewModel.deleteCategory(category = category) },
-            { category -> categoryListViewModel.addCategory(category = category) })*/
 
     }
 

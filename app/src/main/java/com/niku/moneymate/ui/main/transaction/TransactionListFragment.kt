@@ -37,6 +37,7 @@ class TransactionListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var transactionRecyclerView: RecyclerView
     private var adapter: TransactionAdapter = TransactionAdapter(emptyList())
+    private lateinit var swipeActions: BaseSwipeHelper<TransactionWithProperties>
 
     private val transactionListViewModel by activityViewModels<TransactionListViewModel>()
 
@@ -72,11 +73,19 @@ class TransactionListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d(TAG, "onViewCreated!")
+
+        // resetting SwipeHelper in case of creating first item and swipe it right away
+        //updateUI(emptyList())
+        //swipeActions.detach()
+
         transactionListViewModel.transactionListLiveData.observe(
             viewLifecycleOwner
         ) { transactionWithProperties ->
             transactionWithProperties?.let { updateUI(transactionWithProperties) }
         }
+
     }
 
     override fun onDetach() {
@@ -162,35 +171,33 @@ class TransactionListFragment: Fragment() {
 
     private fun updateUI(transactionWithProperties: List<TransactionWithProperties>) {
 
+        Log.d(TAG, "updateUI")
+
         adapter = TransactionAdapter(transactionWithProperties)
         transactionRecyclerView.adapter = adapter
 
-        val sw: BaseSwipeHelper<TransactionWithProperties> = BaseSwipeHelper<TransactionWithProperties>(requireContext())
+        swipeActions = BaseSwipeHelper<TransactionWithProperties>(requireContext())
             .setRecyclerView(transactionRecyclerView)
             .setDirection(ItemTouchHelper.LEFT)
             .setItems(transactionWithProperties)
             .setOnSwipeAction { transaction ->
                 transactionListViewModel.deleteTransaction(moneyTransaction = transaction.transaction)
-                adapter.notifyItemRemoved(transactionWithProperties.indexOf(transaction))
+                //adapter.notifyItemRemoved(transactionWithProperties.indexOf(transaction))
             }
-            .setOnCancelAction { transaction ->
+            /*.setOnCancelAction {
+                //adapter.notifyItemChanged(transactionWithProperties.indexOf(transaction))
+                Log.d(TAG, "Action canceled")
+            }*/
+            .setOnUndoAction { transaction ->
                 transactionListViewModel.addTransaction(moneyTransaction = transaction.transaction)
-                adapter.notifyItemChanged(transactionWithProperties.indexOf(transaction))
+                //adapter.notifyItemInserted(transactionWithProperties.indexOf(transaction))
             }
             .build()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        transactionListViewModel.transactionListLiveData.observe(
-            viewLifecycleOwner
-        ) { transactions ->
-            transactions?.let {
-                updateUI(transactions)
-            }
-        }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        swipeActions.detach()
     }
 
     private inner class TransactionHolder(view: View):
@@ -274,10 +281,9 @@ class TransactionListFragment: Fragment() {
             return TransactionHolder(itemView)
         }
 
-        override fun getItemCount() : Int {
-            val trSize = transactionsWithProperties.size
-            Log.d(TAG, "trSize: $trSize")
-            return trSize
+        override fun getItemCount(): Int {
+            //Log.d(TAG, "trSize: $trSize")
+            return transactionsWithProperties.size
         }
 
         override fun onBindViewHolder(holder: TransactionHolder, position: Int) {
