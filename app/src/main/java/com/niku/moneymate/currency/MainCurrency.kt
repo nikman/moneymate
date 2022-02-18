@@ -2,7 +2,6 @@ package com.niku.moneymate.currency
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.niku.moneymate.uiutils.BaseListItem
 import java.util.*
 
 @Entity
@@ -11,9 +10,6 @@ data class MainCurrency(// @Inject constructor(
     var currency_code: Int = 0,
     var currency_title: String = ""
     //var currency_is_default: Boolean = false
-): BaseListItem {
-
-    override fun toString() = currency_title
-
-    override fun getItemTitle(): String = currency_title
+) {
+    override fun toString() = "$currency_title ($currency_code)"
 }

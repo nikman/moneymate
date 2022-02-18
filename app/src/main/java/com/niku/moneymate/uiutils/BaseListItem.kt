@@ -1,5 +1,6 @@
 package com.niku.moneymate.uiutils
 
-interface BaseListItem {
-    fun getItemTitle(): String
+interface BaseListItem<T> {
+    //fun getItemTitle(): String
+    fun getItem(): T
 }

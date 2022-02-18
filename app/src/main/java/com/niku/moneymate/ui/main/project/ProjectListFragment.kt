@@ -16,8 +16,11 @@ import com.niku.moneymate.R
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectListViewModel
 import com.niku.moneymate.ui.main.MateItemDecorator
+import com.niku.moneymate.uiutils.BaseListItem
 import com.niku.moneymate.uiutils.BaseSwipeHelper
+import com.niku.moneymate.utils.UUID_PROJECT_EMPTY
 import com.niku.moneymate.utils.getStoredProjectId
+import com.niku.moneymate.utils.storeProjectId
 import java.util.*
 
 
@@ -32,7 +35,7 @@ class ProjectListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var projectRecyclerView: RecyclerView
     private var adapter: ProjectAdapter = ProjectAdapter(emptyList())
-    private lateinit var swipeActions: BaseSwipeHelper<Project>
+    //private lateinit var swipeActions: BaseSwipeHelper<Project>
 
     private val projectListViewModel by activityViewModels<ProjectListViewModel>()
 
@@ -68,10 +71,24 @@ class ProjectListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        BaseSwipeHelper<Project>(requireContext())
+            .setRecyclerView(projectRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setOnSwipeAction { project ->
+                val defaultProjectUUID =
+                    UUID.fromString(getStoredProjectId(requireContext()))
+                if (project.project_id == defaultProjectUUID) {
+                    storeProjectId(requireContext(), UUID.fromString(UUID_PROJECT_EMPTY))
+                }
+                projectListViewModel.deleteProject(project = project)
+            }
+            .setOnUndoAction { project -> projectListViewModel.addProject(project = project) }
+            .build()
+
         projectListViewModel.projectListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { projects -> projects?.let { updateUI(projects) } }
-        )
+            viewLifecycleOwner
+        ) { projects -> projects?.let { updateUI(projects) } }
     }
 
     override fun onDetach() {
@@ -105,13 +122,6 @@ class ProjectListFragment: Fragment() {
         adapter = ProjectAdapter(projects)
         projectRecyclerView.adapter = adapter
 
-        swipeActions = BaseSwipeHelper<Project>(requireContext())
-            .setRecyclerView(projectRecyclerView)
-            .setDirection(ItemTouchHelper.LEFT)
-            .setItems(projects)
-            .setOnSwipeAction { project -> projectListViewModel.deleteProject(project = project) }
-            .setOnUndoAction { project -> projectListViewModel.addProject(project = project) }
-            .build()
     }
 
     override fun onStart() {
@@ -135,9 +145,13 @@ class ProjectListFragment: Fragment() {
     }
 
     private inner class ProjectHolder(view: View):
-        RecyclerView.ViewHolder(view), View.OnClickListener {
+        RecyclerView.ViewHolder(view),
+        View.OnClickListener,
+        BaseListItem<Project> {
 
         private lateinit var project: Project
+
+        override fun getItem(): Project = project
 
         private val titleTextView: TextView = itemView.findViewById(R.id.project_title)
 
@@ -171,7 +185,7 @@ class ProjectListFragment: Fragment() {
 
     private inner class ProjectAdapter(var projects: List<Project>): RecyclerView.Adapter<ProjectHolder>() {
 
-        val adapterProjects = projects
+        //val adapterProjects = projects
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectHolder {
 

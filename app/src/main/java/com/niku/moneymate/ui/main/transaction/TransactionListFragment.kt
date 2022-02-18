@@ -21,6 +21,7 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.MateItemDecorator
+import com.niku.moneymate.uiutils.BaseListItem
 import com.niku.moneymate.uiutils.BaseSwipeHelper
 import com.niku.moneymate.utils.*
 import java.util.*
@@ -37,7 +38,7 @@ class TransactionListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var transactionRecyclerView: RecyclerView
     private var adapter: TransactionAdapter = TransactionAdapter(emptyList())
-    private lateinit var swipeActions: BaseSwipeHelper<TransactionWithProperties>
+    //private lateinit var swipeActions: BaseSwipeHelper<TransactionWithProperties>
 
     private val transactionListViewModel by activityViewModels<TransactionListViewModel>()
 
@@ -74,11 +75,18 @@ class TransactionListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(TAG, "onViewCreated!")
-
-        // resetting SwipeHelper in case of creating first item and swipe it right away
-        //updateUI(emptyList())
-        //swipeActions.detach()
+         BaseSwipeHelper<TransactionWithProperties>(requireContext())
+            .setRecyclerView(transactionRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setOnSwipeAction { transaction ->
+                transactionListViewModel.deleteTransaction(
+                    moneyTransaction = transaction.transaction)
+            }
+            .setOnUndoAction { transaction ->
+                transactionListViewModel.addTransaction(
+                    moneyTransaction = transaction.transaction)
+            }
+            .build()
 
         transactionListViewModel.transactionListLiveData.observe(
             viewLifecycleOwner
@@ -173,35 +181,17 @@ class TransactionListFragment: Fragment() {
 
         Log.d(TAG, "updateUI")
 
+
         adapter = TransactionAdapter(transactionWithProperties)
         transactionRecyclerView.adapter = adapter
 
-        swipeActions = BaseSwipeHelper<TransactionWithProperties>(requireContext())
-            .setRecyclerView(transactionRecyclerView)
-            .setDirection(ItemTouchHelper.LEFT)
-            .setItems(transactionWithProperties)
-            .setOnSwipeAction { transaction ->
-                transactionListViewModel.deleteTransaction(moneyTransaction = transaction.transaction)
-                //adapter.notifyItemRemoved(transactionWithProperties.indexOf(transaction))
-            }
-            /*.setOnCancelAction {
-                //adapter.notifyItemChanged(transactionWithProperties.indexOf(transaction))
-                Log.d(TAG, "Action canceled")
-            }*/
-            .setOnUndoAction { transaction ->
-                transactionListViewModel.addTransaction(moneyTransaction = transaction.transaction)
-                //adapter.notifyItemInserted(transactionWithProperties.indexOf(transaction))
-            }
-            .build()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        swipeActions.detach()
     }
 
     private inner class TransactionHolder(view: View):
-        RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
+        RecyclerView.ViewHolder(view),
+        View.OnClickListener,
+        View.OnLongClickListener,
+        BaseListItem<TransactionWithProperties> {
 
         private lateinit var transaction: TransactionWithProperties
 
@@ -215,6 +205,8 @@ class TransactionListFragment: Fragment() {
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
         }
+
+        override fun getItem(): TransactionWithProperties = transaction
 
         override fun onClick(v: View?) {
             callbacks?.onTransactionSelected(transaction.transaction.transaction_id)

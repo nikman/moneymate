@@ -29,7 +29,7 @@ class CategoryListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var categoryRecyclerView: RecyclerView
     private var adapter: CategoryAdapter = CategoryAdapter(emptyList())
-    private lateinit var swipeActions: BaseSwipeHelper<Category>
+    //private lateinit var swipeActions: BaseSwipeHelper<Category>
 
     private val categoryListViewModel by activityViewModels<CategoryListViewModel>()
 
@@ -64,10 +64,18 @@ class CategoryListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        BaseSwipeHelper<Category>(requireContext())
+            .setRecyclerView(categoryRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            //.setItems(categories)
+            .setOnSwipeAction { category -> categoryListViewModel.deleteCategory(category = category) }
+            .setOnUndoAction { category -> categoryListViewModel.addCategory(category = category) }
+            .build()
+
         categoryListViewModel.categoryListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { categories -> categories?.let { updateUI(categories) } }
-        )
+            viewLifecycleOwner
+        ) { categories -> categories?.let { updateUI(categories) } }
     }
 
     override fun onDetach() {
@@ -97,14 +105,6 @@ class CategoryListFragment: Fragment() {
 
         adapter = CategoryAdapter(categories)
         categoryRecyclerView.adapter = adapter
-
-        swipeActions = BaseSwipeHelper<Category>(requireContext())
-            .setRecyclerView(categoryRecyclerView)
-            .setDirection(ItemTouchHelper.LEFT)
-            .setItems(categories)
-            .setOnSwipeAction { category -> categoryListViewModel.deleteCategory(category = category) }
-            .setOnUndoAction { category -> categoryListViewModel.addCategory(category = category) }
-            .build()
 
     }
 
