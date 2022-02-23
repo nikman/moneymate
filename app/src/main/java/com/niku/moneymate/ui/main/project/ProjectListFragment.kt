@@ -8,7 +8,6 @@ import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +34,6 @@ class ProjectListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var projectRecyclerView: RecyclerView
     private var adapter: ProjectAdapter = ProjectAdapter(emptyList())
-    //private lateinit var swipeActions: BaseSwipeHelper<Project>
 
     private val projectListViewModel by activityViewModels<ProjectListViewModel>()
 
@@ -47,7 +45,6 @@ class ProjectListFragment: Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callbacks = context as Callbacks?
-        //swipeAction = context as SwipeAction?
     }
 
     override fun onCreateView(
@@ -94,7 +91,6 @@ class ProjectListFragment: Fragment() {
     override fun onDetach() {
         super.onDetach()
         callbacks = null
-        //swipeAction = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -128,19 +124,19 @@ class ProjectListFragment: Fragment() {
         super.onStart()
 
         projectListViewModel.projectListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { projects ->
-                projects?.let {
-                    Log.i(TAG, "Got projectLiveData ${projects.size}")
-                    for (element in projects) {
-                        Log.i(
-                            TAG,
-                            "Got elem ${element.project_title} # ${element.project_id}")
-                    }
-                    updateUI(projects)
+            viewLifecycleOwner
+        ) { projects ->
+            projects?.let {
+                Log.i(TAG, "Got projectLiveData ${projects.size}")
+                for (element in projects) {
+                    Log.i(
+                        TAG,
+                        "Got elem ${element.project_title} # ${element.project_id}"
+                    )
                 }
+                updateUI(projects)
             }
-        )
+        }
 
     }
 
@@ -211,9 +207,6 @@ class ProjectListFragment: Fragment() {
 
     }
 
-    companion object {
-        fun newInstance(): ProjectListFragment {return ProjectListFragment()}
-    }
 }
 
 

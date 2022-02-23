@@ -11,5 +11,5 @@ data class MainCurrency(// @Inject constructor(
     var currency_title: String = ""
     //var currency_is_default: Boolean = false
 ) {
-    override fun toString() = "$currency_title ($currency_code)"
+    override fun toString() = "$currency_title"
 }

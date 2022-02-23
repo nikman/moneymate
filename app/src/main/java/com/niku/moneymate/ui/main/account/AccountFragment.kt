@@ -39,6 +39,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
     private lateinit var accountWithCurrency: AccountWithCurrency
     private lateinit var currency: MainCurrency
     private lateinit var currencies: List<MainCurrency>
+
     private lateinit var titleField: EditText
     private lateinit var noteField: EditText
     private lateinit var currencyField: Spinner
