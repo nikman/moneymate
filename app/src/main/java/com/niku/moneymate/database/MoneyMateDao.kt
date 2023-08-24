@@ -30,6 +30,12 @@ interface MoneyMateDao {
     @Query("SELECT * FROM account WHERE account_id=(:account_id)")
     fun getAccountDirect(account_id: UUID): Account?
 
+    @Query("SELECT * FROM account LIMIT 1")
+    fun getAccountDirect(): Account?
+
+    @Query("SELECT * FROM maincurrency LIMIT 1")
+    fun getCurrencyDirect(): MainCurrency?
+
     @Transaction
     @Query("SELECT * FROM project WHERE project_id=(:project_id)")
     fun getProject(project_id: UUID): LiveData<Project?>
@@ -100,6 +106,9 @@ interface MoneyMateDao {
     @Insert
     fun addCurrency(currency: MainCurrency)
 
+    @Delete
+    fun deleteCurrency(currency: MainCurrency)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     //suspend fun insertAllCurrencies(currencies: List<MainCurrency>)
     fun insertAllCurrencies(currencies: List<MainCurrency>)
@@ -116,6 +125,9 @@ interface MoneyMateDao {
     @Insert
     fun addCategory(category: Category)
 
+    @Delete
+    fun deleteCategory(category: Category)
+
     @Transaction
     @Query("SELECT * FROM moneyTransaction ORDER BY transaction_date DESC")
     fun getTransactions(): LiveData<List<TransactionWithProperties>>
@@ -129,6 +141,9 @@ interface MoneyMateDao {
 
     @Insert
     fun addTransaction(transaction: MoneyTransaction)
+
+    @Delete
+    fun deleteTransaction(transaction: MoneyTransaction)
 
     @Update
     fun updateProject(project: Project)

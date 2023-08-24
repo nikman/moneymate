@@ -1,5 +1,6 @@
 package com.niku.moneymate
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.preference.PreferenceManager
 import java.util.*
@@ -8,9 +9,12 @@ private const val PREF_LAST_ACCOUNT_ID = "lastAccountId"
 
 object AppPreference {
 
+    @SuppressLint("CommitPrefEdits")
     fun setLastAccountId(context: Context, lastAccountId: UUID) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().apply {
-            putString(PREF_LAST_ACCOUNT_ID, lastAccountId.toString())
+        PreferenceManager.getDefaultSharedPreferences(context)
+            .edit()
+            .apply {
+                putString(PREF_LAST_ACCOUNT_ID, lastAccountId.toString())
         }
     }
 

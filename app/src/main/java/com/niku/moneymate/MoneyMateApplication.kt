@@ -10,6 +10,13 @@ const val NOTIFICATION_CHANNEL_ID = "populate_db"
 
 class MoneyMateApplication: Application() {
 
+    /*private var _appComponent: AppComponent? = null
+
+    internal val appComponent: AppComponent
+    get() = checkNotNull(_appComponent) {
+        "AppComponent isn't initialized"
+    }*/
+
     override fun onCreate() {
         super.onCreate()
         // init db repository
@@ -23,5 +30,7 @@ class MoneyMateApplication: Application() {
                 getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
+        // init appComponent
+        //_appComponent = DaggerAppC.create()
     }
 }

@@ -22,9 +22,8 @@ import java.util.concurrent.Executors
 
 const val TAG = "MoneyMateRepository"
 
-class MoneyMateRepository private constructor(context: Context) {
+class MoneyMateRepository private constructor(private val context: Context) {
 
-    private val context = context
     private val executor = Executors.newSingleThreadExecutor()
 
     private var rdc: RoomDatabase.Callback = object : RoomDatabase.Callback() {
@@ -32,11 +31,13 @@ class MoneyMateRepository private constructor(context: Context) {
             Log.d(TAG, "on create db")
             Executors.newSingleThreadScheduledExecutor().execute {
 
+                val currencyRubUUID = UUID.fromString(UUID_CURRENCY_RUB)
                 val currencyRub =
                     MainCurrency(
-                        UUID.fromString(UUID_CURRENCY_RUB),
+                        currencyRubUUID,
                         CODE_CURRENCY_RUB,
                         TITLE_CURRENCY_RUB)
+                storeCurrencyId(context, currencyRubUUID)
 
                 moneyMateDao.addCurrency(currencyRub)
                 val currencyUsd =
@@ -53,54 +54,37 @@ class MoneyMateRepository private constructor(context: Context) {
                         TITLE_CURRENCY_EUR)
                 moneyMateDao.addCurrency(currencyEur)
 
+                val emptyProjectUUID = UUID.fromString(UUID_PROJECT_EMPTY)
                 val projectEmpty =
                     Project(
                         project_title = context.resources.getString(R.string.predef_empty_project_title),
-                        project_id = UUID.fromString(UUID_PROJECT_EMPTY),
+                        project_id = emptyProjectUUID,
                         is_active = false
                     )
                 moneyMateDao.addProject(projectEmpty)
+                storeProjectId(context, emptyProjectUUID)
 
-                /*val categoryFood =
-                    Category(
-                        category_type = CategoryType.OUTCOME,
-                        category_title = context.resources.getString(R.string.predef_category_title_food),
-                        category_id = UUID.fromString(UUID_CATEGORY_FOOD)
-                    )
-                moneyMateDao.addCategory(categoryFood)
-
-                val categorySalary =
-                    Category(
-                        CategoryType.INCOME,
-                        context.resources.getString(R.string.predef_category_title_salary),
-                        UUID.fromString(UUID_CATEGORY_SALARY)
-                    )
-                moneyMateDao.addCategory(categorySalary)*/
-
-                /*val accountCash =
-                    Account(
-                        currency_id = UUID.fromString(UUID_CURRENCY_RUB),
-                        title = context.resources.getString(R.string.predef_account_title_cash),
-                        account_id = UUID.fromString(UUID_ACCOUNT_CASH)
-                    )
-                moneyMateDao.addAccount(accountCash)*/
+                val emptyAccountUUID = UUID.fromString(UUID_ACCOUNT_EMPTY)
                 val accountEmpty =
                     Account(
-                        currency_id = UUID.fromString(UUID_CURRENCY_RUB),
+                        currency_id = currencyRubUUID,
                         title = "no account",
-                        account_id = UUID.fromString(UUID_ACCOUNT_EMPTY),
+                        account_id = emptyAccountUUID,
                         is_active = false
                     )
                 moneyMateDao.addAccount(accountEmpty)
+                storeAccountId(context, emptyAccountUUID)
 
+                val emptyCategoryUUID = UUID.fromString(UUID_CATEGORY_EMPTY)
                 val categoryEmpty =
                     Category(
                         category_type = 0,
                         category_title = "no category",
-                        category_id = UUID.fromString(UUID_CATEGORY_EMPTY),
+                        category_id = emptyCategoryUUID,
                         is_active = false
                     )
                 moneyMateDao.addCategory(categoryEmpty)
+                storeCategoryId(context, emptyCategoryUUID)
             }
         }
 
@@ -115,15 +99,15 @@ class MoneyMateRepository private constructor(context: Context) {
             DATABASE_NAME)
         .fallbackToDestructiveMigration()
         //.addMigrations(migrationFrom11To12)
-        //.createFromAsset("database/$DATABASE_NAME.db")
         .addCallback(rdc)
-        .build() // !
+        .build()
 
     private val moneyMateDao = database.moneyMateDao()
     private val payeeDao = database.payeeDao()
 
     fun getAllAccounts(): LiveData<List<Account>> = moneyMateDao.getAllAccounts()
-    fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>> = moneyMateDao.getAccountsWithBalance()
+    fun getAccountsWithBalance(showOnlyActive: Boolean = true): LiveData<List<AccountWithCurrency>> =
+        moneyMateDao.getAccountsWithBalance(showOnlyActive)
     fun getCurrencies(): LiveData<List<MainCurrency>> = moneyMateDao.getCurrencies()
     fun getCategories(): LiveData<List<Category>> = moneyMateDao.getCategories()
     fun getTransactions(): LiveData<List<TransactionWithProperties>> = moneyMateDao.getTransactions()
@@ -131,7 +115,6 @@ class MoneyMateRepository private constructor(context: Context) {
 
     fun getAccount(id: UUID): LiveData<AccountWithCurrency?> = moneyMateDao.getAccount(id)
     fun getCurrency(id: UUID): LiveData<MainCurrency?> = moneyMateDao.getCurrency(id)
-    //fun getDefaultCurrency(): LiveData<MainCurrency?> = moneyMateDao.getDefaultCurrency()
     fun getCategory(id: UUID): LiveData<Category?> = moneyMateDao.getCategory(id)
     fun getTransaction(id: UUID): LiveData<TransactionWithProperties?> = moneyMateDao.getTransaction(id)
     fun getAccountBalance(id: UUID): LiveData<Double?> = moneyMateDao.getAccountBalance(id)
@@ -179,6 +162,12 @@ class MoneyMateRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteCurrency(currency: MainCurrency) {
+        executor.execute {
+            moneyMateDao.deleteCurrency(currency)
+        }
+    }
+
     fun insertAllCurrencies(currencies: List<MainCurrency>) {
         executor.execute {
             moneyMateDao.insertAllCurrencies(currencies)
@@ -191,9 +180,21 @@ class MoneyMateRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteCategory(category: Category) {
+        executor.execute {
+            moneyMateDao.deleteCategory(category)
+        }
+    }
+
     fun addTransaction(transaction: MoneyTransaction) {
         executor.execute {
             moneyMateDao.addTransaction(transaction)
+        }
+    }
+
+    fun deleteTransaction(transaction: MoneyTransaction) {
+        executor.execute {
+            moneyMateDao.deleteTransaction(transaction)
         }
     }
 

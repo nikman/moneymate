@@ -27,4 +27,6 @@ data class TransactionWithProperties(
     @Relation(parentColumn = "project_id", entityColumn = "project_id")
     val project: Project
 
-)
+){//}: BaseListItem {
+    override fun toString(): String = "${accountFrom.title}, amount: ${transaction.amount_from} ${transaction.note}"
+}

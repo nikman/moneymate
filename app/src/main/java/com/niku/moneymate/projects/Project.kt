@@ -10,4 +10,7 @@ data class Project(
     var project_title: String = "",
     var is_active: Boolean = true,
     val project_external_id: Int = 0
-)
+){//}: BaseListItem {
+    //override fun getItemTitle(): String = project_title
+    override fun toString(): String = project_title
+}

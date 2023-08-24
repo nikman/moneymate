@@ -2,13 +2,12 @@ package com.niku.moneymate
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.junit.After
 import org.junit.Test
 
-class CurrencyFragmentInstrumentedTest {
+class MainActivityInstrumentedTest {
 
     lateinit var scenario: ActivityScenario<MainActivity>
 
@@ -80,12 +79,62 @@ class CurrencyFragmentInstrumentedTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.currency_code))
             .perform(ViewActions.click())
+            .perform(ViewActions.clearText())
             .perform(ViewActions.typeText("678"))
             .perform(ViewActions.closeSoftKeyboard())
 
         Espresso.onView(ViewMatchers.withId(R.id.currency_title))
             .perform(ViewActions.click())
             .perform(ViewActions.typeText("TEST"))
+            .perform(ViewActions.closeSoftKeyboard())
+
+        Espresso.pressBack()
+
+    }
+
+    @Test
+    fun whenStartingActivity_thenOpeningCurrencyList_thenCreatingNewDefaultCurrency() {
+
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+
+        Espresso.onView(ViewMatchers.withId(R.id.currencies))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.new_currency))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.currency_code))
+            .perform(ViewActions.click())
+            .perform(ViewActions.clearText())
+            .perform(ViewActions.typeText("678"))
+            .perform(ViewActions.closeSoftKeyboard())
+
+        Espresso.onView(ViewMatchers.withId(R.id.currency_title))
+            .perform(ViewActions.click())
+            .perform(ViewActions.typeText("TEST default"))
+            .perform(ViewActions.closeSoftKeyboard())
+
+        Espresso.onView(ViewMatchers.withId(R.id.currency_isDefault))
+            .perform(ViewActions.click())
+
+        Espresso.pressBack()
+
+    }
+
+    @Test
+    fun whenStartingActivity_thenOpeningProjectsList_thenCreatingNewProject() {
+
+        scenario = ActivityScenario.launch(MainActivity::class.java)
+
+        Espresso.onView(ViewMatchers.withId(R.id.projects))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.new_project))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.project_title))
+            .perform(ViewActions.click())
+            .perform(ViewActions.typeText("TEST project"))
             .perform(ViewActions.closeSoftKeyboard())
 
         Espresso.pressBack()

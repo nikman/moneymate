@@ -13,6 +13,10 @@ class TransactionListViewModel: ViewModel() {
         moneyMateRepository.addTransaction(moneyTransaction)
     }
 
+    fun deleteTransaction(moneyTransaction: MoneyTransaction) {
+        moneyMateRepository.deleteTransaction(moneyTransaction)
+    }
+
     fun getTransactionsCountByCategory(category_id: UUID) {
         moneyMateRepository.getTransactionsCountByCategory(category_id)
     }

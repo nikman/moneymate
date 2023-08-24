@@ -31,12 +31,12 @@ class FileUtils {
         startActivity(Intent.createChooser(intent, "Select Application"))
     }
 
-    fun readFileFromAssetsLineByLine(context: Context): Unit {
+    fun readFileFromAssetsLineByLine(context: Context) {
 
         //val constraints: Constraints.Builder().setRequiredNetworkType().build()
 
         val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
-            .setInputData(workDataOf(KEY_FILENAME into "database/20220120_223208_566"))
+            .setInputData(workDataOf(KEY_FILENAME into "database/20220213_114045_754"))
             //.setConstraints(constraints)
             .build()
         WorkManager.getInstance(context).enqueue(request)

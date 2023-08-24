@@ -9,10 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.fragment.findNavController
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
@@ -27,18 +26,21 @@ import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.BaseFragmentEntity
-import com.niku.moneymate.utils.CategoryType
-import com.niku.moneymate.utils.SharedPrefs
-import com.niku.moneymate.utils.TransactionType
-import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
+import com.niku.moneymate.utils.*
+import java.text.DateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 private const val ARG_TRANSACTION_ID = "transaction_id"
 private const val TAG = "TransactionFragment"
 
 class TransactionFragment : Fragment(), BaseFragmentEntity {
+
+    private var transactionGot = false
+    private var accountsGot = false
+    private var projectsGot = false
+    private var categoriesGot = false
+    private var currenciesGot = false
 
     private lateinit var transactionWithProperties: TransactionWithProperties
 
@@ -55,47 +57,25 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
     private lateinit var projects: List<Project>
 
     private lateinit var dateButton: Button
-    private lateinit var accountFromField: Spinner
-    private lateinit var accountToField: Spinner
-    private lateinit var currencyField: Spinner
-    private lateinit var categoryField: Spinner
-    private lateinit var amountField: EditText
-    private lateinit var projectField: Spinner
     private lateinit var transactionTypeImageButton: ImageButton
+    private lateinit var amountField: EditText
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
 
+    private lateinit var listPopupAccountFromButton: Button
+    private lateinit var listPopupWindowAccountFrom: ListPopupWindow
+    private lateinit var listPopupAccountToButton: Button
+    private lateinit var listPopupWindowAccountTo: ListPopupWindow
+    private lateinit var listPopupCategoryButton: Button
+    private lateinit var listPopupWindowCategory: ListPopupWindow
+    private lateinit var listPopupProjectButton: Button
+    private lateinit var listPopupWindowProject: ListPopupWindow
+    private lateinit var listPopupCurrencyButton: Button
+    private lateinit var listPopupWindowCurrency: ListPopupWindow
+
+    private lateinit var arrowForwardImage: ImageView
+
     private val moneyTransactionDetailViewModel by activityViewModels<TransactionDetailViewModel>()
-
-    //fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, B) -> T): MediatorLiveData<T> {
-    fun <T, A, B> LiveData<A>.combineAndCompute(other: List<LiveData<B>>, onChange: (A, ArrayList<B?>) -> T): MediatorLiveData<T> {
-
-        var source1emitted = false
-        /*var source2emitted = false*/
-        val listOfSourcesEmitted = ArrayList<Boolean>()
-
-        val result = MediatorLiveData<T>()
-
-        val mergeF = {
-            val source1Value = this.value
-            //val source2Value = other.value
-            val listOfOtherSourcesValues = ArrayList<B?>()
-
-            other.forEach { listOfOtherSourcesValues.add(it.value) }
-
-            //if (source1emitted && source2emitted) {
-            if (source1emitted && listOfSourcesEmitted.all { it }) {
-                result.value = onChange.invoke(source1Value!!, listOfOtherSourcesValues )
-            }
-        }
-
-        result.addSource(this) { source1emitted = true; mergeF.invoke() }
-        other.forEachIndexed { index, liveData ->
-            result.addSource(liveData) { listOfSourcesEmitted[index] = true; mergeF.invoke() }
-        }
-
-        return result
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -104,28 +84,26 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         super.onCreate(savedInstanceState)
 
         currency = MainCurrency(
-            UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+            UUID.fromString(getStoredCurrencyId(requireContext())))
 
         accountFrom = Account(
             currency_id = currency.currency_id,
-            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+            account_id = UUID.fromString(getStoredAccountId(requireContext())))
 
-        accountTo = Account(
-            currency_id = currency.currency_id,
-            account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
+        accountTo = accountFrom.copy()
 
         category = Category(
-            category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
+            category_id = UUID.fromString(getStoredCategoryId(requireContext())))
 
         project = Project(
-            project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext())))
+            project_id = UUID.fromString(getStoredProjectId(requireContext())))
 
         moneyTransaction = MoneyTransaction(
-            accountFrom.account_id,
-            UUID.fromString(UUID_ACCOUNT_EMPTY),
-            currency.currency_id,
-            category.category_id,
-            project.project_id)
+            account_id_from = accountFrom.account_id,//UUID.fromString(UUID_ACCOUNT_EMPTY),
+            account_id_to = UUID.fromString(UUID_ACCOUNT_EMPTY),
+            currency_id = currency.currency_id,
+            category_id = UUID.fromString(UUID_CATEGORY_EMPTY),//category.category_id,
+            project_id = UUID.fromString(UUID_PROJECT_EMPTY))//project.project_id)
 
         transactionWithProperties =
             TransactionWithProperties(
@@ -149,16 +127,45 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val view = inflater.inflate(R.layout.money_transaction_fragment, container, false)
 
         dateButton = view.findViewById(R.id.transaction_date) as Button
-        dateButton.visibility = View.GONE
-        accountFromField = view.findViewById(R.id.account_from_spinner) as Spinner
-        accountToField = view.findViewById(R.id.account_to_spinner) as Spinner
-        currencyField = view.findViewById(R.id.currency_spinner) as Spinner
+        //dateButton.visibility = View.GONE
         amountField = view.findViewById(R.id.transaction_amount) as EditText
-        categoryField = view.findViewById(R.id.category_spinner) as Spinner
-        projectField = view.findViewById(R.id.project_spinner) as Spinner
         transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
         saveButton = view.findViewById(R.id.ok_button)
         cancelButton = view.findViewById(R.id.cancel_button)
+
+        val maxWidth = requireContext().resources.displayMetrics.widthPixels - 20
+
+        listPopupAccountFromButton = view.findViewById(R.id.button_account_from_v2)
+        listPopupWindowAccountFrom =
+            ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+        listPopupWindowAccountFrom.anchorView = listPopupAccountFromButton
+        listPopupWindowAccountFrom.width = maxWidth
+
+        listPopupAccountToButton = view.findViewById(R.id.button_account_to_v2)
+        listPopupWindowAccountTo =
+            ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+        listPopupWindowAccountTo.anchorView = listPopupAccountToButton
+        listPopupWindowAccountTo.width = maxWidth
+
+        listPopupCategoryButton = view.findViewById(R.id.button_category_v2)
+        listPopupWindowCategory =
+            ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+        listPopupWindowCategory.anchorView = listPopupCategoryButton
+        listPopupWindowCategory.width = maxWidth
+
+        listPopupProjectButton = view.findViewById(R.id.button_project_v2)
+        listPopupWindowProject =
+            ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+        listPopupWindowProject.anchorView = listPopupProjectButton
+        listPopupWindowProject.width = maxWidth
+
+        listPopupCurrencyButton = view.findViewById(R.id.button_currency_v2)
+        listPopupWindowCurrency =
+            ListPopupWindow(requireContext(), null, R.attr.listPopupWindowStyle)
+        listPopupWindowCurrency.anchorView = listPopupCurrencyButton
+        listPopupWindowCurrency.width = maxWidth
+
+        arrowForwardImage = view.findViewById(R.id.arrow_forward)
 
         return view
     }
@@ -173,7 +180,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         moneyTransactionDetailViewModel.loadTransaction(transactionId)
 
         val transactionLiveData = moneyTransactionDetailViewModel.transactionLiveData
-        /*.observe(
+        transactionLiveData.observe(
             viewLifecycleOwner
         ) { transaction ->
             transaction?.let {
@@ -183,119 +190,50 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
                 this.accountTo = transactionWithProperties.accountTo
                 this.currency = transactionWithProperties.currency
                 this.category = transactionWithProperties.category
-                updateUI()
-            }
-        }*/
-
-        val accountListViewModel by activityViewModels<AccountListViewModel>()
-        val accountListLiveData = accountListViewModel.accountListLiveData
-
-        //transactionLiveData.combineAndCompute(accountListLiveData) { _, _ -> {  } }.observe(viewLifecycleOwner) { updateUI() }
-        /*accountListViewModel.accountListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { accounts -> accounts?.let { updateAccountsList(accounts) } }
-        )*/
-
-        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
-        val currencyListLiveData = currencyListViewModel.currencyListLiveData
-        /*currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateCurrenciesList(currencies) } }
-        )*/
-
-        val categoryListViewModel by activityViewModels<CategoryListViewModel>()
-        val categoryListLiveData = categoryListViewModel.categoryListLiveData
-
-        /*categoryListViewModel.categoryListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { categories -> categories?.let { updateCategoriesList(categories) } }
-        )*/
-
-        val projectListViewModel by activityViewModels<ProjectListViewModel>()
-        val projectListLiveData = projectListViewModel.projectListLiveData
-
-        /*projectListViewModel.projectListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { projects -> projects?.let { updateProjectsList(projects) } }
-        )*/
-
-        //val result = MediatorLiveData<Int>()
-
-        /*result.observe(viewLifecycleOwner) {
-            updateUI()
-        }*/
-
-        /*result.addSource(transactionLiveData) { transaction ->
-            transaction?.let {
-                this.transactionWithProperties = transaction
-                this.moneyTransaction = transactionWithProperties.transaction
-                this.accountFrom = transactionWithProperties.accountFrom
-                this.accountTo = transactionWithProperties.accountTo
-                this.currency = transactionWithProperties.currency
-                this.category = transactionWithProperties.category
                 this.project = transactionWithProperties.project
-                //updateUI()
+                transactionGot = true
+                updateUI()
                 Log.d(TAG, "transaction got")
             }
         }
-        result.addSource(accountListLiveData) {
-                accounts -> accounts?.let {
-                    this.accounts = accounts
-                    Log.d(TAG, "accounts got")
-                    //updateUI()
-                }
-        }
-        result.addSource(currencyListLiveData) { currencies ->
-            currencies?.let {
-                this.currencies = currencies
-                Log.d(TAG, "currencies got")
-                //updateUI()
-            }
-        }
 
-        result.addSource(categoryListLiveData) { categories ->
-            categories?.let {
-                this.categories = categories
-                Log.d(TAG, "categories got")
-                //updateUI()
-            }
-        }
-        result.addSource(projectListLiveData) { projects ->
-            projects?.let {
-                this.projects = projects
-                Log.d(TAG, "projects got")
-                //updateUI()
-            }
-        }*/
+        val accountListViewModel by activityViewModels<AccountListViewModel>()
+        accountListViewModel.accountListLiveData.observe(
+            viewLifecycleOwner
+        ) { accounts -> accounts?.let {
+            updateAccountsList(accounts)
+            updateUI()
+        } }
 
-        /*val dataForCompute = listOf(
-            accountListLiveData,
-            currencyListLiveData,
-            categoryListLiveData,
-            projectListLiveData)
+        val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
+        currencyListViewModel.currencyListLiveData.observe(
+            viewLifecycleOwner
+        ) { currencies -> currencies?.let {
+            updateCurrenciesList(currencies)
+            updateUI()
+        } }
 
-        val lambdas = listOf(
-            { accounts: List<Account> -> accounts?.let {
-                this.accounts = accounts
-                Log.d(TAG, "accounts got")
-                //updateUI()
-            }
-            },
-            { currencies: List<MainCurrency> ->
-                currencies?.let {
-                    this.currencies = currencies
-                    Log.d(TAG, "currencies got")
-                    //updateUI()
-                }
-        )
+        val categoryListViewModel by activityViewModels<CategoryListViewModel>()
 
-        transactionLiveData.combineAndCompute(dataForCompute, lambdas)*/
+        categoryListViewModel.categoryListLiveData.observe(
+            viewLifecycleOwner
+        ) { categories -> categories?.let {
+            updateCategoriesList(categories)
+            updateUI()
+        } }
+
+        val projectListViewModel by activityViewModels<ProjectListViewModel>()
+
+        projectListViewModel.projectListLiveData.observe(
+            viewLifecycleOwner
+        ) { projects -> projects?.let {
+            updateProjectsList(projects)
+            updateUI()
+        } }
 
     }
 
     override fun onStart() {
-
-        //Log.d(TAG, "onStart")
 
         super.onStart()
 
@@ -309,7 +247,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener {
                     _, year, monthOfYear, dayOfMonth ->
                 val selectedDate = GregorianCalendar(year, monthOfYear, dayOfMonth).time
-                dateButton.text = selectedDate.toString()
+                dateButton.text =
+                    DateFormat.getDateInstance().format(selectedDate)
+                    //selectedDate.toString()
                 moneyTransaction.transactionDate = selectedDate
             }, year, month, day)
             dpd.show()
@@ -328,7 +268,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         amountField.addTextChangedListener(amountWatcher)
 
         transactionTypeImageButton.apply {
-            setOnClickListener { _, ->
+            setOnClickListener {
                 setImageButton(revert = true)
             }
         }
@@ -378,207 +318,152 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
 
         Log.d(TAG, "updateUI_11")
 
-        if (moneyTransaction != null
-            && accounts != null
-            && currencies != null
-            && categories != null
-            && projects != null) {
+        if (transactionGot) {
+            if (moneyTransaction.account_id_to == UUID.fromString(UUID_ACCOUNT_EMPTY)) {
+                listPopupAccountToButton.visibility = View.GONE
+                arrowForwardImage.visibility = View.GONE
+            } else {
+                listPopupAccountToButton.visibility = View.VISIBLE
+                arrowForwardImage.visibility = View.VISIBLE
+            }
+        }
+
+        if (transactionGot
+            && accountsGot
+            && currenciesGot
+            && categoriesGot
+            && projectsGot) {
 
             Log.d(TAG, "updateUI_2")
 
             amountField.setText(abs(moneyTransaction.amount_from).toString())
-            dateButton.text = moneyTransaction.transactionDate.toString()
+            dateButton.text =
+                DateFormat.getDateInstance().format(moneyTransaction.transactionDate)
+                //moneyTransaction.transactionDate.toString()
 
             updateAccountsList(accounts)
             updateCurrenciesList(currencies)
             updateCategoriesList(categories)
             updateProjectsList(projects)
 
-            accountToField.setSelection(accounts.indexOf(accountTo), false)
-            accountFromField.setSelection(accounts.indexOf(accountFrom), false)
-            currencyField.setSelection(currencies.indexOf(currency), false)
-            categoryField.setSelection(categories.indexOf(category), false)
-            projectField.setSelection(projects.indexOf(project), false)
+            listPopupAccountFromButton.text = accountFrom.toString()
+            listPopupAccountToButton.text = accountTo.toString()
+            listPopupCategoryButton.text = category.toString()
+            listPopupProjectButton.text = project.toString()
+            listPopupCurrencyButton.text = currency.toString()
 
             setImageButton(revert = false)
 
         }
-
     }
 
     private fun updateAccountsList(accounts: List<Account>) {
 
-       //this.accounts = accounts
+        accountsGot = true
 
-        val accountsStrings = List<String>(accounts.size)
-        { i -> accounts[i].title }
+        this.accounts = accounts
 
-        val adapter: ArrayAdapter<*>
+        val accountsStrings = List(accounts.size)
+        { i -> accounts[i].toString() }
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, accountsStrings)
 
-        adapter = ArrayAdapter(
-            this.requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            accountsStrings)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        accountFromField.adapter = adapter
-        accountToField.adapter = adapter
-
-        Log.d(TAG, "updateAccountsList")
-
-        accountFromField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                Log.d(TAG, "updateAccountsList - onItemSelected")
-                moneyTransaction.account_id_from = accounts[position].account_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
+        listPopupWindowAccountFrom.setAdapter(adapter)
+        listPopupWindowAccountFrom.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
+            moneyTransaction.account_id_from = accounts[position].account_id
+            listPopupAccountFromButton.text = accounts[position].toString()
+            listPopupWindowAccountFrom.dismiss()
         }
 
-        accountToField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long) {
-                moneyTransaction.account_id_to = accounts[position].account_id
-            }
+        listPopupAccountFromButton.setOnClickListener { v: View? -> listPopupWindowAccountFrom.show() }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
+        listPopupWindowAccountTo.setAdapter(adapter)
+        listPopupWindowAccountTo.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
+            // save to prefs
+            storeAccountToId(requireContext(), accounts[position].account_id)
+            moneyTransaction.account_id_to = accounts[position].account_id
+            listPopupAccountToButton.text = accounts[position].toString()
+            listPopupWindowAccountTo.dismiss()
         }
 
-        projectField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                Log.d(TAG, "updateAccountsList - projectField - onItemSelected")
-                moneyTransaction.project_id = projects[position].project_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
-        }
-
+        listPopupAccountToButton.setOnClickListener { v: View? -> listPopupWindowAccountTo.show() }
     }
 
     private fun updateCurrenciesList(currencies: List<MainCurrency>) {
 
         Log.d(TAG, "updateCurrenciesList")
 
-        //this.currencies = currencies
+        currenciesGot = true
 
-        val currenciesStrings = List<String>(currencies.size)
-        { i -> currencies[i].currency_title }
+        this.currencies = currencies
 
-        val adapter: ArrayAdapter<*>
+        val currenciesStrings = List(currencies.size)
+        { i -> currencies[i].toString() }
 
-        adapter = ArrayAdapter(
-            this.requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            currenciesStrings)
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, currenciesStrings)
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        currencyField.adapter = adapter
-
-        currencyField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                Log.d(TAG, "updateCurrenciesList - onItemSelected")
-                moneyTransaction.currency_id = currencies[position].currency_id
-                //moneyTransaction.currency_id = UUID.fromString(parent.getItemAtPosition(position) as String)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
+        listPopupWindowCurrency.setAdapter(adapter)
+        listPopupWindowCurrency.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
+            moneyTransaction.currency_id = currencies[position].currency_id
+            listPopupCurrencyButton.text = currencies[position].toString()
+            listPopupWindowCurrency.dismiss()
         }
-
-
+       listPopupCurrencyButton.setOnClickListener { v: View? -> listPopupWindowCurrency.show() }
     }
 
     private fun updateCategoriesList(categories: List<Category>) {
 
-        //this.categories = categories
+        categoriesGot = true
+
+        this.categories = categories
+
         Log.d(TAG, "updateCategoriesList")
 
-        val categoriesStrings = List<String>(categories.size)
-        { i -> categories[i].category_title }
+        val categoriesStrings = List(categories.size)
+        { i -> categories[i].toString() }
 
-        val adapter: ArrayAdapter<*>
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, categoriesStrings)
 
-        adapter = ArrayAdapter(
-            this.requireContext(),
-            android.R.layout.simple_dropdown_item_1line,
-            categoriesStrings)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categoryField.adapter = adapter
-
-        categoryField.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                moneyTransaction.category_id = categories[position].category_id
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-            }
+        listPopupWindowCategory.setAdapter(adapter)
+        listPopupWindowCategory.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
+            moneyTransaction.category_id = categories[position].category_id
+            listPopupCategoryButton.text = categories[position].toString()
+            listPopupWindowCategory.dismiss()
         }
+
+        listPopupCategoryButton.setOnClickListener { v: View? -> listPopupWindowCategory.show() }
 
     }
 
     private fun updateProjectsList(projects: List<Project>) {
-
-        //this.projects = projects
+        projectsGot = true
+        this.projects = projects
         Log.d(TAG, "updateProjectsList")
 
-        val projectsStrings = List<String>(projects.size)
-        { i -> projects[i].project_title }
+        val projectsStrings = List(projects.size)
+        { i -> projects[i].toString() }
 
-        val adapter: ArrayAdapter<*>
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, projectsStrings)
 
-        adapter = ArrayAdapter(
-            this.requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            projectsStrings)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        projectField.adapter = adapter
+        listPopupWindowProject.setAdapter(adapter)
+        listPopupWindowProject.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
+            moneyTransaction.project_id = projects[position].project_id
+            listPopupProjectButton.text = projects[position].toString()
+            listPopupWindowProject.dismiss()
+        }
+       listPopupProjectButton.setOnClickListener { v: View? -> listPopupWindowProject.show() }
     }
 
     override fun CloseWithoutSaving() {
-        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         findNavController().popBackStack()
     }
 
     override fun SaveEntiy(entity: Any) {
-        moneyTransactionDetailViewModel.saveTransaction(transaction = this.moneyTransaction)
+        moneyTransactionDetailViewModel.saveTransaction(
+            transaction = this.moneyTransaction)
         findNavController().popBackStack()
     }
 
     companion object {
-
         fun  newBundle(transaction_id: UUID): Bundle {
             return Bundle().apply { putSerializable(ARG_TRANSACTION_ID, transaction_id) }
         }

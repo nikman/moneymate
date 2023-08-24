@@ -8,14 +8,17 @@ import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.ui.main.MateItemDecorator
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.uiutils.BaseListItem
+import com.niku.moneymate.uiutils.BaseSwipeHelper
+import com.niku.moneymate.utils.UUID_CURRENCY_RUB
+import com.niku.moneymate.utils.getStoredCurrencyId
+import com.niku.moneymate.utils.storeCurrencyId
 import java.util.*
 
 
@@ -30,12 +33,7 @@ class CurrencyListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var currencyRecyclerView: RecyclerView
     private var adapter: CurrencyAdapter = CurrencyAdapter(emptyList())
-
-    /*private val viewModelFactory = CommonViewModelFactory()
-
-    private val currencyListViewModel: CurrencyListViewModel by lazy {
-        ViewModelProvider(viewModelStore, viewModelFactory)[CurrencyListViewModel::class.java]
-    }*/
+    //private lateinit var swipeActions: BaseSwipeHelper<MainCurrency>
 
     private val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
 
@@ -49,11 +47,6 @@ class CurrencyListFragment: Fragment() {
         callbacks = context as Callbacks?
     }
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total accounts: ${accountListViewModel.accounts.size}")
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,20 +58,36 @@ class CurrencyListFragment: Fragment() {
         currencyRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         currencyRecyclerView.layoutManager = LinearLayoutManager(context)
         currencyRecyclerView.adapter = adapter
-        currencyRecyclerView.addItemDecoration(
+        /*currencyRecyclerView.addItemDecoration(
             MateItemDecorator(requireContext(), R.drawable.divider)
-        )
+        )*/
 
         return view
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
+        BaseSwipeHelper<MainCurrency>(requireContext())
+            .setRecyclerView(currencyRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setOnSwipeAction {currency ->
+                val defaultCurrencyUUID =
+                    UUID.fromString(getStoredCurrencyId(requireContext()))
+                if (currency.currency_id == defaultCurrencyUUID) {
+                    storeCurrencyId(requireContext(), UUID.fromString(UUID_CURRENCY_RUB))
+                }
+                currencyListViewModel.deleteCurrency(currency = currency)
+            }
+            .setOnUndoAction { currency -> currencyListViewModel.addCurrency(currency = currency) }
+            .build()
+
         currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { currencies -> currencies?.let { updateUI(currencies) } }
-        )
+            viewLifecycleOwner
+        ) { currencies -> currencies?.let { updateUI(currencies) } }
+
     }
 
     override fun onDetach() {
@@ -109,31 +118,36 @@ class CurrencyListFragment: Fragment() {
         adapter = CurrencyAdapter(currencies)
         currencyRecyclerView.adapter = adapter
 
+        Log.d(TAG, "updateUI cur size=${currencies.size}")
+
     }
 
     override fun onStart() {
+
         super.onStart()
 
         currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { currencies ->
-                currencies?.let {
-                    Log.i(TAG, "Got currencyLiveData ${currencies.size}")
-                    for (element in currencies) {
-                        Log.i(
-                            TAG,
-                            "Got elem ${element.currency_title} # ${element.currency_id}")
-                    }
-                    updateUI(currencies)
+            viewLifecycleOwner
+        ) { currencies ->
+            currencies?.let {
+                Log.i(TAG, "Got currencyLiveData ${currencies.size}")
+                for (element in currencies) {
+                    Log.i(
+                        TAG,
+                        "Got elem ${element.currency_title} # ${element.currency_id}"
+                    )
                 }
+                updateUI(currencies)
             }
-        )
+        }
     }
 
     private inner class CurrencyHolder(view: View):
-        RecyclerView.ViewHolder(view), View.OnClickListener {
+        RecyclerView.ViewHolder(view), View.OnClickListener, BaseListItem<MainCurrency> {
 
         private lateinit var currency: MainCurrency
+
+        override fun getItem() = currency
 
         private val titleTextView: TextView = itemView.findViewById(R.id.currency_title)
         private val codeTextView: TextView = itemView.findViewById(R.id.currency_code)
@@ -143,10 +157,7 @@ class CurrencyListFragment: Fragment() {
         }
 
         override fun onClick(v: View?) {
-
-            //Toast.makeText(context, "${account.title} pressed!", Toast.LENGTH_SHORT).show()
             callbacks?.onCurrencySelected(currency.currency_id)
-
         }
 
         fun bind(currency: MainCurrency) {
@@ -154,8 +165,7 @@ class CurrencyListFragment: Fragment() {
             titleTextView.text = this.currency.currency_title
             codeTextView.text = this.currency.currency_code.toString()
 
-            val uuidAsString = context?.applicationContext?.let {
-                SharedPrefs().getStoredCurrencyId(it) }
+            val uuidAsString = getStoredCurrencyId(requireContext())
 
             if (uuidAsString != null) {
                 if (uuidAsString.isNotEmpty() &&
@@ -165,15 +175,12 @@ class CurrencyListFragment: Fragment() {
                     codeTextView.typeface = boldTypeface
                 }
             }
-
         }
-
     }
 
     private inner class CurrencyAdapter(var currencies: List<MainCurrency>): RecyclerView.Adapter<CurrencyHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyHolder {
-            //val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)
             val itemView =
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.list_item_view_currency, parent, false)
@@ -196,9 +203,6 @@ class CurrencyListFragment: Fragment() {
 
     }
 
-    companion object {
-        fun newInstance(): CurrencyListFragment {return CurrencyListFragment()}
-    }
 }
 
 

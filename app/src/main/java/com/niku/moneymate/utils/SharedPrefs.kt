@@ -7,72 +7,85 @@ private const val KEY_NAME = "money-mate-shared-prefs-key"
 private const val CURRENCY_PREFS_KEY = "currency-code-key"
 private const val CATEGORY_PREFS_KEY = "category-code-key"
 private const val ACCOUNT_PREFS_KEY = "account-code-key"
+private const val ACCOUNT_TO_PREFS_KEY = "account-to-code-key"
 private const val PROJECT_PREFS_KEY = "project-code-key"
 
-class SharedPrefs {
+fun storeCurrencyId(context: Context, value: UUID) {
 
-    fun storeCurrencyId(context: Context, value: UUID) {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    val editor = preferences.edit()
+    editor.putString(CURRENCY_PREFS_KEY, value.toString())
+    editor.apply()
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putString(CURRENCY_PREFS_KEY, value.toString())
-        editor.apply()
+}
 
-    }
+fun storeCategoryId(context: Context, value: UUID) {
 
-    fun storeCategoryId(context: Context, value: UUID) {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    val editor = preferences.edit()
+    editor.putString(CATEGORY_PREFS_KEY, value.toString())
+    editor.apply()
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putString(CATEGORY_PREFS_KEY, value.toString())
-        editor.apply()
+}
 
-    }
+fun storeAccountId(context: Context, value: UUID) {
 
-    fun storeAccountId(context: Context, value: UUID) {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    val editor = preferences.edit()
+    editor.putString(ACCOUNT_PREFS_KEY, value.toString())
+    editor.apply()
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putString(ACCOUNT_PREFS_KEY, value.toString())
-        editor.apply()
+}
 
-    }
+fun storeAccountToId(context: Context, value: UUID) {
 
-    fun storeProjectId(context: Context, value: UUID) {
+val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+val editor = preferences.edit()
+editor.putString(ACCOUNT_TO_PREFS_KEY, value.toString())
+editor.apply()
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putString(PROJECT_PREFS_KEY, value.toString())
-        editor.apply()
+}
 
-    }
+fun storeProjectId(context: Context, value: UUID) {
 
-    fun getStoredCurrencyId(context: Context): String? {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    val editor = preferences.edit()
+    editor.putString(PROJECT_PREFS_KEY, value.toString())
+    editor.apply()
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(CURRENCY_PREFS_KEY, UUID_CURRENCY_RUB)
+}
 
-    }
+fun getStoredCurrencyId(context: Context): String? {
 
-    fun getStoredCategoryId(context: Context): String? {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    return preferences.getString(CURRENCY_PREFS_KEY, UUID_CURRENCY_RUB)
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(CATEGORY_PREFS_KEY, UUID_CATEGORY_FOOD)
+}
 
-    }
+fun getStoredCategoryId(context: Context): String? {
 
-    fun getStoredAccountId(context: Context): String? {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    return preferences.getString(CATEGORY_PREFS_KEY, UUID_CATEGORY_EMPTY)
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(ACCOUNT_PREFS_KEY, UUID_ACCOUNT_CASH)
+}
 
-    }
+fun getStoredAccountId(context: Context): String? {
 
-    fun getStoredProjectId(context: Context): String? {
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    return preferences.getString(ACCOUNT_PREFS_KEY, UUID_ACCOUNT_EMPTY)
 
-        val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
-        return preferences.getString(PROJECT_PREFS_KEY, UUID_PROJECT_EMPTY)
+}
 
-    }
+fun getStoredAccountToId(context: Context): String? {
+
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    return preferences.getString(ACCOUNT_TO_PREFS_KEY, UUID_ACCOUNT_EMPTY)
+
+}
+
+fun getStoredProjectId(context: Context): String? {
+
+    val preferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+    return preferences.getString(PROJECT_PREFS_KEY, UUID_PROJECT_EMPTY)
 
 }

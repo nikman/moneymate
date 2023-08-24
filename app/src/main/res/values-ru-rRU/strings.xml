@@ -53,4 +53,7 @@
     <string name="notification_channel_name">Инициализация БД предопределенными данными</string>
     <string name="notification_caption">Заполнение БД</string>
     <string name="notification_text">БД заполнена успешно</string>
+    <string name="transaction_list_convert_account_title">%1$s >> %2$s</string>
+    <string name="new_convertation">Перевод</string>
+    <string name="pref_label_main">Основные</string>
 </resources>

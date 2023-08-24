@@ -12,4 +12,8 @@ class CurrencyListViewModel: ViewModel() {
         moneyMateRepository.addCurrency(currency)
     }
 
+    fun deleteCurrency(currency: MainCurrency) {
+        moneyMateRepository.deleteCurrency(currency)
+    }
+
 }

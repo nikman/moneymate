@@ -13,7 +13,8 @@ import androidx.fragment.app.activityViewModels
 import com.niku.moneymate.R
 import com.niku.moneymate.projects.Project
 import com.niku.moneymate.projects.ProjectDetailViewModel
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredProjectId
+import com.niku.moneymate.utils.storeProjectId
 import java.util.*
 
 private const val ARG_PROJECT_ID = "project_id"
@@ -102,7 +103,7 @@ class ProjectFragment : Fragment() {
         isDefaultProjectCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
-                    SharedPrefs().storeProjectId(context, project.project_id)
+                    storeProjectId(context, project.project_id)
                 }
             }
         }
@@ -118,8 +119,7 @@ class ProjectFragment : Fragment() {
 
         titleField.setText(project.project_title)
 
-        val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredProjectId(it) }
+        val uuidAsString = getStoredProjectId(requireContext())
 
         if (uuidAsString != null) {
             isDefaultProjectCheckBox.isChecked =

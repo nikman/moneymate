@@ -1,6 +1,7 @@
 package com.niku.moneymate.ui.main.transaction
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -8,21 +9,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
 import com.niku.moneymate.account.Account
 import com.niku.moneymate.category.Category
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.projects.Project
 import com.niku.moneymate.transaction.MoneyTransaction
 import com.niku.moneymate.transaction.TransactionListViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
-import com.niku.moneymate.ui.main.MateItemDecorator
-import com.niku.moneymate.utils.SharedPrefs
-import com.niku.moneymate.utils.UUID_ACCOUNT_EMPTY
+import com.niku.moneymate.uiutils.BaseListItem
+import com.niku.moneymate.uiutils.BaseSwipeHelper
+import com.niku.moneymate.utils.*
+import java.text.DateFormat
 import java.util.*
 
 private const val TAG = "TransactionListFragment"
@@ -62,9 +63,9 @@ class TransactionListFragment: Fragment() {
         transactionRecyclerView.layoutManager = LinearLayoutManager(context)
         transactionRecyclerView.adapter = adapter
 
-        transactionRecyclerView.addItemDecoration(
+        /*transactionRecyclerView.addItemDecoration(
             MateItemDecorator(requireContext(), R.drawable.divider)
-        )
+        )*/
 
         return view
 
@@ -72,11 +73,26 @@ class TransactionListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+         BaseSwipeHelper<TransactionWithProperties>(requireContext())
+            .setRecyclerView(transactionRecyclerView)
+            .setDirection(ItemTouchHelper.LEFT)
+            .setOnSwipeAction { transaction ->
+                transactionListViewModel.deleteTransaction(
+                    moneyTransaction = transaction.transaction)
+            }
+            .setOnUndoAction { transaction ->
+                transactionListViewModel.addTransaction(
+                    moneyTransaction = transaction.transaction)
+            }
+            .build()
+
         transactionListViewModel.transactionListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { transactionWithProperties ->
-                transactionWithProperties?.let { updateUI(transactionWithProperties) } }
-        )
+            viewLifecycleOwner
+        ) { transactionWithProperties ->
+            transactionWithProperties?.let { updateUI(transactionWithProperties) }
+        }
+
     }
 
     override fun onDetach() {
@@ -95,19 +111,15 @@ class TransactionListFragment: Fragment() {
 
                 val currency =
                     MainCurrency(
-                        currency_id = UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+                        currency_id = UUID.fromString(getStoredCurrencyId(requireContext())))
 
                 val category =
                     Category(
-                        category_id = UUID.fromString(SharedPrefs().getStoredCategoryId(requireContext())))
+                        category_id = UUID.fromString(getStoredCategoryId(requireContext())))
 
                 val account = Account(
                     currency_id = currency.currency_id,
-                    account_id = UUID.fromString(SharedPrefs().getStoredAccountId(requireContext())))
-
-                /*val project = Project(
-                    project_id = UUID.fromString(SharedPrefs().getStoredProjectId(requireContext()))
-                )*/
+                    account_id = UUID.fromString(getStoredAccountId(requireContext())))
 
                 val transaction = MoneyTransaction(
                     account_id_from = account.account_id,
@@ -115,7 +127,37 @@ class TransactionListFragment: Fragment() {
                     currency_id = currency.currency_id,
                     category_id = category.category_id,
                     project_id = UUID.fromString(
-                        SharedPrefs().getStoredProjectId(requireContext())))
+                        getStoredProjectId(requireContext())))
+
+                transactionListViewModel.addTransaction(transaction)
+                callbacks?.onTransactionSelected(transaction.transaction_id)
+                true
+            }
+            R.id.new_convertation -> {
+
+                val currency =
+                    MainCurrency(
+                        currency_id = UUID.fromString(getStoredCurrencyId(requireContext())))
+
+                val category =
+                    Category(
+                        category_id = UUID.fromString(getStoredCategoryId(requireContext())))
+
+                val account = Account(
+                    currency_id = currency.currency_id,
+                    account_id = UUID.fromString(getStoredAccountId(requireContext())))
+
+                val accountTo = Account(
+                    currency_id = currency.currency_id,
+                    account_id = UUID.fromString(getStoredAccountToId(requireContext())))
+
+                val transaction = MoneyTransaction(
+                    account_id_from = account.account_id,
+                    account_id_to = accountTo.account_id,
+                    currency_id = currency.currency_id,
+                    category_id = category.category_id,
+                    project_id = UUID.fromString(
+                        getStoredProjectId(requireContext())))
 
                 transactionListViewModel.addTransaction(transaction)
                 callbacks?.onTransactionSelected(transaction.transaction_id)
@@ -127,7 +169,8 @@ class TransactionListFragment: Fragment() {
             }
             R.id.payees -> {
                 //callbacks?.onPayeeSelected()
-                requireActivity().findNavController(R.id.bottomNavigationView).navigate(R.id.payeeListFragment)
+                requireActivity().findNavController(
+                    R.id.bottomNavigationView).navigate(R.id.payeeListFragment)
                 true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -136,26 +179,18 @@ class TransactionListFragment: Fragment() {
 
     private fun updateUI(transactionWithProperties: List<TransactionWithProperties>) {
 
+        Log.d(TAG, "updateUI")
+
         adapter = TransactionAdapter(transactionWithProperties)
         transactionRecyclerView.adapter = adapter
 
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        transactionListViewModel.transactionListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { transactions -> transactions?.let {
-                    updateUI(transactions)
-                }
-            }
-        )
-
-    }
-
     private inner class TransactionHolder(view: View):
-        RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
+        RecyclerView.ViewHolder(view),
+        View.OnClickListener,
+        View.OnLongClickListener,
+        BaseListItem<TransactionWithProperties> {
 
         private lateinit var transaction: TransactionWithProperties
 
@@ -170,6 +205,8 @@ class TransactionListFragment: Fragment() {
             itemView.setOnLongClickListener(this)
         }
 
+        override fun getItem(): TransactionWithProperties = transaction
+
         override fun onClick(v: View?) {
             callbacks?.onTransactionSelected(transaction.transaction.transaction_id)
         }
@@ -183,13 +220,33 @@ class TransactionListFragment: Fragment() {
 
             this.transaction = transactionWithProperties
 
-            dateTextView.text = this.transaction.transaction.transactionDate.toString()
-            accountTextView.text = this.transaction.accountFrom.title
-            amountTextView.text = "%.2f".format(this.transaction.transaction.amount_from)
+            dateTextView.text =
+                DateFormat.getDateInstance().format(transaction.transaction.transactionDate)
+
+            val accountFromText = transaction.accountFrom.toString()
+            val itsTransfer = transaction.accountTo.account_id.toString() != UUID_ACCOUNT_EMPTY
+            val accountToText = if (itsTransfer) transaction.accountTo.toString() else transaction.currency.toString()
+
+            accountTextView.text =
+                if (itsTransfer) {
+                getString(R.string.transaction_list_convert_account_title,
+                    accountFromText,
+                    accountToText) } else { transaction.accountFrom.toString() }
+
+            val trColor: String = when {
+                itsTransfer -> "#F9A825"
+                transaction.transaction.amount_from < 0 -> "#B71C1C"
+                else -> "#1B5E20"
+            }
+            accountTextView.setTextColor(Color.parseColor(trColor))
+
+            amountTextView.text = "%.2f".format(transaction.transaction.amount_from)
             this.transaction.project.let {
                 projectTextView.text = it.project_title
             }
-            categoryTextView.text = this.transaction.category.category_title
+            categoryTextView.text = this.transaction.category.toString()
+
+            amountTextView.setTextColor(Color.parseColor(trColor))
 
         }
 
@@ -207,24 +264,17 @@ class TransactionListFragment: Fragment() {
             return TransactionHolder(itemView)
         }
 
-        override fun getItemCount() : Int {
-            val trSize = transactionsWithProperties.size
-            Log.d(TAG, "trSize: $trSize")
-            return trSize
+        override fun getItemCount(): Int {
+            return transactionsWithProperties.size
         }
 
         override fun onBindViewHolder(holder: TransactionHolder, position: Int) {
             val transactionWithProperties = transactionsWithProperties[position]
-            //holder.apply { titleTextView.text = account.title }
-            //Log.d(TAG, "Position: $position")
             holder.bind(transactionWithProperties)
         }
 
     }
 
-    companion object {
-        fun newInstance(): TransactionListFragment {return TransactionListFragment()}
-    }
 }
 
 

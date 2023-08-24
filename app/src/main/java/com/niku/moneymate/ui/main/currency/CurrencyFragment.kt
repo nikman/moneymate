@@ -13,23 +13,20 @@ import androidx.fragment.app.activityViewModels
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyDetailViewModel
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.utils.SharedPrefs
+import com.niku.moneymate.utils.getStoredCurrencyId
+import com.niku.moneymate.utils.storeCurrencyId
 import java.util.*
 
 private const val ARG_CURRENCY_ID = "currency_id"
 
 class CurrencyFragment : Fragment() {
 
-    //private lateinit var viewModel: MainViewModel
     private lateinit var currency: MainCurrency
 
     private lateinit var codeField: EditText
     private lateinit var titleField: EditText
     private lateinit var isDefaultCurrencyCheckBox: CheckBox
 
-    /*private val currencyDetailViewModel: CurrencyDetailViewModel by lazy {
-        ViewModelProvider(this)[CurrencyDetailViewModel::class.java]
-    }*/
     private val currencyDetailViewModel by activityViewModels<CurrencyDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +48,7 @@ class CurrencyFragment : Fragment() {
         isDefaultCurrencyCheckBox = view.findViewById(R.id.currency_isDefault) as CheckBox
 
         return view
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,22 +60,14 @@ class CurrencyFragment : Fragment() {
         currencyDetailViewModel.loadCurrency(currencyId)
 
         currencyDetailViewModel.currencyLiveData.observe(
-            viewLifecycleOwner,
-            {
-                    currency -> currency?.let {
+            viewLifecycleOwner
+        ) { currency ->
+            currency?.let {
                 this.currency = currency
                 updateUI()
             }
-            }
-        )
+        }
 
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        /*viewModel =
-            ViewModelProvider(
-                this, ViewModelProvider.NewInstanceFactory())[MainViewModel::class.java]*/
     }
 
     override fun onStart() {
@@ -121,7 +111,7 @@ class CurrencyFragment : Fragment() {
             setOnCheckedChangeListener { _, isChecked ->
                 //currency.currency_is_default = isChecked
                 if (isChecked) {
-                    SharedPrefs().storeCurrencyId(context, currency.currency_id)
+                    storeCurrencyId(context, currency.currency_id)
                 }
             }
         }
@@ -139,7 +129,7 @@ class CurrencyFragment : Fragment() {
         titleField.setText(currency.currency_title)
 
         val uuidAsString = context?.applicationContext?.let {
-            SharedPrefs().getStoredCurrencyId(it) }
+            getStoredCurrencyId(it) }
 
         if (uuidAsString != null) {
             isDefaultCurrencyCheckBox.isChecked =

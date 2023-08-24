@@ -24,8 +24,10 @@ import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
 import com.niku.moneymate.ui.main.BaseFragmentEntity
-import com.niku.moneymate.utils.SharedPrefs
 import com.niku.moneymate.utils.TransactionType
+import com.niku.moneymate.utils.getStoredAccountId
+import com.niku.moneymate.utils.getStoredCurrencyId
+import com.niku.moneymate.utils.storeAccountId
 import java.util.*
 
 private const val ARG_ACCOUNT_ID = "account_id"
@@ -37,6 +39,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
     private lateinit var accountWithCurrency: AccountWithCurrency
     private lateinit var currency: MainCurrency
     private lateinit var currencies: List<MainCurrency>
+
     private lateinit var titleField: EditText
     private lateinit var noteField: EditText
     private lateinit var currencyField: Spinner
@@ -57,7 +60,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
         super.onCreate(savedInstanceState)
 
         currency = MainCurrency(
-            UUID.fromString(SharedPrefs().getStoredCurrencyId(requireContext())))
+            UUID.fromString(getStoredCurrencyId(requireContext())))
         account = Account(currency_id = currency.currency_id)
         accountWithCurrency = AccountWithCurrency(account, currency)
         val accountId: UUID = arguments?.getSerializable(ARG_ACCOUNT_ID) as UUID
@@ -93,36 +96,33 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
         val currencyListViewModel by activityViewModels<CurrencyListViewModel>()
 
         currencyListViewModel.currencyListLiveData.observe(
-            viewLifecycleOwner,
-            { currencies -> currencies?.let { updateCurrencyList(currencies) } }
-        )
+            viewLifecycleOwner
+        ) { currencies -> currencies?.let { updateCurrencyList(currencies) } }
 
         accountDetailViewModel.accountLiveData.observe(
-            viewLifecycleOwner,
-            {
-                account -> account?.let {
-                    this.accountWithCurrency = it
-                    this.account = it.account
-                    updateUI()
-                }
+            viewLifecycleOwner
+        ) { account ->
+            account?.let {
+                this.accountWithCurrency = it
+                this.account = it.account
+                updateUI()
             }
-        )
+        }
 
         accountDetailViewModel.getAccountBalance(accountId).observe(
-            viewLifecycleOwner,
-            { account -> account?.let {
+            viewLifecycleOwner
+        ) { account ->
+            account?.let {
                 this.accountBalance = it
                 updateBalanceField()
             }
-            }
-        )
+        }
 
         accountDetailViewModel.getAccountExpensesData(accountId).observe(
-            viewLifecycleOwner,
-            {
-                    listOfExpenses -> listOfExpenses?.let { updateChartField(listOfExpenses) }
-            }
-        )
+            viewLifecycleOwner
+        ) { listOfExpenses ->
+            listOfExpenses?.let { updateChartField(listOfExpenses) }
+        }
     }
 
     override fun onStart() {
@@ -167,7 +167,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
                 position: Int,
                 id: Long
             ) {
-                currencies?.let {
+                currencies.let {
                     account.currency_id = currencies[position].currency_id
                 }
 
@@ -193,7 +193,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
             setOnCheckedChangeListener { _, isChecked ->
                 //currency.currency_is_default = isChecked
                 if (isChecked) {
-                    SharedPrefs().storeAccountId(context, account.account_id)
+                    storeAccountId(context, account.account_id)
                 }
             }
         }
@@ -212,11 +212,6 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        //accountDetailViewModel.saveAccount(account)
-    }
-
     private fun updateUI() {
 
         titleField.setText(accountWithCurrency.account.title)
@@ -224,7 +219,7 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
         //initialBalanceField.setText(accountWithCurrency.account.initial_balance.toString())
 
         val uuidAsString =
-            SharedPrefs().getStoredAccountId(requireContext())
+            getStoredAccountId(requireContext())
 
         if (uuidAsString != null) {
             isDefaultAccountCheckBox.isChecked =
@@ -296,8 +291,8 @@ class AccountFragment: Fragment(), BaseFragmentEntity {
 
         val xAxisFormatter: ValueFormatter = DayAxisValueFormatter(labelsIncome)
 
-        val groupSpace = 0.08f
-        val barSpace = 0.03f // x4 DataSet
+        //val groupSpace = 0.08f
+        //val barSpace = 0.03f // x4 DataSet
 
         //val barWidth = 0.2f // x4 DataSet
 

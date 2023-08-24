@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/cardview_shadow_start_color"
     tools:context=".ui.main.account.AccountFragment">
 
     <com.google.android.material.textview.MaterialTextView

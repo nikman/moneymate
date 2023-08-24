@@ -22,7 +22,7 @@
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/menu/fragment_account_list.xml" value="0.17916666666666667" />
         <entry key="..\:/Users/niku/AndroidStudioProjects/moneymate/app/src/main/res/menu/fragment_project_list.xml" value="0.1" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/drawable-anydpi/ic_action_navbar_item_account.xml" value="0.2109375" />
-        <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/account_fragment.xml" value="0.1" />
+        <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/account_fragment.xml" value="0.264" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/category_fragment.xml" value="0.4" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/fragment_account_list.xml" value="0.264" />
         <entry key="..\:/programming/android/moneymate/app/src/main/res/layout/fragment_common_list.xml" value="0.19479166666666667" />
@@ -39,10 +39,19 @@
         <entry key="..\:/programming/android/moneymate/app/src/main/res/xml/preference_screen.xml" value="0.4" />
         <entry key="app/src/main/res/layout/account_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/currency_fragment.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/money_transaction_fragment.xml" value="0.11145833333333334" />
+        <entry key="app/src/main/res/layout/fragment_common_list.xml" value="0.1175925925925926" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.24139492753623187" />
+        <entry key="app/src/main/res/layout/list_item_view_account.xml" value="0.12991927346115034" />
+        <entry key="app/src/main/res/layout/list_item_view_transaction.xml" value="0.13723511604439959" />
+        <entry key="app/src/main/res/layout/list_popup_window_item.xml" value="0.13723511604439959" />
+        <entry key="app/src/main/res/layout/money_transaction_fragment.xml" value="0.30105263157894735" />
+        <entry key="app/src/main/res/layout/money_transaction_fragment_old.xml" value="0.24139492753623187" />
+        <entry key="app/src/main/res/layout/money_transaction_fragment_old_v2.xml" value="0.24139492753623187" />
         <entry key="app/src/main/res/layout/project_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2564814814814815" />
         <entry key="app/src/main/res/menu/fragment_currency_list.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/fragment_transaction_list.xml" value="0.10740740740740741" />
+        <entry key="app/src/main/res/xml/preference_screen.xml" value="0.1" />
       </map>
     </option>
   </component>

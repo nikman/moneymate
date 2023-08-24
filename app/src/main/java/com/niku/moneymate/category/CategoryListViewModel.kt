@@ -12,4 +12,8 @@ class CategoryListViewModel: ViewModel() {
         moneyMateRepository.addCategory(category)
     }
 
+    fun deleteCategory(category: Category) {
+        moneyMateRepository.deleteCategory(category)
+    }
+
 }
