@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.niku.moneymate.R
 import com.niku.moneymate.currency.CurrencyListViewModel
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.uiutils.BaseListItem
 import com.niku.moneymate.uiutils.BaseSwipeHelper
 import com.niku.moneymate.utils.UUID_CURRENCY_RUB
@@ -59,9 +58,9 @@ class CurrencyListFragment: Fragment() {
         currencyRecyclerView = view.findViewById(R.id.recycler_view) as RecyclerView
         currencyRecyclerView.layoutManager = LinearLayoutManager(context)
         currencyRecyclerView.adapter = adapter
-        currencyRecyclerView.addItemDecoration(
+        /*currencyRecyclerView.addItemDecoration(
             MateItemDecorator(requireContext(), R.drawable.divider)
-        )
+        )*/
 
         return view
 

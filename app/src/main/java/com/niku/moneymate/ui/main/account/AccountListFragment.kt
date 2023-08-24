@@ -14,7 +14,6 @@ import com.niku.moneymate.account.Account
 import com.niku.moneymate.account.AccountListViewModel
 import com.niku.moneymate.accountWithCurrency.AccountWithCurrency
 import com.niku.moneymate.currency.MainCurrency
-import com.niku.moneymate.ui.main.MateItemDecorator
 import com.niku.moneymate.utils.getStoredCurrencyId
 import java.util.*
 
@@ -54,8 +53,8 @@ class AccountListFragment: Fragment() {
         accountRecyclerView.layoutManager = LinearLayoutManager(context)
         accountRecyclerView.adapter = adapter
 
-        accountRecyclerView.addItemDecoration(
-            MateItemDecorator(requireContext(), R.drawable.divider))
+        /*accountRecyclerView.addItemDecoration(
+            MateItemDecorator(requireContext(), R.drawable.divider))*/
 
         return view
 
@@ -164,7 +163,8 @@ class AccountListFragment: Fragment() {
             //val view = layoutInflater.inflate(R.layout.list_item_view_account, parent, false)
             val itemView =
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_view_account, parent, false)
+                    //.inflate(R.layout.list_item_view_account, parent, false)
+                    .inflate(R.layout.list_item_view_account_card, parent, false)
 
             return AccountHolder(itemView)
         }
