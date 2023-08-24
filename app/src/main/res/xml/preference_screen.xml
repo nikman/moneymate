@@ -2,17 +2,17 @@
 
     <PreferenceCategory
         app:key="advanced"
-        app:title="Learning Preferences"
+        app:title="@string/pref_label_main"
         app:initialExpandedChildrenCount="3">
 
         <Preference
             app:key="open_currency_list"
-            app:title="Currencies"
+            app:title="@string/bottom_nav_item_currencies"
             app:summary="Open currency list"/>
 
         <Preference
             app:key="open_project_list"
-            app:title="Projects"
+            app:title="@string/bottom_nav_item_projects"
             app:summary="Open project list"/>
 
         <Preference

@@ -23,6 +23,7 @@ import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.uiutils.BaseListItem
 import com.niku.moneymate.uiutils.BaseSwipeHelper
 import com.niku.moneymate.utils.*
+import java.text.DateFormat
 import java.util.*
 
 private const val TAG = "TransactionListFragment"
@@ -37,7 +38,6 @@ class TransactionListFragment: Fragment() {
     private var callbacks: Callbacks? = null
     private lateinit var transactionRecyclerView: RecyclerView
     private var adapter: TransactionAdapter = TransactionAdapter(emptyList())
-    //private lateinit var swipeActions: BaseSwipeHelper<TransactionWithProperties>
 
     private val transactionListViewModel by activityViewModels<TransactionListViewModel>()
 
@@ -169,7 +169,8 @@ class TransactionListFragment: Fragment() {
             }
             R.id.payees -> {
                 //callbacks?.onPayeeSelected()
-                requireActivity().findNavController(R.id.bottomNavigationView).navigate(R.id.payeeListFragment)
+                requireActivity().findNavController(
+                    R.id.bottomNavigationView).navigate(R.id.payeeListFragment)
                 true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -179,7 +180,6 @@ class TransactionListFragment: Fragment() {
     private fun updateUI(transactionWithProperties: List<TransactionWithProperties>) {
 
         Log.d(TAG, "updateUI")
-
 
         adapter = TransactionAdapter(transactionWithProperties)
         transactionRecyclerView.adapter = adapter
@@ -220,16 +220,8 @@ class TransactionListFragment: Fragment() {
 
             this.transaction = transactionWithProperties
 
-            //val firstApiFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
-            //val date = LocalDate.parse(transaction.transaction.transactionDate.toString() , firstApiFormat)
-            /*val dateFormatRu = SimpleDateFormat(
-                "dd.MM.yyyy HH:mm", Locale.US
-            )
-            val date =
-                dateFormatRu.parse(
-                    transaction.transaction.transactionDate.toString())
-*/
-            dateTextView.text = transaction.transaction.transactionDate.toString()
+            dateTextView.text =
+                DateFormat.getDateInstance().format(transaction.transaction.transactionDate)
 
             val accountFromText = transaction.accountFrom.toString()
             val itsTransfer = transaction.accountTo.account_id.toString() != UUID_ACCOUNT_EMPTY
@@ -273,22 +265,16 @@ class TransactionListFragment: Fragment() {
         }
 
         override fun getItemCount(): Int {
-            //Log.d(TAG, "trSize: $trSize")
             return transactionsWithProperties.size
         }
 
         override fun onBindViewHolder(holder: TransactionHolder, position: Int) {
             val transactionWithProperties = transactionsWithProperties[position]
-            //holder.apply { titleTextView.text = account.title }
-            //Log.d(TAG, "Position: $position")
             holder.bind(transactionWithProperties)
         }
 
     }
 
-    companion object {
-        fun newInstance(): TransactionListFragment {return TransactionListFragment()}
-    }
 }
 
 

@@ -27,6 +27,7 @@ import com.niku.moneymate.transaction.TransactionDetailViewModel
 import com.niku.moneymate.transaction.TransactionWithProperties
 import com.niku.moneymate.ui.main.BaseFragmentEntity
 import com.niku.moneymate.utils.*
+import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
 
@@ -126,7 +127,7 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
         val view = inflater.inflate(R.layout.money_transaction_fragment, container, false)
 
         dateButton = view.findViewById(R.id.transaction_date) as Button
-        dateButton.visibility = View.GONE
+        //dateButton.visibility = View.GONE
         amountField = view.findViewById(R.id.transaction_amount) as EditText
         transactionTypeImageButton = view.findViewById(R.id.image_button_transaction_type)
         saveButton = view.findViewById(R.id.ok_button)
@@ -246,7 +247,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             val dpd = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener {
                     _, year, monthOfYear, dayOfMonth ->
                 val selectedDate = GregorianCalendar(year, monthOfYear, dayOfMonth).time
-                dateButton.text = selectedDate.toString()
+                dateButton.text =
+                    DateFormat.getDateInstance().format(selectedDate)
+                    //selectedDate.toString()
                 moneyTransaction.transactionDate = selectedDate
             }, year, month, day)
             dpd.show()
@@ -334,7 +337,9 @@ class TransactionFragment : Fragment(), BaseFragmentEntity {
             Log.d(TAG, "updateUI_2")
 
             amountField.setText(abs(moneyTransaction.amount_from).toString())
-            dateButton.text = moneyTransaction.transactionDate.toString()
+            dateButton.text =
+                DateFormat.getDateInstance().format(moneyTransaction.transactionDate)
+                //moneyTransaction.transactionDate.toString()
 
             updateAccountsList(accounts)
             updateCurrenciesList(currencies)

@@ -51,6 +51,7 @@
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2564814814814815" />
         <entry key="app/src/main/res/menu/fragment_currency_list.xml" value="0.1" />
         <entry key="app/src/main/res/menu/fragment_transaction_list.xml" value="0.10740740740740741" />
+        <entry key="app/src/main/res/xml/preference_screen.xml" value="0.1" />
       </map>
     </option>
   </component>

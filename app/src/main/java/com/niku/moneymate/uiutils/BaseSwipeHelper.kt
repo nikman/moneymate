@@ -21,9 +21,8 @@ import com.niku.moneymate.R
  *     val sw: BaseSwipeHelper<T> = BaseSwipeHelper<T>(requireContext())
  *      .setRecyclerView(rv)
  *      .setDirection(ItemTouchHelper.LEFT)
- *      .setItems(List<T>)
  *      .setOnSwipeAction { ... }
- *      .setOnCancelAction { ... }
+ *      .setOnUndolAction { ... }
  *      .build()
  * </pre>
  */
@@ -31,14 +30,11 @@ private const val TAG = "BaseSwipeHelper"
 
 class BaseSwipeHelper<T> constructor (context: Context) {
 
-    //private var mItems: List<T>? = null
     private var mContext: Context? = null
     private lateinit var mRecyclerView: RecyclerView
     private var mDirection: Int? = null
     private lateinit var mOnSwipeAction: (item: T) -> Unit
-    //private lateinit var mOnCancelAction: (item: T) -> Unit
     private lateinit var mOnUndoAction: (item: T) -> Unit
-    private lateinit var mSwipeRightHelper: ItemTouchHelper
 
     init {
         mContext = context
@@ -53,11 +49,6 @@ class BaseSwipeHelper<T> constructor (context: Context) {
         mDirection = direction
         return this
     }
-
-    /*fun setItems(items: List<T>): BaseSwipeHelper<T> {
-        mItems = items.map { it }
-        return this
-    }*/
 
     fun setOnSwipeAction(action: (item: T) -> Unit): BaseSwipeHelper<T> {
         mOnSwipeAction = action
@@ -74,19 +65,11 @@ class BaseSwipeHelper<T> constructor (context: Context) {
         return this
     }
 
-    fun detach() {
-        mSwipeRightHelper.attachToRecyclerView(null)
-    }
-
     fun build(): BaseSwipeHelper<T> {
 
         if (mContext == null) {
             throw IllegalArgumentException("context not initialized")
         }
-
-        /*if (mItems == null) {
-            throw IllegalArgumentException("Items not initialized")
-        }*/
 
         val trashBinIcon =
             mContext?.resources?.let {
@@ -105,21 +88,7 @@ class BaseSwipeHelper<T> constructor (context: Context) {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                /*if (mItems!!.isEmpty()) {
-                    Log.d(TAG, "No need to handle actions")
-                    return
-                }
-
-                if (mItems!!.size <= viewHolder.bindingAdapterPosition) {
-                    Log.d(TAG, "Position ${viewHolder.bindingAdapterPosition + 1} is greater than items size ${mItems?.size}")
-                    mRecyclerView.adapter?.notifyDataSetChanged()
-                    return
-                }*/
-
                 val item = (viewHolder as BaseListItem<T>).getItem()
-                    //mItems!![viewHolder.bindingAdapterPosition]
-
-                //val item: T = (viewHolder.bindingAdapter.getItemId() as T).getItem()
 
                 val builder = AlertDialog.Builder(mContext)
                     .setTitle("Delete")
@@ -130,7 +99,6 @@ class BaseSwipeHelper<T> constructor (context: Context) {
                         "You want to delete '$item'?")
                     .setPositiveButton("YES"){ _, _ ->
                         mOnSwipeAction(item)
-                        //mRecyclerView.adapter?.notifyItemRemoved(viewHolder.bindingAdapterPosition)
 
                         val snackbar = Snackbar
                             .make(
@@ -140,16 +108,17 @@ class BaseSwipeHelper<T> constructor (context: Context) {
                             .setAction("UNDO"
                             ) {
                                 mOnUndoAction(item)
-                                //mRecyclerView.adapter?.notifyItemInserted(viewHolder.bindingAdapterPosition)
-                            }
+                             }
                             .setActionTextColor(Color.YELLOW)
                             .show()
                     }
-                    .setNegativeButton("No"){ _, _ ->
-                        mRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                    .setNegativeButton("No") { _, _ ->
+                        mRecyclerView.adapter?.notifyItemChanged(
+                            viewHolder.bindingAdapterPosition)
                     }
-                    .setNeutralButton("Cancel"){_,_ ->
-                        mRecyclerView.adapter?.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                    .setNeutralButton("Cancel") {_,_ ->
+                        mRecyclerView.adapter?.notifyItemChanged(
+                            viewHolder.bindingAdapterPosition)
                     }
                     .setCancelable(false)
 

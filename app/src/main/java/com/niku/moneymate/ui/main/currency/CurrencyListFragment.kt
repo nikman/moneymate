@@ -203,9 +203,6 @@ class CurrencyListFragment: Fragment() {
 
     }
 
-    companion object {
-        fun newInstance(): CurrencyListFragment {return CurrencyListFragment()}
-    }
 }
 
 
